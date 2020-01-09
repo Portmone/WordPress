@@ -1,0 +1,127 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2017-04-05 12:12+0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.8.12\n"
+"Language: en_US\n"
+"Project-Id-Version: WordPress - 4.7.x\n"
+"POT-Creation-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+
+msgid "Оплатить через Portmone"
+msgstr "Pay via Portmone"
+
+msgid "Ошибка авторизации. Введен не верный логин или пароль"
+msgstr "Authorisation Error. Invalid login or password entered"
+
+msgid "Идентификатор магазина в системе Portmone(Payee ID)"
+msgstr "Store identifier in the Portmone system(Payee ID)"
+
+msgid "Обязательно для заполнения"
+msgstr "Required information"
+
+msgid "ID Интернет-магазина, предоставленный менеджером Portmone"
+msgstr "The online store ID provided by the Portmone manager"
+
+msgid "Логин Интернет-магазина в системе Portmone"
+msgstr "The login of the online store in Portmone system"
+
+msgid "Логин Интернет-магазина, предоставленный менеджером Portmone"
+msgstr "The login of the online store provided by the Portmone manager"
+
+msgid "Пароль Интернет-магазина в системе Portmone"
+msgstr "The password of the online store in the Portmone system"
+
+msgid "Пароль для Интернет-магазина, предоставленный менеджером Portmone"
+msgstr "The password of the online store provided by the manager of the provided by the Portmone manager"
+
+msgid "Комментарий для клиента"
+msgstr "Note to the customer"
+
+msgid "Сервис проведения платежей обеспечивается системой Portmone.com с использованием современного и безопасного механизма авторизации платежных карт. Служба поддержки Portmone.com: телефон +380(44)200 09 02, электронная почта: support@portmone.com"
+msgstr "The payment service is provided by Portmone.com system using a modern and secure payment card authorization mechanism."
+
+msgid "Описание для клиента на странице оплаты заказа"
+msgstr "Description for the customer on the payment page"
+
+msgid "Показать логотип на странице оплаты"
+msgstr "Show logo on payment page"
+
+msgid "Отметьте, чтобы показать логотип Portmone"
+msgstr "Select to show Portmone logo"
+
+msgid "Страница ответа"
+msgstr "Reply page"
+
+msgid "URL страницы успеха"
+msgstr "Success page URL"
+
+msgid "Настройки"
+msgstr "Settings"
+
+msgid "Информация"
+msgstr "Information"
+
+msgid "Версия плагина"
+msgstr "Plug-in version"
+
+msgid "Платежный плагина Portmone"
+msgstr "Portmone payment plug-in"
+
+msgid "Спасибо за покупку!"
+msgstr "Thank you for purchasing!"
+
+msgid "При совершенииоплаты возникла ошибка. Свяжитесь с Интернет-магазином для проверки заказа"
+msgstr "Error during payment. Contact the online store for order verification"
+
+msgid "В системе Portmone данного платежа нет, он возвращен или создан некорректно"
+msgstr "There is no payment in the Portmone system, it is returned or created incorrectly"
+
+msgid "При совершении оплаты возникла ошибка. Данные Интернет-магазина некорректны"
+msgstr "Error during payment. Online store data is incorrect"
+
+msgid "При совершении оплаты возникла ошибка. Проверьте данные вашей карты и попробуйте провести оплату еще раз!"
+msgstr "Error during payment. Check your card details and try to pay again!"
+
+msgid "Номер вашего заказа"
+msgstr "Your order number"
+
+msgid "Включить конвертацию в Гривны"
+msgstr "Enable currency conversion to UAH"
+
+msgid "Конвертировать валюту магазина из %1$s %2$s > в > %3$s, при оформлении заказа"
+msgstr "Convert store currency from %1$s %2$s > to > %3$s, when ordering"
+
+msgid "Portmone принимает только Украинские гривны"
+msgstr "Portmone accepts only UAH"
+
+msgid "Курс валюты"
+msgstr "Exchange rate"
+
+msgid "Курс %1$s за 1 %2$s %3$s"
+msgstr "Rate %1$s for 1 %2$s %3$s"
+
+msgid "eCommerce Версия"
+msgstr "eCommerce version"
+
+msgid "Не определено"
+msgstr "Not specified"
+
+msgid "WP версия"
+msgstr "WP version"
+
+msgid "ID товара"
+msgstr "product ID"
+
+msgid "кол."
+msgstr "quan."
+
+msgid "цена"
+msgstr "prise"
+
+msgid "Закрыть"
+msgstr "Exit"

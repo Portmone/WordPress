@@ -1,0 +1,122 @@
+.menu-portmone {
+    float: left;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-left: .5em;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 24px;
+    background: #e5e5e5;
+    color: #555;
+}
+
+.menu-portmone-active, .menu-portmone-active:focus,.menu-portmone-active:focus:active, .menu-portmone-active:hover {
+    border-bottom: 1px solid #f1f1f1;
+    background: #f8f8f8;
+    color: #000;
+}
+
+.menu-portmone-active {
+    margin-bottom: -1px;
+    color: #444;
+}
+
+.menu-portmone-active, .menu-portmone:focus:active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.red {
+    color:red;
+}
+
+.portmone_status_table{
+    width:80%;
+}
+
+.portmone-table{
+    width:100%;
+}
+
+.portmone-row{
+    display:table-row;
+}
+
+.portmone-col{
+    padding: 10px 9px;
+    display:table-cell;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.1);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.1);
+}
+
+.portmone-c50{
+    width:50%;
+}
+
+.portmone_input_error {
+    border-color: red !important;
+}
+
+#checkout_wrapper{
+    text-align:left;
+    position:relative;
+    background:#FFF;
+    padding-left:15px;
+    padding-right:15px;
+    padding-bottom:30px;
+    margin:9px auto;
+}
+
+.successful-message-portmone{
+    position: fixed;
+    font-family: Arial, Helvetica, sans-serif;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 99999;
+    -webkit-transition: opacity 400ms ease-in;
+    -moz-transition: opacity 400ms ease-in;
+    transition: opacity 400ms ease-in;
+}
+
+.successful-message-portmone:target {
+    display: block;
+    pointer-events: auto;
+}
+
+.successful-message-portmone > div {
+    width: 400px;
+    position: relative;
+    margin: 20% auto;
+    padding: 5px 20px 13px 20px;
+
+    background: #fff;
+    background: -moz-linear-gradient(#fff);
+    background: -webkit-linear-gradient(#fff);
+    background: -o-linear-gradient(#fff);
+}
+
+.close {
+    background: #cc2128;
+    color: #FFFFFF;
+    line-height: 25px;
+    position: absolute;
+    right: -12px;
+    text-align: center;
+    top: -10px;
+    width: 24px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0), 0 0px 0 !important;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #FFFFFF !important;
+    background: #858688 !important;
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0), 0 0px 0 !important;
+}
+
+.img-portmone { width: 100px; }
