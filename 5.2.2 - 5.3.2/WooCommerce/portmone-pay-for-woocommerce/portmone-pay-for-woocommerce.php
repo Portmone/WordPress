@@ -613,6 +613,7 @@ function woocommerce_portmone_init() {
             return $methods;
         }
         add_filter('woocommerce_payment_gateways', 'woocommerce_add_portmone_gateway');
+        load_plugin_textdomain("portmone-pay-for-woocommerce", false, basename(dirname(__FILE__))."/languages");
 
         define("PORTMONE_STATUSES",
             [
