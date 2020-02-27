@@ -3,7 +3,7 @@
 Plugin Name: Portmone pay for woocommerce
 Plugin URI: https://github.com/Portmone/WordPress
 Description: Portmone Payment Gateway for WooCommerce.
-Version: 2.0.3
+Version: 2.0.4
 Author: glib.yuriiev@portmone.me
 Author URI: https://www.portmone.com.ua
 Domain Path: /
@@ -88,7 +88,7 @@ function woocommerce_portmone_init() {
         private $order_total    = 0;
 
         public function __construct() {
-            $this->version = '2.0.3';
+            $this->version = '2.0.4';
             $this->currency = get_woocommerce_currencies();
             $this->m_lan = array(
                 'enabled_title'                 => 'Включить прием оплаты через Portmone.com',
@@ -320,7 +320,7 @@ function woocommerce_portmone_init() {
         function generate_portmone_form($order_id) {
             $description_order = '';
             $order = new WC_Order($order_id);
-            $items = $order->get_items();
+            /*$items = $order->get_items();
             if (is_array($items)) {
                 foreach ($items as $item) {
                     if (version_compare( WOOCOMMERCE_VERSION , '3.0.0', '>=')) {
@@ -331,7 +331,7 @@ function woocommerce_portmone_init() {
                     $description_order .= $description;
                 }
                 $description_order .= 'TOTAL '. $order->order_total;
-            }
+            }*/
 
             if (isset($this->settings['convert_money']) &&
                 isset($this->settings['exchange_rates']) &&
@@ -347,16 +347,18 @@ function woocommerce_portmone_init() {
 
             $portmone_args = array(
                 'payee_id'           => $this->payee_id,
-                'shop_order_number'  => $order_id.'_'.time(),
+                'shop_order_number'  => $order_id,
                 'bill_amount'        => $this->order_total,
                 'bill_currency'      => $this->bill_currency,
-                'description'        => $description_order,
                 'success_url'        => $order->get_checkout_order_received_url(),
                 'failure_url'        => $order->get_checkout_order_received_url(),
                 'lang'               => $this->getLanguage(),
                 'preauth_flag'       => $this->getPreauthFlag(),
                 'encoding'           => 'UTF-8'
             );
+            if ($description_order != '') {
+                $portmone_args['description'] = $description_order;
+            }
             $out = '';
                 foreach ($portmone_args as $key => $value) {
                     $portmone_args_array[] = "<input type='hidden' name='$key' value='$value'/>";
@@ -599,6 +601,9 @@ function woocommerce_portmone_init() {
      */
         function portmone_get_order_id($shopnumber) {
             $shopnumbercount = strpos($shopnumber, "_");
+            if ($shopnumbercount == false){
+                return $shopnumber;
+            }
             return substr($shopnumber, 0, $shopnumbercount);
         }
     }
