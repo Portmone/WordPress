@@ -3,7 +3,7 @@
 Plugin Name: Portmone pay for woocommerce
 Plugin URI: https://github.com/Portmone/WordPress
 Description: Portmone Payment Gateway for WooCommerce.
-Version: 2.0.4
+Version: 2.0.5
 Author: glib.yuriiev@portmone.me
 Author URI: https://www.portmone.com.ua
 Domain Path: /
@@ -88,7 +88,7 @@ function woocommerce_portmone_init() {
         private $order_total    = 0;
 
         public function __construct() {
-            $this->version = '2.0.4';
+            $this->version = '2.0.5';
             $this->currency = get_woocommerce_currencies();
             $this->m_lan = array(
                 'enabled_title'                 => 'Включить прием оплаты через Portmone.com',
@@ -489,28 +489,29 @@ function woocommerce_portmone_init() {
             }
 
             $result_portmone = $this->curlRequest(self::GATEWAY_URL, $data);
+            if ($result_portmone === false) {
+                $order_all->add_order_note('curl request error');
+            }
             $parseXml = $this->parseXml($result_portmone);
 
             if ($parseXml === false) {
+                $order_all->add_order_note('Portmone Xml empty');
                 if ($response['RESULT'] == '0') {
-                    $order_all->update_status('wc-status-paidnotve');
+                    $status = 'wc-status-paidnotve';
                     $result = $this->t_lan['successful_pay'];
                 } else {
-                    $order_all->update_status('wc-status-error');
+                    $status = 'wc-status-error';
                     $result = $response['RESULT'] . ' ' .$this->lang['error_auth'];
                 }
-                $order_all->add_order_note($result);
-                $order_all->payment_complete();
+                $this->update_order($order_all, null, $status, $result);
                 return $result;
             }
             $payee_id_return = (array)$parseXml->request->payee_id;
             $order_data = (array)$parseXml->orders->order;
 
             if ($response['RESULT'] !== '0') {
-                $order_all->update_status('wc-status-error');
                 $result = $response['RESULT']. ' ' . $this->t_lan['number_pay'] .': '. $orderId;
-                $order_all->add_order_note($result);
-                $order_all->payment_complete();
+                $this->update_order($order_all, null, 'wc-status-error', $result);
                 return $result;
             }
 
@@ -543,33 +544,36 @@ function woocommerce_portmone_init() {
             }
 
             if ($order_data['status'] == self::ORDER_REJECTED) {
-                $order_all->update_status('wc-status-error');
-                $order_all->add_order_note($this->t_lan['order_rejected']);
-                $order_all->payment_complete();
+                $this->update_order($order_all, $order_data['pay_date'], 'wc-status-error', $this->t_lan['order_rejected']);
                 return $this->t_lan['order_rejected']. ' ' . $this->t_lan['number_pay'] .': '. $orderId;
             }
+
             if ($order_data['status'] == self::ORDER_PREAUTH) {
-                $order_all->update_status('wc-status-preauth');
-                $order_all->add_order_note($this->t_lan['preauth_pay']);
-                $order_all->payment_complete();
+                $this->update_order($order_all, $order_data['pay_date'], 'wc-status-preauth', $this->t_lan['preauth_pay']);
                 //return $this->t_lan['preauth_pay']. ' ' . $this->t_lan['number_pay'] .': '. $orderId;
             }
+
             if ($order_data['status'] == self::ORDER_CREATED) {
-                $order_all->update_status('wc-status-error');
-                $order_all->add_order_note($this->t_lan['order_rejected']);
-                $order_all->payment_complete();
+                $this->update_order($order_all, $order_data['pay_date'], 'wc-status-error', $this->t_lan['order_rejected']);
                 return $this->t_lan['order_rejected'];
             }
 
             if ($order_data['status'] == self::ORDER_PAYED) {
-                $order_all->update_status('wc-status-paid');
-                $order_all->add_order_note($this->t_lan['successful_pay']);
-                $order_all->payment_complete();
+                $this->update_order($order_all, $order_data['pay_date'], 'wc-status-paid', $this->t_lan['successful_pay']);
             }
 
             return false;
         }
 
+        function update_order(\WC_Order $order_all, $pay_date, $status, $note) {
+            $order_all->update_status($status);
+            $order_all->add_order_note($note);
+            if ( ! $order_all->get_date_paid( 'edit' )  && $pay_date !== null) {
+                $order_all->set_date_paid(strtotime($pay_date));
+                $order_all->save();
+            }
+            $order_all->payment_complete();
+        }
     /**
      * We display the answer on payment
      **/
