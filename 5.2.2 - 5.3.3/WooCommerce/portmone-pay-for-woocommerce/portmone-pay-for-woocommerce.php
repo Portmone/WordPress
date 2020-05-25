@@ -208,7 +208,7 @@ function woocommerce_portmone_init() {
             }
 
             add_action('woocommerce_receipt_portmone', array(&$this, 'receipt_page'));
-            add_action('woocommerce_thankyou', array($this, 'pending_new_order_notification'), 20, 1);
+            add_action('woocommerce_thankyou_portmone', array($this, 'pending_new_order_notification'), 20, 1);
             apply_filters( 'woocommerce_currency', get_option('woocommerce_currency') );
         }
 
