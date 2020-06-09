@@ -3,7 +3,7 @@
 Plugin Name: Portmone pay for woocommerce
 Plugin URI: https://github.com/Portmone/WordPress
 Description: Portmone Payment Gateway for WooCommerce.
-Version: 2.0.7
+Version: 2.0.8
 Author: glib.yuriiev@portmone.me
 Author URI: https://www.portmone.com.ua
 Domain Path: /
@@ -74,6 +74,25 @@ function woocommerce_portmone_init() {
     add_action ('init', 'portmone_css');
     add_action ('admin_init', 'portmone_scripts');
     add_action ('admin_init', 'portmone_admin_css');
+    add_action( 'admin_menu', 'add_menu' );
+    function add_menu() {
+        $portmone = new WC_portmone();
+        $portmone->init_settings();
+        if ($portmone->settings['show_admin_menu'] > 0) {
+            add_menu_page(
+                'Portmone.com',
+                'Portmone.com',
+                'manage_options',
+                'wc-settings&tab=checkout&section=portmone#tab1',
+                [
+                    __CLASS__,
+                    'page_options',
+                ],
+                plugin_dir_url( __FILE__ ) . 'assets/img/logo_200x200.png',
+                $portmone->settings['show_admin_menu']
+            );
+        }
+    }
 
     function showPortmoneMessage($content) {
         return '<div id="message-portmone" class="successful-message-portmone is-style-wide " style="display: block;">
@@ -100,7 +119,7 @@ function woocommerce_portmone_init() {
         private $order_total    = 0;
 
         public function __construct() {
-            $this->version = '2.0.7';
+            $this->version = '2.0.8';
             $this->currency = get_woocommerce_currencies();
             $this->m_lan = array(
                 'enabled_title'                 => 'Включить прием оплаты через Portmone.com',
@@ -123,6 +142,12 @@ function woocommerce_portmone_init() {
                 'showlogo_title'                => 'Показать логотип на странице оплаты',
                 'showlogo_label'                => 'Показать логотип Portmone.com при оформлении заказа',
                 'showlogo_description'          => 'Отметьте, чтобы показать логотип Portmone.com',
+                'show_admin_menu_title'         => 'Показать Portmone.com в списке меню административной панели',
+                'show_admin_menu_description'   => 'Укажите порядковый номер отображения в списке меню. Если значение < 1, Portmone.com отображатся в списке меню не будет',
+                'show_admin_menu_default'       => '1',
+                'update_count_products_title'   => 'Изменять колличество товаров на складе после оплаты',
+                'update_count_products_label'   => 'От общей суммы товаров на складе отнять товары оплаченного заказа',
+                'update_count_products_description'=> 'Отметьте, чтобы изменять колличество товаров',
                 'preauth_flag_title'            => 'Режим преавторизации',
                 'preauth_flag_label'            => 'Средства только блокируются на карте клиента, но финансового списания со счета клиента не происходит',
                 'preauth_flag_description'      => 'Отметьте, чтобы cредства только блокируются на карте клиента, но финансового списания со счета клиента не происходит',
@@ -175,6 +200,7 @@ function woocommerce_portmone_init() {
             $this->method_title = 'Portmone';
             $this->method_description = $this->t_lan['method_description'];
             $this->has_fields = false;
+
             $this->init_settings();
             $this->m_settings = array(
                 'enabled',
@@ -184,7 +210,9 @@ function woocommerce_portmone_init() {
                 'title',
                 'description',
                 'preauth_flag',
-                'showlogo'
+                'showlogo',
+                'show_admin_menu',
+                'update_count_products'
             );
 
             if ($this->settings['showlogo'] == "yes") {
@@ -211,6 +239,7 @@ function woocommerce_portmone_init() {
             add_action('woocommerce_thankyou_portmone', array($this, 'pending_new_order_notification'), 20, 1);
             apply_filters( 'woocommerce_currency', get_option('woocommerce_currency') );
         }
+
 
     /**
      * Initializing the configuration form in the admin panel
@@ -262,7 +291,7 @@ function woocommerce_portmone_init() {
                     'default'          => $this->t_lan['description_default'],
                     'description'      => $this->t_lan['description_description'],
                     'desc_tip'         => true),
-                'preauth_flag'          => array('title' => $this->t_lan['preauth_flag_title'],
+                'preauth_flag'         => array('title' => $this->t_lan['preauth_flag_title'],
                     'type'             => 'checkbox',
                     'label'            => $this->t_lan['preauth_flag_label'],
                     'default'          => 'no',
@@ -273,6 +302,17 @@ function woocommerce_portmone_init() {
                     'label'            => $this->t_lan['showlogo_label'],
                     'default'          => 'yes',
                     'description'      => $this->t_lan['showlogo_description'],
+                    'desc_tip'         => true),
+                'show_admin_menu'      => array('title' => $this->t_lan['show_admin_menu_title'],
+                    'type'             => 'number',
+                    'default'          => $this->t_lan['show_admin_menu_default'],
+                    'description'      => $this->t_lan['show_admin_menu_description'],
+                    'desc_tip'         => true),
+                'update_count_products'=> array('title' => $this->t_lan['update_count_products_title'],
+                    'type'             => 'checkbox',
+                    'label'            => $this->t_lan['update_count_products_label'],
+                    'default'          => 'yes',
+                    'description'      => $this->t_lan['update_count_products_description'],
                     'desc_tip'         => true)
             );
 
@@ -506,6 +546,7 @@ function woocommerce_portmone_init() {
                 if ($response['RESULT'] == '0') {
                     $status = 'wc-status-paidnotve';
                     $result = $this->t_lan['successful_pay'];
+                    $this->update_count_products($order_all);
                 } else {
                     $status = 'wc-status-error';
                     $result = $response['RESULT'] . ' ' .$this->lang['error_auth'];
@@ -556,6 +597,7 @@ function woocommerce_portmone_init() {
             }
 
             if ($order_data['status'] == self::ORDER_PREAUTH) {
+                $this->update_count_products($order_all);
                 $this->update_order($order_all, $order_data['pay_date'], 'wc-status-preauth', $this->t_lan['preauth_pay']);
                 //return $this->t_lan['preauth_pay']. ' ' . $this->t_lan['number_pay'] .': '. $orderId;
             }
@@ -566,6 +608,7 @@ function woocommerce_portmone_init() {
             }
 
             if ($order_data['status'] == self::ORDER_PAYED) {
+                $this->update_count_products($order_all);
                 $this->update_order($order_all, $order_data['pay_date'], 'wc-status-paid', $this->t_lan['successful_pay']);
             }
 
@@ -585,24 +628,55 @@ function woocommerce_portmone_init() {
      * We display the answer on payment
      **/
         function check_response() {
-            $paymentInfo = $this->isPaymentValid($_REQUEST);
+            global $woocommerce;
             $orderId = $this->portmone_get_order_id($_REQUEST['SHOPORDERNUMBER']);
-            if ($paymentInfo == false) {
-                if ($_REQUEST['RESULT'] == '0') {
-                    $this->message['message'] = $this->t_lan['thankyou_text'] . ' ' . $this->t_lan['number_pay'] . ' ' .$orderId ;
-                } else {
-                    $this->message['message'] = $_REQUEST['RESULT']. ' ' . $this->t_lan['number_pay'] . ' ' .$orderId ;
-                }
-                $this->message['class'] = 'message-portmone';
-            } else {
-                $this->message['class'] = 'message-portmone';
-                $this->message['message'] = $paymentInfo;
-                $order = wc_get_order($orderId);
-                $redirect_url = add_query_arg(array($this->message['class'] => urlencode($this->message['message'])), $order->get_cancel_order_url());
+            $sessionName = 'order'.$orderId;
 
-                wp_redirect($redirect_url);
-                exit;
+            if (empty($woocommerce->session->$sessionName)) {
+
+                $paymentInfo = $this->isPaymentValid($_REQUEST);
+
+                if ($paymentInfo == false) {
+                    if ($_REQUEST['RESULT'] == '0') {
+                        $this->message['message'] = $this->t_lan['thankyou_text'] . ' ' . $this->t_lan['number_pay'] . ' ' .$orderId ;
+                    } else {
+                        $this->message['message'] = $_REQUEST['RESULT']. ' ' . $this->t_lan['number_pay'] . ' ' .$orderId ;
+                    }
+                    $this->message['class'] = 'message-portmone';
+                } else {
+                    $this->message['class'] = 'message-portmone';
+                    $this->message['message'] = $paymentInfo;
+                    $order = wc_get_order($orderId);
+                    $redirect_url = add_query_arg(array($this->message['class'] => urlencode($this->message['message'])), $order->get_cancel_order_url());
+
+                    wp_redirect($redirect_url);
+                    exit;
+                }
             }
+
+            if ( isset( $woocommerce->session ) ) {
+                $woocommerce->session->$sessionName = 'true';
+            }
+        }
+
+    /**
+     *
+     */
+        function update_count_products($order) {
+
+            if ($this->settings['update_count_products'] == 'yes') {
+                $items = $order->get_items();
+                if (is_array($items)) {
+                    foreach ($items as $item) {
+                        $product = $item->get_product();
+                        if ($product->get_manage_stock()) {
+                            $stock_quantity = wc_update_product_stock( $product, $item->get_quantity(), 'decrease', true );
+                            $order->add_order_note('Товар ID: ' .$product->get_id(). ' списан со склада '. $item->get_quantity() . 'шт.('.$stock_quantity.')');
+                        }
+                    }
+                }
+            }
+
         }
 
     /**
