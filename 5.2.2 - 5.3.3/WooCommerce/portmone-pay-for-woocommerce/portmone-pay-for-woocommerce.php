@@ -3,14 +3,14 @@
 Plugin Name: Portmone pay for woocommerce
 Plugin URI: https://github.com/Portmone/WordPress
 Description: Portmone Payment Gateway for WooCommerce.
-Version: 2.0.9
+Version: 2.0.10
 Author: glib.yuriiev@portmone.me
 Author URI: https://www.portmone.com.ua
 Domain Path: /
 License: Payment Card Industry Data Security Standard (PCI DSS)
 License URI: https://www.portmone.com.ua/r3/uk/security/
 WC requires at least: 3.7.1
-WC tested up to: 4.1.0
+WC tested up to: 4.4.1
 */
 
     /**
@@ -122,7 +122,7 @@ function woocommerce_portmone_init() {
         private $order_total    = 0;
 
         public function __construct() {
-            $this->version = '2.0.9';
+            $this->version = '2.0.10';
             $this->currency = get_woocommerce_currencies();
             $this->m_lan = array(
                 'enabled_title'                 => 'Включить прием оплаты через Portmone.com',
@@ -676,7 +676,8 @@ function woocommerce_portmone_init() {
                         $product = $item->get_product();
                         if ($product->get_manage_stock()) {
                             $stock_quantity = wc_update_product_stock( $product, $item->get_quantity(), 'decrease', true );
-                            $order->add_order_note('Товар ID: ' .$product->get_id(). ' списан со склада '. $item->get_quantity() . 'шт.('.$stock_quantity.')');
+                            $stock_status_note = $this->update_stock_status_products($product, $stock_quantity);
+                            $order->add_order_note('Товар ID: ' .$product->get_id(). ' списан со склада '. $item->get_quantity() . 'шт.('.$stock_quantity.')'. $stock_status_note);
                         }
                     }
                 }
@@ -684,6 +685,18 @@ function woocommerce_portmone_init() {
 
         }
 
+        /**
+         * @param $quantity
+         */
+        function update_stock_status_products($product, $quantity) {
+            $note = '';
+            if ($quantity < 1) {
+                $product->set_stock_status( 'outofstock' );
+                $product->save();
+                $note = ' переведен в статус '. '"Нет на складе"';
+            }
+            return $note;
+        }
     /**
      * @param $shopnumber
      *
