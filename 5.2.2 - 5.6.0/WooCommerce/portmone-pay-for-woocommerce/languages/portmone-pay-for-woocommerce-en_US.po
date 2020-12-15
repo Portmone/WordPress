@@ -1,0 +1,190 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2020-12-15 21:25+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 2.4.1\n"
+"Language: en_US\n"
+"Project-Id-Version: WordPress - 4.7.x\n"
+"POT-Creation-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+
+msgid "Включить прием оплаты через Portmone.com"
+msgstr "Enable payment via Portmone.com"
+
+msgid "Включить Portmone.com модуль оплаты"
+msgstr "Enable Portmone.com Payment Module"
+
+msgid "Идентификатор магазина в системе Portmone.com (Payee ID)"
+msgstr "Store identifier in the Portmone.com system (Payee ID)"
+
+msgid "Обязательно для заполнения"
+msgstr "Required information"
+
+msgid "ID Интернет-магазина, предоставленный менеджером Portmone.com"
+msgstr "The online store ID provided by the Portmone.com manager"
+
+msgid "Логин Интернет-магазина в системе Portmone.com"
+msgstr "The login of the online store in Portmone.com system"
+
+msgid "Логин Интернет-магазина, предоставленный менеджером Portmone.com"
+msgstr "The login of the online store provided by the Portmone.com manager"
+
+msgid "Пароль Интернет-магазина в системе Portmone.com"
+msgstr "The password of the online store in the Portmone.com system"
+
+msgid "Пароль для Интернет-магазина, предоставленный менеджером Portmone.com"
+msgstr "The password of the online store provided by the manager of the provided by the Portmone.com manager"
+
+msgid "Название компании"
+msgstr "Company name"
+
+msgid "Оплата заказа через Portmone.com"
+msgstr "Payment for order through Portmone.com"
+
+msgid "Название Интернет-магазина, которое видит клиент при оплате"
+msgstr "The name of the online store, which the customer sees when paying"
+
+msgid "Комментарий для клиента"
+msgstr "Note to the customer"
+
+msgid "Сервис проведения платежей обеспечивается системой Portmone.com с использованием современного и безопасного механизма авторизации платежных карт. Служба поддержки Portmone.com: телефон +380(44)200 09 02, электронная почта: support@portmone.com"
+msgstr "The payment service is provided by Portmone.com system using a modern and secure payment card authorization mechanism"
+
+msgid "Описание для клиента на странице оплаты заказа"
+msgstr "Description for the customer on the payment page"
+
+msgid "Показать логотип на странице оплаты"
+msgstr "Show logo on payment page"
+
+msgid "Показать логотип Portmone.com при оформлении заказа"
+msgstr "Show Portmone.com logo when ordering"
+
+msgid "Отметьте, чтобы показать логотип Portmone.com"
+msgstr "Select to show Portmone.com logo"
+
+msgid "Показать Portmone.com в списке меню административной панели"
+msgstr "Show Portmone.com in the admin panel menu list"
+
+msgid "Укажите порядковый номер отображения в списке меню. Если значение < 1, Portmone.com отображатся в списке меню не будет"
+msgstr "Indicate the display serial number in the menu list. If value <1, Portmone.com will not appear in the menu list."
+
+msgid "Изменять колличество товаров на складе после оплаты"
+msgstr "Change the number of goods in stock after payment"
+
+msgid "От общей суммы товаров на складе отнять товары оплаченного заказа"
+msgstr "From the total amount of goods in the warehouse to take away goods paid order"
+
+msgid "Отметьте, чтобы изменять колличество товаров"
+msgstr "Tick ​​to change the quantity of goods."
+
+msgid "Включить режим показа на странице"
+msgstr "Enable display on page"
+
+msgid "Включить на странице способ оплаты"
+msgstr "Enable the payment method on the page"
+
+msgid "Включить режим страницы без перенаправления"
+msgstr "Enable page mode without redirection"
+
+msgid "Страница неудачного платежа"
+msgstr "Bad Payment Page"
+
+msgid "URL страницы неудачного платежа"
+msgstr "Failed Payment Page URL"
+
+msgid "Платежный шлюз"
+msgstr "Payment Gateway"
+
+msgid "Настройки"
+msgstr "Settings"
+
+msgid "Информация"
+msgstr "Information"
+
+msgid "Версия плагина"
+msgstr "Plug-in version"
+
+msgid "Платежный плагина Portmone.com"
+msgstr "Portmone.com payment plug-in"
+
+msgid "Оплатить через Portmone.com"
+msgstr "Pay via Portmone.com"
+
+msgid "Спасибо за покупку!"
+msgstr "Thank you for purchasing!"
+
+msgid "При совершенииоплаты возникла ошибка. Свяжитесь с Интернет-магазином для проверки заказа"
+msgstr "Error during payment. Contact the online store for order verification"
+
+msgid "В системе Portmone.com данного платежа нет, он возвращен или создан некорректно"
+msgstr "There is no payment in the Portmone.com system, it is returned or created incorrectly"
+
+msgid "При совершении оплаты возникла ошибка. Данные Интернет-магазина некорректны"
+msgstr "Error during payment. Online store data is incorrect"
+
+msgid "При совершении оплаты возникла ошибка. Проверьте данные вашей карты и попробуйте провести оплату еще раз!"
+msgstr "Error during payment. Check your card details and try to pay again!"
+
+msgid "Номер вашего заказа"
+msgstr "Your order number"
+
+msgid "Оплата совершена успешно через Portmone.com"
+msgstr "Payment is completed successfully via Portmone.com"
+
+msgid "Включить конвертацию в Гривны"
+msgstr "Enable conversion to Hryvnia"
+
+msgid "Конвертировать валюту магазина из %1$s %2$s > в > %3$s, при оформлении заказа используя собственный курс конвертации который указать ниже (стандартно, конвертация проходит по курсу НБУ, на сайте портмоне)"
+msgstr "Convert store currency from %1$s %2$s > to > %3$s, when ordering using your own conversion rate which is indicated below (standard, conversion takes place at the NBU rate, on the purse website)"
+
+msgid "Portmone.com принимает только Украинские гривны. Ваша сумма будет автоматически конвертирована в UAH в Portmone.com по курсу НБУ. Если вы хотите указать собственный курс конвертации, выберите этот пункт."
+msgstr "Portmone.com accepts only Ukrainian hryvnia. Your amount will be automatically converted in UAH to Portmone.com at the NBU rate. If you want to specify your own conversion rate, select this item."
+
+msgid "Курс валюты"
+msgstr "Exchange rate"
+
+msgid "Курс %1$s за 1 %2$s %3$s"
+msgstr "Rate %1$s for 1 %2$s %3$s"
+
+msgid "Ошибка авторизации. Введен не верный логин или пароль"
+msgstr "Authorisation Error. Invalid login or password entered"
+
+msgid "ID товара"
+msgstr "Product ID"
+
+msgid "кол."
+msgstr "quan."
+
+msgid "цена"
+msgstr "prise"
+
+msgid "Режим преавторизации"
+msgstr "Pre-authorization mode"
+
+msgid "Средства только блокируются на карте клиента, но финансового списания со счета клиента не происходит"
+msgstr "Funds are only blocked on the client’s card, but there is no financial write-off from the client’s account"
+
+msgid "Отметьте, чтобы cредства только блокируются на карте клиента, но финансового списания со счета клиента не происходит"
+msgstr "Please note that funds are only blocked on the client's card, but no financial debiting from the client's account occurs"
+
+msgid "ошибка пропадет после успешной оплаты"
+msgstr "the error will disappear after a successful payment"
+
+msgid "Оплачено с Portmone.com"
+msgstr "Paid with Portmone.com"
+
+msgid "Оплачено с Portmone.com (но не проверено)"
+msgstr "Paid with Portmone.com (but not verified)"
+
+msgid "Оплачено с Portmone.com (блокировка средств)"
+msgstr "Paid with Portmone.com (money lock)"
+
+msgid "Оплата с Portmone.com НЕ удалась"
+msgstr "Paid with Portmone.com is NOT successful"
+
+msgid "Статус этого заказа &ldquo;%s&rdquo; &mdash; его невозможно оплатить повторно"
+msgstr "This order status is &ldquo;%s&rdquo; &mdash; it cannot be repaid"
