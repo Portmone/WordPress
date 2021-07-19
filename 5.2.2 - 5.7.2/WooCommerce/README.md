@@ -6,7 +6,7 @@ Requires at least: WordPress 5.7.2, wooCommerce: 5.4.1
 License: Payment Card Industry Data Security Standard (PCI DSS) 
 License URI: [License](https://www.portmone.com.ua/r3/uk/security/) 
 
-Расширение для WordPress позволяет клиентам осуществлять платежи с помощью [Portmone.com](https://www.portmone.com.ua/r3/).
+Расширение для WordPress позволяет клиентам осуществлять платежи с помощью [Portmone.com](https://www.portmone.com.ua/).
 
 ### Описание
 Этот модуль добавляет Portmone.com в качестве способа оплаты в ваш магазин WordPress. 
