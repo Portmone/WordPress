@@ -3,7 +3,7 @@
 Plugin Name: Portmone pay for woocommerce
 Plugin URI: https://github.com/Portmone/WordPress
 Description: Portmone Payment Gateway for WooCommerce.
-Version: 2.0.13
+Version: 2.0.14
 Requires at least: 5.2.2
 Author: gleb2093@gmail.com
 Author URI: https://www.portmone.com.ua
@@ -432,6 +432,7 @@ function woocommerce_portmone_init() {
                 'failure_url'        => $order->get_checkout_order_received_url().'&status=failure'.$userId,
                 'lang'               => $this->getLanguage(),
                 'preauth_flag'       => $this->getPreauthFlag(),
+                'cms_module_name'    => json_encode(['name' => 'WordPress', 'v' => $this->plugin_data['Version']]),
                 'encoding'           => 'UTF-8'
             );
             if ($description_order != '') {
