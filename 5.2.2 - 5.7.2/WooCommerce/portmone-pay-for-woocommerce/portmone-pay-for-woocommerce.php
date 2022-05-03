@@ -148,7 +148,13 @@ function woocommerce_portmone_init() {
                 'payee_id_title'                => 'Идентификатор магазина в системе Portmone.com (Payee ID)',
                 'payee_id_span_title'           => 'Обязательно для заполнения',
                 'payee_id_description'          => 'ID Интернет-магазина, предоставленный менеджером Portmone.com',
-                'login_title'                   => 'Логин Интернет-магазина в системе Portmone.com',
+				'exp_time_title'                => 'Время на оплату',
+				'exp_time_span_title'           => 'Обязательно для заполнения',
+				'exp_time_description'          => 'Время отведенное на оплату через Portmone.com',
+				'key_title'                		=> 'Ключ для подписи',
+				'key_span_title'           		=> 'Обязательно для заполнения',
+				'key_description'         		=> 'Ключ для подписи согласованный с Portmone',
+				'login_title'                   => 'Логин Интернет-магазина в системе Portmone.com',
                 'login_span_title'              => 'Обязательно для заполнения',
                 'login_description'             => 'Логин Интернет-магазина, предоставленный менеджером Portmone.com',
                 'password_title'                => 'Пароль Интернет-магазина в системе Portmone.com',
@@ -238,7 +244,9 @@ function woocommerce_portmone_init() {
                 'preauth_flag',
                 'showlogo',
                 'show_admin_menu',
-                'update_count_products'
+                'update_count_products',
+				'exp_time',
+				'key',
             );
 
             if ($this->settings['showlogo'] == "yes") {
@@ -282,7 +290,15 @@ function woocommerce_portmone_init() {
                 'password'             => array('title' => $this->t_lan['password_title'] . ' <span title="'. $this->t_lan['password_span_title'].'" class="red">*</span>',
                     'type'             => 'password',
                     'description'      => $this->t_lan['password_description'],
-                    'desc_tip'         => true)
+                    'desc_tip'         => true),
+				'exp_time'             => array('title' => $this->t_lan['exp_time_title'] . ' <span title="'. $this->t_lan['exp_time_span_title'].'"></span>',
+					'type'             => 'text',
+					'description'      => $this->t_lan['exp_time_description'],
+					'desc_tip'         => true),
+				'key'             => array('title' => $this->t_lan['key_title'] . ' <span title="'. $this->t_lan['key_span_title'].'" class="red">*</span>',
+					'type'             => 'text',
+					'description'      => $this->t_lan['key_description'],
+					'desc_tip'         => true)
             );
             if(get_woocommerce_currency() !== 'UAH') {
                 $array2 = array(
@@ -430,12 +446,19 @@ function woocommerce_portmone_init() {
                 'bill_currency'      => $this->bill_currency,
                 'success_url'        => $order->get_checkout_order_received_url().'&status=success'.$userId,
                 'failure_url'        => $order->get_checkout_order_received_url().'&status=failure'.$userId,
-                'lang'               => $this->getLanguage(),
+				'exp_time'        => $this->exp_time,
+				'lang'               => $this->getLanguage(),
                 'preauth_flag'       => $this->getPreauthFlag(),
                 'cms_module_name'    => json_encode(['name' => 'WordPress', 'v' => $this->plugin_data['Version']]),
                 'encoding'           => 'UTF-8'
             );
-            if ($description_order != '') {
+			$key						=$this->key;
+			$portmone_args['dt']       			= date('Ymdhis');
+			$signature					= $portmone_args['payee_id'].$portmone_args['dt'].bin2hex($portmone_args['shop_order_number']).$portmone_args['bill_amount'] ;
+			$signature 					= strtoupper($signature).strtoupper(bin2hex($this->login));
+			$signature 					= strtoupper(hash_hmac('sha256', $signature, $key));
+			$portmone_args['signature']    		= $signature;
+			if ($description_order != '') {
                 $portmone_args['description'] = $description_order;
             }
             $out = '';

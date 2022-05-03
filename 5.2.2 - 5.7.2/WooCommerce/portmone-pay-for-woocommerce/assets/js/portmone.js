@@ -24,12 +24,17 @@ jQuery(function () {
                             error++;
                         }
                     }
-                    if (val[4].name == 'woocommerce_portmone_convert_money' && val[4].value =='1' ) {
-                        if (val[5].value =='' ) {
+                    if (val[6].name == 'woocommerce_portmone_convert_money' && val[6].value =='1' ) {
+                        if (val[7].value =='' ) {
                             $('#woocommerce_portmone_exchange_rates').addClass('woocommerce_portmone_input_error');
                             error++;
                         }
                     }
+					if (val[5].value == '') {
+						$('#woocommerce_portmone_key').addClass('woocommerce_portmone_input_error');
+						error++;
+					}
+
                     if (error>0 ) {
                         $('#portmone-header').after('<div id="message" class="error" ><p><strong>Не заполнены обязательные поля</strong></p></div>');
                         return false;
