@@ -30,6 +30,18 @@ msgstr "The online store ID provided by the Portmone.com manager"
 msgid "Логин Интернет-магазина в системе Portmone.com"
 msgstr "The login of the online store in Portmone.com system"
 
+msgid "Время на оплату"
+msgstr "Time for payments"
+
+msgid "Время отведенное на оплату через Portmone.com"
+msgstr "Time for payment in Portmone.com"
+
+msgid "Ключ для подписи"
+msgstr "Key for signature"
+
+msgid "Ключ для подписи согласованный с Portmone"
+msgstr "key for signature consensual with Portmone.com"
+
 msgid "Логин Интернет-магазина, предоставленный менеджером Portmone.com"
 msgstr "The login of the online store provided by the Portmone.com manager"
 
