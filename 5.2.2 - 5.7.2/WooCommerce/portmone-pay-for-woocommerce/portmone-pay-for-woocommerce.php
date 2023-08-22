@@ -3,7 +3,7 @@
 Plugin Name: Portmone pay for woocommerce
 Plugin URI: https://github.com/Portmone/WordPress
 Description: Portmone Payment Gateway for WooCommerce.
-Version: 2.0.14
+Version: 2.0.15
 Requires at least: 5.2.2
 Author: gleb2093@gmail.com
 Author URI: https://www.portmone.com.ua
@@ -713,7 +713,7 @@ function woocommerce_portmone_init() {
     /**
      * We display the answer on payment
      **/
-        function check_response() {
+        function check_response($isPrintNotice = true) {
             if (!empty($_REQUEST['SHOPORDERNUMBER'])) {
                 $orderId = $this->portmone_get_order_id($_REQUEST['SHOPORDERNUMBER']);
                 $paymentInfo = $this->isPaymentValid($_REQUEST);
@@ -724,11 +724,15 @@ function woocommerce_portmone_init() {
                         $this->message['message'] = $_REQUEST['RESULT'] . ' ' . $this->t_lan['number_pay'] . ' ' . $orderId;
                     }
                     $this->message['class'] = 'message-portmone';
-                    wc_print_notice( $this->message['message']);
+                    if ($isPrintNotice) {
+                        wc_print_notice( $this->message['message']);
+                    }
                 } else {
                     $this->message['class'] = 'message-portmone';
                     $this->message['message'] = $paymentInfo;
-                    wc_print_notice( $this->message['message'], 'error');
+                    if ($isPrintNotice) {
+                        wc_print_notice( $this->message['message'], 'error');
+                    }
                 }
             }
         }
@@ -769,6 +773,9 @@ function woocommerce_portmone_init() {
                     wp_set_current_user($user_id, $user->user_login);
                     wp_set_auth_cookie($user_id, true);
                 }
+            } elseif ( !empty($_REQUEST['SHOPORDERNUMBER']) ){
+                $portmone = new WC_portmone();
+                $portmone->check_response(false);
             }
         }
     }
