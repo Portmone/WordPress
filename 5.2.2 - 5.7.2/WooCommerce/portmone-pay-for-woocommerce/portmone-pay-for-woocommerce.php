@@ -772,11 +772,14 @@ function woocommerce_portmone_init() {
                     wp_clear_auth_cookie();
                     wp_set_current_user($user_id, $user->user_login);
                     wp_set_auth_cookie($user_id, true);
+                    return;
                 }
-            } elseif ( !empty($_REQUEST['SHOPORDERNUMBER']) ){
-                $portmone = new WC_portmone();
-                $portmone->check_response(false);
             }
+        }
+
+        if ( !empty($_REQUEST['SHOPORDERNUMBER']) && !is_user_logged_in() ){
+            $portmone = new WC_portmone();
+            $portmone->check_response(false);
         }
     }
     /**
