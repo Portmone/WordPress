@@ -4,7 +4,7 @@
  * Plugin Name: Portmone-pay-for-woocommerce
  * Plugin URI: https://github.com/Portmone/WordPress
  * Description: Portmone Payment Gateway for WooCommerce.
- * Version: 3.0.4
+ * Version: 3.0.5
  * Author: Portmone
  * Author URI: https://www.portmone.com.ua
  * Domain Path: /
@@ -437,12 +437,12 @@ function woocommerce_portmone_init() {
                     'default'          => 'no',
                     'description'      => $this->t_lan['preauth_flag_description'],
                     'desc_tip'         => true),
-                'showlogo'             => array('title' => $this->t_lan['showlogo_title'],
+                /*'showlogo'             => array('title' => $this->t_lan['showlogo_title'],
                     'type'             => 'checkbox',
                     'label'            => $this->t_lan['showlogo_label'],
                     'default'          => 'yes',
                     'description'      => $this->t_lan['showlogo_description'],
-                    'desc_tip'         => true),
+                    'desc_tip'         => true),*/
                 'show_admin_menu'      => array('title' => $this->t_lan['show_admin_menu_title'],
                     'type'             => 'number',
                     'default'          => $this->t_lan['show_admin_menu_default'],
@@ -879,10 +879,10 @@ function woocommerce_portmone_init() {
             }
         }
 
-        if ( !empty($_REQUEST['SHOPORDERNUMBER']) && !is_user_logged_in() ){
+        /*if ( !empty($_REQUEST['SHOPORDERNUMBER']) && !is_user_logged_in() ){
             $portmone = new WC_Portmone();
             $portmone->check_response(false);
-        }
+        }*/
     }
     add_action("wp", "login_current_user");
 
