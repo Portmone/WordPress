@@ -1,24 +1,66 @@
 <?php
-/*
-Plugin Name: Portmone pay for woocommerce
-Plugin URI: https://github.com/Portmone/WordPress
-Description: Portmone Payment Gateway for WooCommerce.
-Version: 2.0.17
-Requires at least: 5.2.2
-Author: Portmone
-Author URI: https://www.portmone.com.ua
-Domain Path: /
-License: Payment Card Industry Data Security Standard (PCI DSS)
-License URI: https://www.portmone.com.ua/r3/uk/security/
-WC requires at least: 3.7.1
-WC tested up to: 5.4.1
-*/
 
 /**
- * Connecting language files
+ * Plugin Name: Portmone-pay-for-woocommerce
+ * Plugin URI: https://github.com/Portmone/WordPress
+ * Description: Portmone Payment Gateway for WooCommerce.
+ * Version: 3.0.5
+ * Author: Portmone
+ * Author URI: https://www.portmone.com.ua
+ * Domain Path: /
+ * License: Payment Card Industry Data Security Standard (PCI DSS)
+ * License URI: https://www.portmone.com.ua/r3/uk/security/
+ * Requires at least: 6.3
+ * Requires PHP: 7.4
+ * WC requires at least: 8.6
+ * WC tested up to: 8.7.0
+ *
+ * @package Portmone
  */
-add_action("init", "portmone_languages");
-add_action("wp", "login_current_user");
+
+use Automattic\WooCommerce\Utilities\OrderUtil;
+use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
+// Declaring extension compatibility with HPOS
+add_action( 'before_woocommerce_init', function() {
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+    }
+} );
+
+
+add_action('before_woocommerce_init', function() {
+    if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil'))
+    {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('cart_checkout_blocks', __FILE__, true);
+    }
+});
+
+
+add_action('woocommerce_blocks_loaded', 'portmone_woocommerce_block_support');
+
+function portmone_woocommerce_block_support()
+{
+    if (class_exists('Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType'))
+    {
+        require_once dirname( __FILE__ ) . '/portmone-checkout-block.php';
+
+        add_action(
+            'woocommerce_blocks_payment_method_type_registration',
+            function(PaymentMethodRegistry $payment_method_registry) {
+                $container = Automattic\WooCommerce\Blocks\Package::container();
+                $container->register(
+                    WC_Portmone_Blocks::class,
+                    function() {
+                        return new WC_Portmone_Blocks();
+                    }
+                );
+                $payment_method_registry->register($container->get(WC_Portmone_Blocks::class));
+            },
+            5
+        );
+    }
+}
+
 
 /**
  * Подгружаем файл переводов
@@ -26,16 +68,16 @@ add_action("wp", "login_current_user");
 function portmone_languages() {
     load_plugin_textdomain("portmone-pay-for-woocommerce", false, basename(dirname(__FILE__))."/languages");
 }
+/**
+ * Connecting language files
+ */
+add_action("init", "portmone_languages");
 
 /**
  * Connecting images
  */
 define('PORTMONE_IMGDIR', WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)) . '/assets/img/');
 
-/**
- * Hook plug-in Portmone
- */
-add_action("plugins_loaded", "woocommerce_portmone_init", 0);
 
 /**
  * @param $links
@@ -52,6 +94,7 @@ function plagin_links($links, $file) {
         return $links;
     }
 
+
 /**
  * @param $links
  *
@@ -66,6 +109,11 @@ function plagin_actions($links) {
 add_filter("plugin_row_meta", "plagin_links", 10, 2);
 add_filter("plugin_action_links_" . plugin_basename( __FILE__ ), "plagin_actions");
 
+
+/**
+ * Hook plug-in Portmone
+ */
+add_action("plugins_loaded", "woocommerce_portmone_init", 0);
 
 /**
  * Инициализация плагина
@@ -92,7 +140,7 @@ function woocommerce_portmone_init() {
     add_action ("admin_notices", "portmone_notice");
 
     function add_menu() {
-        $portmone = new WC_portmone();
+        $portmone = new WC_Portmone();
         $portmone->init_settings();
         if ($portmone->settings['show_admin_menu'] > 0) {
             add_menu_page(
@@ -114,7 +162,7 @@ function woocommerce_portmone_init() {
         $view_error = get_option( 'woocommerce_portmone_view_error');
         if ($view_error) {
             echo '<div class="notice notice-error is-dismissible">
-                    <p><img style="height:14px" src="'.plugin_dir_url( __FILE__ ) . 'assets/img/logo_200x200.png'.'" alt=""> '.(new WC_portmone())->method_title.' '.$view_error.' '.(new WC_portmone())->m_lan['portmone_notice_description'].'</p>
+                    <p><img style="height:14px" src="'.plugin_dir_url( __FILE__ ) . 'assets/img/logo_200x200.png'.'" alt=""> '.(new WC_Portmone())->method_title.' '.$view_error.' '.(new WC_Portmone())->m_lan['portmone_notice_description'].'</p>
                 </div>';
         }
     }
@@ -122,7 +170,8 @@ function woocommerce_portmone_init() {
     /**
      * Класс платежного плагина
      */
-    class WC_portmone extends WC_Payment_Gateway {
+    class WC_Portmone extends WC_Payment_Gateway {
+
         const ORDER_PAYED       = 'PAYED';
         const ORDER_CREATED     = 'CREATED';
         const ORDER_REJECTED    = 'REJECTED';
@@ -136,13 +185,67 @@ function woocommerce_portmone_init() {
         private $order_total    = 0;
         private $plugin_data;
 
+        public $supports = array(
+            'products',
+            'refunds'
+        );
+
+        /**
+         * Can be set to true if you want payment fields
+         * to show on the checkout (if doing a direct integration).
+         * @var boolean
+         */
+        public $has_fields = false;
+
+        /**
+         * Unique ID for the gateway
+         * @var string
+         */
+        public $id = 'portmone';
+
+        /**
+         * Title of the payment method shown on the admin page.
+         * @var string
+         */
+        public $method_title = 'Portmone';
+
+
+        /**
+         * Description of the payment method shown on the admin page.
+         * @var  string
+         */
+        public $method_description = 'Allow customers to securely pay via Portmone (Credit/Debit Cards, NetBanking, UPI, Wallets)';
+
+        /**
+         * Icon URL, set in constructor
+         * @var string
+         */
+        public $icon;
+
+        // todo use
+        /**
+         * hpos enabled check
+         * @var bool
+         */
+        public $isHposEnabled;
+
         public function __construct() {
+            $this->isHposEnabled = false;
+
+            // file added in woocommerce v7.1.0, maybe removed later
+            if (class_exists('Automattic\WooCommerce\Utilities\OrderUtil') and
+                OrderUtil::custom_orders_table_usage_is_enabled())
+            {
+                $this->isHposEnabled = true;
+            }
+
+
             if( !function_exists('get_plugin_data') ){
                 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
             }
             $this->plugin_data = get_plugin_data(__FILE__);
             $this->currency = get_woocommerce_currencies();
-            $this->m_lan = array(
+            $this->m_lan = [
                 'enabled_title'                 => 'Включить прием оплаты через Portmone.com',
                 'enabled_label'                 => 'Включить Portmone.com модуль оплаты',
                 'payee_id_title'                => 'Идентификатор магазина в системе Portmone.com (Payee ID)',
@@ -212,7 +315,7 @@ function woocommerce_portmone_init() {
                 'send_email'                    => 'Email пользователю добавлен в очередь на отправку',
                 'plagin_status_success'         => 'версия  актуальна для плагина',
                 'plagin_status_warning'         => 'на этой версии плагин НЕ проверен и может работать нестабильно',
-            );
+            ];
 
             $this->f_lan = 'portmone-pay-for-woocommerce';
 
@@ -234,7 +337,7 @@ function woocommerce_portmone_init() {
             $this->has_fields = false;
 
             $this->init_settings();
-            $this->m_settings = array(
+            $this->m_settings = [
                 'enabled',
                 'payee_id',
                 'login',
@@ -247,7 +350,7 @@ function woocommerce_portmone_init() {
                 'update_count_products',
 				'exp_time',
 				'key',
-            );
+            ];
 
             if (!empty($this->settings['showlogo']) && $this->settings['showlogo'] == "yes") {
                 $this->icon = PORTMONE_IMGDIR . 'portmonepay.svg';
@@ -264,15 +367,15 @@ function woocommerce_portmone_init() {
             add_action('woocommerce_thankyou_portmone', array($this, 'check_response') );
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
             add_action('admin_notices', 'portmone_notice');
-            add_action('woocommerce_receipt_portmone', array(&$this, 'receipt_page'));
+            add_action('woocommerce_receipt_' . $this->id, array($this, 'receipt_page'));
 
             apply_filters( 'woocommerce_currency', get_option('woocommerce_currency') );
         }
 
 
-    /**
-     * Initializing the configuration form in the admin panel
-     */
+        /**
+         * Initializing the configuration form in the admin panel
+         */
         function init_form() {
             $array1 = array(
                 'enabled'              => array('title' => $this->t_lan['enabled_title'],
@@ -334,12 +437,12 @@ function woocommerce_portmone_init() {
                     'default'          => 'no',
                     'description'      => $this->t_lan['preauth_flag_description'],
                     'desc_tip'         => true),
-                'showlogo'             => array('title' => $this->t_lan['showlogo_title'],
+                /*'showlogo'             => array('title' => $this->t_lan['showlogo_title'],
                     'type'             => 'checkbox',
                     'label'            => $this->t_lan['showlogo_label'],
                     'default'          => 'yes',
                     'description'      => $this->t_lan['showlogo_description'],
-                    'desc_tip'         => true),
+                    'desc_tip'         => true),*/
                 'show_admin_menu'      => array('title' => $this->t_lan['show_admin_menu_title'],
                     'type'             => 'number',
                     'default'          => $this->t_lan['show_admin_menu_default'],
@@ -356,10 +459,10 @@ function woocommerce_portmone_init() {
             $this->form_fields = array_merge($array1, $array2, $array3);
         }
 
-    /**
-     * Admin Panel Options
-     * - Options for bits like 'title' and availability on a country-by-country basis
-     **/
+        /**
+         * Admin Panel Options
+         * - Options for bits like 'title' and availability on a country-by-country basis
+         **/
         public function admin_options() {
 
             ob_start();
@@ -409,19 +512,19 @@ function woocommerce_portmone_init() {
             }
         }
 
-    /**
-     * Receipt Page
-     **/
-        function receipt_page($order) {
-            echo $this->generate_portmone_form($order);
+        /**
+         * Receipt Page
+         **/
+        function receipt_page($order_id) {
+            echo $this->generate_portmone_form($order_id);
         }
 
-    /**
-     * Generate payu button link
-     **/
+        /**
+         * Generate payu button link
+         **/
         function generate_portmone_form($order_id) {
             $description_order = '';
-            $order = new WC_Order($order_id);
+            $order = wc_get_order($order_id);
 
             if (isset($this->settings['convert_money']) &&
                 isset($this->settings['exchange_rates']) &&
@@ -478,19 +581,19 @@ function woocommerce_portmone_init() {
          * @return array
          */
         function process_payment($order_id) {
-            $order = new WC_Order($order_id);
+            $order = wc_get_order($order_id);
 
             if (version_compare( WOOCOMMERCE_VERSION , '2.1.0', '>=')) {
                 $payment_url = $order->get_checkout_payment_url(true);
             } else {
                 $payment_url = get_permalink(get_option('woocommerce_pay_page_id'));
             }
-               return array('result' => 'success', 'redirect' => add_query_arg('order_pay', $order_id, $payment_url));
+            return array('result' => 'success', 'redirect' => add_query_arg('order_pay', $order_id, $payment_url));
         }
 
-    /**
-     * Return page after payment
-     **/
+        /**
+         * Return page after payment
+         **/
         private function getCurrency() {
             if(in_array(get_woocommerce_currency(), ['UAH', 'USD', 'EUR', 'GBP', 'PLN', 'KZT'])) {
                 return get_woocommerce_currency();
@@ -499,9 +602,9 @@ function woocommerce_portmone_init() {
             }
         }
 
-    /**
-     * Definition of the WP language
-     **/
+        /**
+         * Definition of the WP language
+         **/
         private function getLanguage() {
             $lang = substr(get_bloginfo('language'), 0, 2);
             if ($lang == 'ru' || $lang == 'en' || $lang == 'uk') {
@@ -511,16 +614,16 @@ function woocommerce_portmone_init() {
             }
         }
 
-    /**
-     * Definition of the WP language
-     **/
+        /**
+         * Definition of the WP language
+         **/
         private function getPreauthFlag() {
             return ($this->preauth_flag == 'yes')? 'Y' : 'N' ;
         }
 
-    /**
-     * A request to verify the validity of payment in Portmone
-     **/
+        /**
+         * A request to verify the validity of payment in Portmone
+         **/
         function curlRequest($url, $data) {
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -558,9 +661,9 @@ function woocommerce_portmone_init() {
             $wc_email_admin->trigger($order->get_id(), $order);
         }
 
-    /**
-     * Parsing XML response from Portmone
-     **/
+        /**
+         * Parsing XML response from Portmone
+         **/
         function parseXml($string) {
             libxml_use_internal_errors(true);
             $xml = simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -571,12 +674,12 @@ function woocommerce_portmone_init() {
                 }
         }
 
-    /**
-     * Handling a payment response from Portmone
-     **/
+        /**
+         * Handling a payment response from Portmone
+         **/
         protected function isPaymentValid($response) {
             $orderId = $this->portmone_get_order_id($response['SHOPORDERNUMBER']);
-            $order_all = new WC_Order($orderId);
+            $order_all = wc_get_order($orderId);
             $data = array(
                 "method" => "result",
                 "payee_id" => $this->payee_id,
@@ -710,9 +813,9 @@ function woocommerce_portmone_init() {
             return (isset($matches[0]))? strip_tags($matches[0]) : false ;
         }
 
-    /**
-     * We display the answer on payment
-     **/
+        /**
+         * We display the answer on payment
+         **/
         function check_response($isPrintNotice = true) {
             if (!empty($_REQUEST['SHOPORDERNUMBER'])) {
                 $orderId = $this->portmone_get_order_id($_REQUEST['SHOPORDERNUMBER']);
@@ -737,22 +840,22 @@ function woocommerce_portmone_init() {
             }
         }
 
-    /**
-     * @param $order
-     *
-     * списываем товары со склада
-     */
+        /**
+         * @param $order
+         *
+         * списываем товары со склада
+         */
         function update_count_products($order) {
             if ($this->settings['update_count_products'] == 'yes') {
                 wc_reduce_stock_levels( $order->get_id() );
             }
         }
 
-    /**
-     * @param $shopnumber
-     *
-     * @return bool|string
-     */
+        /**
+         * @param $shopnumber
+         *
+         * @return bool|string
+         */
         function portmone_get_order_id($shopnumber) {
             $shopnumbercount = strpos($shopnumber, "_");
             if ($shopnumbercount == false){
@@ -761,7 +864,6 @@ function woocommerce_portmone_init() {
             return substr($shopnumber, 0, $shopnumbercount);
         }
     }
-
 
     function login_current_user(){
         if ( get_the_id() == 8 ){
@@ -777,51 +879,54 @@ function woocommerce_portmone_init() {
             }
         }
 
-        if ( !empty($_REQUEST['SHOPORDERNUMBER']) && !is_user_logged_in() ){
-            $portmone = new WC_portmone();
+        /*if ( !empty($_REQUEST['SHOPORDERNUMBER']) && !is_user_logged_in() ){
+            $portmone = new WC_Portmone();
             $portmone->check_response(false);
-        }
+        }*/
     }
+    add_action("wp", "login_current_user");
+
     /**
      * @param $methods
      *
      * @return array
      */
-        function woocommerce_add_portmone_gateway($methods) {
-            $methods[] = 'WC_portmone';
-            return $methods;
-        }
-        add_filter('woocommerce_payment_gateways', 'woocommerce_add_portmone_gateway');
-        load_plugin_textdomain("portmone-pay-for-woocommerce", false, basename(dirname(__FILE__))."/languages");
+    function woocommerce_add_portmone_gateway($methods) {
+        $methods[] = 'WC_Portmone';
+        return $methods;
+    }
+    add_filter('woocommerce_payment_gateways', 'woocommerce_add_portmone_gateway');
 
-        define("PORTMONE_STATUSES",
-            [
-                'paid'          => ['#109b00', '#FFFFFF', __('Оплачено с Portmone.com', 'portmone-pay-for-woocommerce')],
-                'paidnotve'     => ['#0a4e03', '#FFFFFF', __('Оплачено с Portmone.com (но не проверено)', 'portmone-pay-for-woocommerce')],
-                'preauth'       => ['#ffe000', '#000000', __('Оплачено с Portmone.com (блокировка средств)', 'portmone-pay-for-woocommerce')],
-                'error'         => ['#bb0f0f', '#FFFFFF', __('Оплата с Portmone.com НЕ удалась', 'portmone-pay-for-woocommerce')]
-            ]
-        );
+    load_plugin_textdomain("portmone-pay-for-woocommerce", false, basename(dirname(__FILE__))."/languages");
 
-        function register_new_order_statuses() {
-            foreach (PORTMONE_STATUSES as $kay => $val) {
-                register_post_status( 'wc-status-'.$kay, array(
-                    'label'                     => _x( $val[2], 'Order status', 'textdomain' ),
-                    'public'                    => true,
-                    'exclude_from_search'       => false,
-                    'show_in_admin_all_list'    => true,
-                    'show_in_admin_status_list' => true,
-                    'label_count'               => _n_noop( '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>', '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>', 'textdomain' )
-                ) );
-            }
-        }
-        add_action( 'init', 'register_new_order_statuses' );
+    define("PORTMONE_STATUSES",
+        [
+            'paid'          => ['#109b00', '#FFFFFF', __('Оплачено с Portmone.com', 'portmone-pay-for-woocommerce')],
+            'paidnotve'     => ['#0a4e03', '#FFFFFF', __('Оплачено с Portmone.com (но не проверено)', 'portmone-pay-for-woocommerce')],
+            'preauth'       => ['#ffe000', '#000000', __('Оплачено с Portmone.com (блокировка средств)', 'portmone-pay-for-woocommerce')],
+            'error'         => ['#bb0f0f', '#FFFFFF', __('Оплата с Portmone.com НЕ удалась', 'portmone-pay-for-woocommerce')]
+        ]
+    );
 
-        function new_wc_order_statuses( $order_statuses ) {
-            foreach (PORTMONE_STATUSES as $kay => $val) {
-                $order_statuses['wc-status-'.$kay] = _x($val[2], 'Order status', 'textdomain');
-            }
-            return $order_statuses;
+    function register_new_order_statuses() {
+        foreach (PORTMONE_STATUSES as $kay => $val) {
+            register_post_status( 'wc-status-'.$kay, array(
+                'label'                     => _x( $val[2], 'Order status', 'textdomain' ),
+                'public'                    => true,
+                'exclude_from_search'       => false,
+                'show_in_admin_all_list'    => true,
+                'show_in_admin_status_list' => true,
+                'label_count'               => _n_noop( '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>', '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>', 'textdomain' )
+            ) );
         }
-        add_filter( 'wc_order_statuses', 'new_wc_order_statuses' );
+    }
+    add_action( 'init', 'register_new_order_statuses' );
+
+    function new_wc_order_statuses( $order_statuses ) {
+        foreach (PORTMONE_STATUSES as $kay => $val) {
+            $order_statuses['wc-status-'.$kay] = _x($val[2], 'Order status', 'textdomain');
+        }
+        return $order_statuses;
+    }
+    add_filter( 'wc_order_statuses', 'new_wc_order_statuses' );
 }
