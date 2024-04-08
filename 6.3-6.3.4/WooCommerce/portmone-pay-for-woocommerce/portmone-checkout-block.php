@@ -34,8 +34,8 @@ final class WC_Portmone_Blocks extends AbstractPaymentMethodType
     public function get_payment_method_data()
     {
         return [
-            'title' => $this->settings['title'],
-            'description' => $this->settings['description'],
+            'title' => $this->settings['title'] ?? 'Portmone',
+            'description' => $this->settings['description'] ?? 'Portmone',
         ]; 
     }
 }
