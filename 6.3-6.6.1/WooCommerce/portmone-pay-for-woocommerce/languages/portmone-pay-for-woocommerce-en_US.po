@@ -209,3 +209,51 @@ msgstr "version is relevant for the plugin"
 
 msgid "на этой версии плагин НЕ проверен и может работать нестабильно"
 msgstr "the plugin is NOT tested on this version and may be unstable"
+
+msgid "Замовлення не було сплачено через систему Portmone"
+msgstr "The order was not paid through the Portmone system"
+
+msgid "Значення для shop_order_number не можуть бути порожніми"
+msgstr "Values for shop_order_number cannot be empty"
+
+msgid "Помилка під час надсилання запиту на отримання номера замовлення в системі Portmone"
+msgstr "Error sending request to receive order number in Portmone system"
+
+msgid "Помилка авторизації. Введено неправильний логін або пароль"
+msgstr "Authorization error. Incorrect login or password entered"
+
+msgid "Неможливо відшкодувати. Оплату скасовано"
+msgstr "Cannot be refunded. Payment rejected"
+
+msgid "Неможливо відшкодувати. Замовлення не було сплачено"
+msgstr "Cannot be refunded. The order was not paid"
+
+msgid "Невідома помилка"
+msgstr "Unknown error"
+
+msgid "Зберегти ім\'я та прізвище клієнта"
+msgstr "Save the  customer\'s first and last name"
+
+msgid "Ім\'я та прізвище клієнта береться з адреси, вказаної в замовленні. Узгоджується з менеджером Portmone"
+msgstr "The customer\'s first and last name is taken from the address specified in the order. To be agreed with the Portmone manager"
+
+msgid "Зберегти телефон клієнта"
+msgstr "Save customer phone number"
+
+msgid "Телефон клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
+msgstr "The customer\'s phone number is taken from the address specified in the order. To be agreed with the Portmone manager"
+
+msgid "Зберегти email клієнта"
+msgstr "Save customer email"
+
+msgid "Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
+msgstr "The customer\'s email is taken from the address specified in the order. To be agreed with the Portmone manager"
+
+msgid "Параметри розщеплення"
+msgstr "Splitting parameters"
+
+msgid "Desc1:payeeID1;amount1;Desc2:payeeID2;amount2;..."
+msgstr "Desc1:payeeID1;amount1;Desc2:payeeID2;amount2;..."
+
+msgid "<p>• опис замовлення по кожному з одержувачів (Desc);</p><p>• ID компанії для кожного з одержувачів (payeeID);</p><p>• суму, яку необхідно зарахувати на рахунок кожного з одержувачів (amount);/p>"
+msgstr "<p>• description of the order for each of the recipients (Desc);</p><p>• company ID for each of the recipients (payeeID);</p><p>• amount that must be credited to the account of each of the recipients (amount);</p>"

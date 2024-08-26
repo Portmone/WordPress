@@ -4,7 +4,7 @@
  * Plugin Name: Portmone-pay-for-woocommerce
  * Plugin URI: https://github.com/Portmone/WordPress
  * Description: Portmone Payment Gateway for WooCommerce.
- * Version: 3.0.6
+ * Version: 4.0.1
  * Author: Portmone
  * Author URI: https://www.portmone.com.ua
  * Domain Path: /
@@ -13,7 +13,7 @@
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * WC requires at least: 8.6
- * WC tested up to: 8.7.0
+ * WC tested up to: 9.2.2
  *
  * @package Portmone
  */
@@ -126,6 +126,7 @@ function woocommerce_portmone_init() {
 
     function portmone_scripts () {
         wp_enqueue_script("portmone-js", plugin_dir_url(__FILE__) . 'assets/js/portmone.js', array('jquery'));
+        wp_enqueue_style("portmone-css", plugin_dir_url(__FILE__) . 'assets/css/portmone_styles.css');
     }
 
     function portmone_admin_css () {
@@ -315,6 +316,18 @@ function woocommerce_portmone_init() {
                 'send_email'                    => 'Email пользователю добавлен в очередь на отправку',
                 'plagin_status_success'         => 'версия  актуальна для плагина',
                 'plagin_status_warning'         => 'на этой версии плагин НЕ проверен и может работать нестабильно',
+                'save_client_first_last_name_flag_title' => 'Зберегти ім\'я та прізвище клієнта',
+                'save_client_first_last_name_flag_label' => 'Зберегти ім\'я та прізвище клієнта',
+                'save_client_first_last_name_flag_description' => 'Ім\'я та прізвище клієнта береться з адреси, вказаної в замовленні. Узгоджується з менеджером Portmone',
+                'save_client_phone_number_flag_title' => 'Зберегти телефон клієнта',
+                'save_client_phone_number_flag_label' => 'Зберегти телефон клієнта',
+                'save_client_phone_number_flag_description' => 'Телефон клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone',
+                'save_client_email_flag_title' => 'Зберегти email клієнта',
+                'save_client_email_flag_label' => 'Зберегти email клієнта',
+                'save_client_email_flag_description' => 'Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone',
+                'split_payment_title' => 'Параметри розщеплення',
+                'split_payment_placeholder' => 'Desc1:payeeID1;amount1;Desc2:payeeID2;amount2;...',
+                'split_payment_description' => '<p>• опис замовлення по кожному з одержувачів (Desc);</p><p>• ID компанії для кожного з одержувачів (payeeID);</p><p>• суму, яку необхідно зарахувати на рахунок кожного з одержувачів (amount);</p>',
             ];
 
             $this->f_lan = 'portmone-pay-for-woocommerce';
@@ -350,6 +363,10 @@ function woocommerce_portmone_init() {
                 'update_count_products',
 				'exp_time',
 				'key',
+                'save_client_first_last_name_flag',
+                'save_client_phone_number_flag',
+                'save_client_email_flag',
+                'split_payment'
             ];
 
             if (!empty($this->settings['showlogo']) && $this->settings['showlogo'] == "yes") {
@@ -453,7 +470,31 @@ function woocommerce_portmone_init() {
                     'label'            => $this->t_lan['update_count_products_label'],
                     'default'          => 'yes',
                     'description'      => $this->t_lan['update_count_products_description'],
-                    'desc_tip'         => true)
+                    'desc_tip'         => true),
+                'save_client_first_last_name_flag'   => array('title' => $this->t_lan['save_client_first_last_name_flag_title'],
+                    'type'             => 'checkbox',
+                    'label'            => $this->t_lan['save_client_first_last_name_flag_label'],
+                    'default'          => 'no',
+                    'description'      => $this->t_lan['save_client_first_last_name_flag_description'],
+                    'desc_tip'         => true),
+                'save_client_phone_number_flag'   => array('title' => $this->t_lan['save_client_phone_number_flag_title'],
+                    'type'             => 'checkbox',
+                    'label'            => $this->t_lan['save_client_phone_number_flag_label'],
+                    'default'          => 'no',
+                    'description'      => $this->t_lan['save_client_phone_number_flag_description'],
+                    'desc_tip'         => true),
+                'save_client_email_flag'         => array('title' => $this->t_lan['save_client_email_flag_title'],
+                    'type'             => 'checkbox',
+                    'label'            => $this->t_lan['save_client_email_flag_label'],
+                    'default'          => 'no',
+                    'description'      => $this->t_lan['save_client_email_flag_description'],
+                    'desc_tip'         => true),
+                'split_payment'        => array('title' => $this->t_lan['split_payment_title'],
+                    'type'             => 'text',
+                    'default'          => '',
+                    'description'      => $this->t_lan['split_payment_description'],
+                    'placeholder'      => $this->t_lan['split_payment_placeholder'],
+                    'desc_tip'         => true),
             );
 
             $this->form_fields = array_merge($array1, $array2, $array3);
@@ -549,9 +590,13 @@ function woocommerce_portmone_init() {
                 'bill_currency'      => $this->bill_currency,
                 'success_url'        => $order->get_checkout_order_received_url().'&status=success'.$userId,
                 'failure_url'        => $order->get_checkout_order_received_url().'&status=failure'.$userId,
-				'exp_time'        => $this->exp_time,
+				'exp_time'           => $this->exp_time,
 				'lang'               => $this->getLanguage(),
                 'preauth_flag'       => $this->getPreauthFlag(),
+                'attribute1'         => $this->getAttribute1($order),
+                'attribute2'         => $this->getAttribute2($order),
+                'attribute3'         => $this->getAttribute3($order),
+                'attribute5'         => $this->split_payment,
                 'cms_module_name'    => json_encode(['name' => 'WordPress', 'v' => $this->plugin_data['Version']]),
                 'encoding'           => 'UTF-8'
             );
@@ -564,13 +609,21 @@ function woocommerce_portmone_init() {
 			if ($description_order != '') {
                 $portmone_args['description'] = $description_order;
             }
+
+            if ($order->meta_exists('_shop_order_number')) {
+                $order->update_meta_data( '_shop_order_number', $portmone_args['shop_order_number'] );
+            } else {
+                $order->add_meta_data( '_shop_order_number', $portmone_args['shop_order_number'] );
+            }
+            $order->save();
+
             $out = '';
                 foreach ($portmone_args as $key => $value) {
                     $portmone_args_array[] = "<input type='hidden' name='$key' value='$value'/>";
                 }
-                $out .= '<form action="' . self::GATEWAY_URL . '" method="post" id="portmone_payment_form">
+                $out .= '<form action="' . self::GATEWAY_URL . '" method="post" id="portmone_payment_form" name="portmone_payment_form">
                     ' . implode('', $portmone_args_array) . '
-                <input type="submit" id="submit_portmone_payment_form" value="' . $this->t_lan['submit_portmone'] . '" /></form>';
+                </form>';
 
             return $out;
         }
@@ -589,6 +642,131 @@ function woocommerce_portmone_init() {
                 $payment_url = get_permalink(get_option('woocommerce_pay_page_id'));
             }
             return array('result' => 'success', 'redirect' => add_query_arg('order_pay', $order_id, $payment_url));
+        }
+
+        /**
+         * Process a refund.
+         *
+         * @param  int    $order_id Order ID.
+         * @param  float  $amount Refund amount.
+         * @param  string $reason Refund reason.
+         * @return bool|WP_Error
+         */
+        public function process_refund( $order_id, $amount = null, $reason = '' ) {
+            $order = wc_get_order( $order_id );
+
+            if ( ! $this->can_refund_order( $order ) ) {
+                return new WP_Error( 'error', __( 'Refund failed.', 'woocommerce' ) );
+            }
+
+            $paymentMethod = $order->get_payment_method();
+            if ($paymentMethod != 'portmone') {
+                return new WP_Error( 'error', __( 'Замовлення не було сплачено через систему Portmone', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            $shopOrderNumber = $order->get_meta( '_shop_order_number' );
+            if (empty($shopOrderNumber)) {
+                return new WP_Error( 'error', __( 'Значення для shop_order_number не можуть бути порожніми', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            $shopBillId = $this->getShopBillId($shopOrderNumber);
+            if ( is_wp_error( $shopBillId ) ) {
+                return new WP_Error( 'error', $shopBillId->get_error_message() );
+            }
+
+            $data = array(
+                "method" => "return",
+                "login" => $this->login,
+                "password" => $this->password,
+                "shop_bill_id" => $shopBillId,
+                'return_amount' => $amount,
+                'attribute1' => $reason,
+                'encoding' => 'UTF-8',
+                'lang' => 'uk',
+            );
+
+            $result_portmone = $this->curlRequest(self::GATEWAY_URL, $data);
+            if ($result_portmone === false) {
+                return new WP_Error( 'error', __('Помилка під час надсилання запиту на отримання номера замовлення в системі Portmone', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            $parseXml = $this->parseXml($result_portmone);
+            if ($parseXml === false) {
+                return new WP_Error( 'error', __('Помилка авторизації. Введено неправильний логін або пароль', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            $orderData = $parseXml->order;
+            if ($orderData->error_code != 0 ) {
+                return new WP_Error( 'error', $orderData->error_message );
+            }
+
+            if ($orderData->status == 'RETURN') {
+                $order->add_order_note(
+                /* translators: 1: Refund amount, 2: Refund ID */
+                    sprintf( __( 'Refunded %1$s - Refund ID: %2$s', 'woocommerce' ), $orderData->bill_amount, $orderData->shop_bill_id )
+                );
+                return true;
+            }
+
+            return new WP_Error( 'error', __('Невідома помилка', 'portmone-pay-for-woocommerce' ) );;
+        }
+
+        private function getShopBillId($shopOrderNumber)
+        {
+            $data = array(
+                "method" => "result",
+                "payee_id" => $this->payee_id,
+                "login" => $this->login,
+                "password" => $this->password,
+                "shop_order_number" => $shopOrderNumber,
+            );
+
+            $result_portmone = $this->curlRequest(self::GATEWAY_URL, $data);
+            if ($result_portmone === false) {
+                return new WP_Error( 'error', __( 'Помилка під час надсилання запиту на отримання номера замовлення в системі Portmone', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            $parseXml = $this->parseXml($result_portmone);
+            if ($parseXml === false) {
+                return new WP_Error( 'error', __('Помилка авторизації. Введено неправильний логін або пароль', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            delete_option( 'woocommerce_portmone_view_error' );
+            $payee_id_return = (array)$parseXml->request->payee_id;
+            $order_data = (array)$parseXml->orders->order;
+
+            if ($payee_id_return[0] != $this->payee_id) {
+                return new WP_Error( 'error', __($this->t_lan['error_merchant'], 'portmone-pay-for-woocommerce' ) );
+            }
+
+            if (count($parseXml->orders->order) == 0) {
+                return new WP_Error( 'error', __($this->t_lan['error_order_in_portmone'], 'portmone-pay-for-woocommerce' ) );
+            } elseif (count($parseXml->orders->order) > 1){
+                $no_pay = false;
+                foreach($parseXml->orders->order as $order ){
+                    $status = (array)$order->status;
+                    if ($status[0] == self::ORDER_PAYED || $status[0] == self::ORDER_PREAUTH) {
+                        return $order->shop_bill_id;
+                    }
+                }
+                if ($no_pay == false) {
+                    return new WP_Error( 'error', __($this->t_lan['error_order_in_portmone'], 'portmone-pay-for-woocommerce' ) );
+                }
+            }
+
+            if ($order_data['status'] == self::ORDER_REJECTED) {
+                return new WP_Error( 'error', __('Неможливо відшкодувати. Оплату скасовано', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            if ($order_data['status'] == self::ORDER_CREATED) {
+                return new WP_Error( 'error', __('Неможливо відшкодувати. Замовлення не було сплачено', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            if ($order_data['status'] == self::ORDER_PREAUTH || $order_data['status'] == self::ORDER_PAYED) {
+                return $order_data['shop_bill_id'];
+            }
+
+            return new WP_Error( 'error', __('Невідома помилка', 'portmone-pay-for-woocommerce' ) );;
         }
 
         /**
@@ -614,11 +792,20 @@ function woocommerce_portmone_init() {
             }
         }
 
-        /**
-         * Definition of the WP language
-         **/
         private function getPreauthFlag() {
             return ($this->preauth_flag == 'yes')? 'Y' : 'N' ;
+        }
+
+        private function getAttribute1(\WC_Order $order) {
+            return ($this->save_client_first_last_name_flag == 'yes') ? $order->get_billing_first_name()  . ' ' . $order->get_billing_last_name() : '';
+        }
+
+        private function getAttribute2(\WC_Order $order) {
+            return ($this->save_client_phone_number_flag == 'yes') ? $order->get_billing_phone() : '';
+        }
+
+        private function getAttribute3(\WC_Order $order) {
+            return ($this->save_client_email_flag == 'yes') ? $order->get_billing_email() : '';
         }
 
         /**
@@ -650,7 +837,7 @@ function woocommerce_portmone_init() {
             $wc_email = WC()->mailer()->get_emails()[$view];
             $wc_email_admin = WC()->mailer()->get_emails()['WC_Email_New_Order'];
 
-            $wc_email_admin->settings['subject'] = $wc_email->settings['subject'] = __('{site_title} - Новый заказ ({order_number}) - {order_date}');
+            $wc_email_admin->settings['subject'] = $wc_email->settings['subject'] = __('{site_title}');
             $wc_email_admin->settings['heading'] = $wc_email->settings['heading'] = __('Новый заказ');
 
             $wc_email->recipient = $order->get_billing_email();
@@ -713,10 +900,10 @@ function woocommerce_portmone_init() {
 
                 $order_all->add_order_note('#3P '.'Xml empty');
                 if ($response["RESULT"] == '0') {
-                    $status = 'wc-status-paidnotve';
+                    $status = 'wc-pending';
                     $result = $this->t_lan['successful_pay'];
                 } else {
-                    $status = 'wc-status-error';
+                    $status = 'wc-failed';
                     $result = $response['RESULT'] . ' ' .$this->lang['error_auth'];
                 }
                 $this->update_order($order_all, null, $status, '#4P '.$result);
@@ -734,12 +921,12 @@ function woocommerce_portmone_init() {
 
             if ($response['RESULT'] !== '0') {
                 $result = $response['RESULT']. ' ' . $this->t_lan['number_pay'] .': '. $orderId;
-                $this->update_order($order_all, null, 'wc-status-error', '#5P '.$result);
+                $this->update_order($order_all, null, 'wc-failed', '#5P '.$result);
                 return $result;
             }
 
             if ($payee_id_return[0] != $this->payee_id) {
-                $this->update_order($order_all, $order_data['pay_date'], 'pending', '#6P '.$this->t_lan['error_merchant']);
+                $this->update_order($order_all, $order_data['pay_date'], 'wc-pending', '#6P '.$this->t_lan['error_merchant']);
                 return $this->t_lan['error_merchant'];
             }
 
@@ -750,7 +937,7 @@ function woocommerce_portmone_init() {
                 foreach($parseXml->orders->order as $order ){
                     $status = (array)$order->status;
                     if ($status[0] == self::ORDER_PAYED){
-                        $this->update_order($order_all, $order_data['pay_date'], 'wc-status-paid', '#7P '.$this->t_lan['successful_pay']);
+                        $this->update_order($order_all, $order_data['pay_date'], 'wc-processing', '#7P '.$this->t_lan['successful_pay']);
                         $no_pay = true;
                         break;
                     } elseif($status[0] == self::ORDER_PREAUTH) {
@@ -760,7 +947,7 @@ function woocommerce_portmone_init() {
                     }
                 }
                 if ($no_pay == false) {
-                    $this->update_order($order_all, $order_data['pay_date'], 'wc-status-error', '#8P '.$this->t_lan['error_order_in_portmone']);
+                    $this->update_order($order_all, $order_data['pay_date'], 'wc-failed', '#8P '.$this->t_lan['error_order_in_portmone']);
                     return $this->t_lan['error_order_in_portmone'];
                 } else {
                     $this->update_count_products($order_all);
@@ -770,7 +957,7 @@ function woocommerce_portmone_init() {
             }
 
             if ($order_data['status'] == self::ORDER_REJECTED) {
-                $this->update_order($order_all, $order_data['pay_date'], 'wc-status-error', '#9P '.$this->t_lan['order_rejected']);
+                $this->update_order($order_all, $order_data['pay_date'], 'wc-failed', '#9P '.$this->t_lan['order_rejected']);
                 return $this->t_lan['order_rejected']. ' ' . $this->t_lan['number_pay'] .': '. $orderId;
             }
 
@@ -781,12 +968,12 @@ function woocommerce_portmone_init() {
             }
 
             if ($order_data['status'] == self::ORDER_CREATED) {
-                $this->update_order($order_all, $order_data['pay_date'], 'wc-status-error', '#13P '.$this->t_lan['order_rejected']);
+                $this->update_order($order_all, $order_data['pay_date'], 'wc-failed', '#13P '.$this->t_lan['order_rejected']);
                 return $this->t_lan['order_rejected'];
             }
 
             if ($order_data['status'] == self::ORDER_PAYED) {
-                $this->update_order($order_all, $order_data['pay_date'], 'wc-status-paid', '#14P '.$this->t_lan['successful_pay']);
+                $this->update_order($order_all, $order_data['pay_date'], 'wc-processing', '#14P '.$this->t_lan['successful_pay']);
                 $this->update_count_products($order_all);
                 $this->send_notification_email($order_all, 'WC_Email_Customer_Processing_Order');
             }
@@ -804,7 +991,9 @@ function woocommerce_portmone_init() {
                 $order_all->set_transaction_id( $_REQUEST['SHOPBILLID'] );
             }
             $order_all->save();
-            $order_all->payment_complete();
+            if ($status == 'wc-processing') {
+                $order_all->payment_complete();
+            }
         }
 
         function matchesError($result_portmone) {
@@ -901,10 +1090,10 @@ function woocommerce_portmone_init() {
 
     define("PORTMONE_STATUSES",
         [
-            'paid'          => ['#109b00', '#FFFFFF', __('Оплачено с Portmone.com', 'portmone-pay-for-woocommerce')],
-            'paidnotve'     => ['#0a4e03', '#FFFFFF', __('Оплачено с Portmone.com (но не проверено)', 'portmone-pay-for-woocommerce')],
+            'paid'          => ['#109b00', '#FFFFFF', __('Оплачено с Portmone.com', 'portmone-pay-for-woocommerce')], // замінений на wc-processing
+            'paidnotve'     => ['#0a4e03', '#FFFFFF', __('Оплачено с Portmone.com (но не проверено)', 'portmone-pay-for-woocommerce')], // замінений на wc-pending
             'preauth'       => ['#ffe000', '#000000', __('Оплачено с Portmone.com (блокировка средств)', 'portmone-pay-for-woocommerce')],
-            'error'         => ['#bb0f0f', '#FFFFFF', __('Оплата с Portmone.com НЕ удалась', 'portmone-pay-for-woocommerce')]
+            'error'         => ['#bb0f0f', '#FFFFFF', __('Оплата с Portmone.com НЕ удалась', 'portmone-pay-for-woocommerce')] //замінений на wc-failed
         ]
     );
 
