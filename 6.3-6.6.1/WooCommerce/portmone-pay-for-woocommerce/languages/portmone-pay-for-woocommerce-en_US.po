@@ -222,11 +222,14 @@ msgstr "Error sending request to receive order number in Portmone system"
 msgid "Помилка авторизації. Введено неправильний логін або пароль"
 msgstr "Authorization error. Incorrect login or password entered"
 
-msgid "Неможливо відшкодувати. Оплату скасовано"
-msgstr "Cannot be refunded. Payment rejected"
+msgid "Неможливо проведення повернення. Оплату скасовано"
+msgstr "It is not possible to make a return. Payment rejected"
 
-msgid "Неможливо відшкодувати. Замовлення не було сплачено"
-msgstr "Cannot be refunded. The order was not paid"
+msgid "Неможливо проведення повернення. Замовлення не було сплачено через систему Portmone"
+msgstr "It is not possible to make a return. The order was not paid through the Portmone system"
+
+msgid "Для проведення повернення, будь ласка, зверніться в службу підтримки Portmone.com"
+msgstr "To make a return, please contact Portmone.com support"
 
 msgid "Невідома помилка"
 msgstr "Unknown error"
@@ -249,11 +252,17 @@ msgstr "Save customer email"
 msgid "Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
 msgstr "The customer\'s email is taken from the address specified in the order. To be agreed with the Portmone manager"
 
-msgid "Параметри розщеплення"
+msgid "Розщеплення платежу"
 msgstr "Splitting parameters"
 
-msgid "Desc1:payeeID1;amount1;Desc2:payeeID2;amount2;..."
-msgstr "Desc1:payeeID1;amount1;Desc2:payeeID2;amount2;..."
+msgid "Платіжна система Portmone.com надає можливість розщеплення 1 (одного) карткового платежу на декілька компаній (юридичних осіб). Продавець повинен додати в товар атрибут з іменем payee_id і значенням рівного індексу компанії в системі Portmone.com"
+msgstr "The Portmone.com payment system provides the possibility of splitting 1 (one) card payment to several companies (legal entities). The seller must add to the product an attribute with the name payee_id and the value equal to the index of the company in the Portmone.com system"
 
-msgid "<p>• опис замовлення по кожному з одержувачів (Desc);</p><p>• ID компанії для кожного з одержувачів (payeeID);</p><p>• суму, яку необхідно зарахувати на рахунок кожного з одержувачів (amount);/p>"
-msgstr "<p>• description of the order for each of the recipients (Desc);</p><p>• company ID for each of the recipients (payeeID);</p><p>• amount that must be credited to the account of each of the recipients (amount);</p>"
+msgid "Відзначте, щоб зробити розщеплення платежу"
+msgstr "Check to split the payment"
+
+msgid "Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв\'яжіться з нами, щоб отримати допомогу."
+msgstr "An error occurred. The recipient company is not specified in the product &ldquo;%s&rdquo;. Please contact us for assistance."
+
+msgid "Для проведення часткового повернення, будь ласка, зверніться в службу підтримки Portmone.com"
+msgstr "For a partial refund, please contact Portmone.com support"

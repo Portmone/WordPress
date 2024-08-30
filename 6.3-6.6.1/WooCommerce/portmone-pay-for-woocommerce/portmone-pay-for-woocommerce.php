@@ -13,7 +13,7 @@
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * WC requires at least: 8.6
- * WC tested up to: 9.2.2
+ * WC tested up to: 9.2.3
  *
  * @package Portmone
  */
@@ -177,6 +177,7 @@ function woocommerce_portmone_init() {
         const ORDER_CREATED     = 'CREATED';
         const ORDER_REJECTED    = 'REJECTED';
         const ORDER_PREAUTH     = 'PREAUTH';
+        const ORDER_RETURN      = 'RETURN';
         const GATEWAY_URL       = 'https://www.portmone.com.ua/gateway/';
         const DEFAULT_PORTMONE_TIMEZONE = '+02';
         const DEFAULT_PORTMONE_PAYED_ID = 1185;
@@ -325,9 +326,9 @@ function woocommerce_portmone_init() {
                 'save_client_email_flag_title' => 'Зберегти email клієнта',
                 'save_client_email_flag_label' => 'Зберегти email клієнта',
                 'save_client_email_flag_description' => 'Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone',
-                'split_payment_title' => 'Параметри розщеплення',
-                'split_payment_placeholder' => 'Desc1:payeeID1;amount1;Desc2:payeeID2;amount2;...',
-                'split_payment_description' => '<p>• опис замовлення по кожному з одержувачів (Desc);</p><p>• ID компанії для кожного з одержувачів (payeeID);</p><p>• суму, яку необхідно зарахувати на рахунок кожного з одержувачів (amount);</p>',
+                'split_payment_flag_title' => 'Розщеплення платежу',
+                'split_payment_flag_label' => 'Платіжна система Portmone.com надає можливість розщеплення 1 (одного) карткового платежу на декілька компаній (юридичних осіб). Продавець повинен додати в товар атрибут з іменем payee_id і значенням рівного індексу компанії в системі Portmone.com',
+                'split_payment_flag_description' => 'Відзначте, щоб зробити розщеплення платежу',
             ];
 
             $this->f_lan = 'portmone-pay-for-woocommerce';
@@ -366,7 +367,7 @@ function woocommerce_portmone_init() {
                 'save_client_first_last_name_flag',
                 'save_client_phone_number_flag',
                 'save_client_email_flag',
-                'split_payment'
+                'split_payment_flag'
             ];
 
             if (!empty($this->settings['showlogo']) && $this->settings['showlogo'] == "yes") {
@@ -489,11 +490,11 @@ function woocommerce_portmone_init() {
                     'default'          => 'no',
                     'description'      => $this->t_lan['save_client_email_flag_description'],
                     'desc_tip'         => true),
-                'split_payment'        => array('title' => $this->t_lan['split_payment_title'],
-                    'type'             => 'text',
-                    'default'          => '',
-                    'description'      => $this->t_lan['split_payment_description'],
-                    'placeholder'      => $this->t_lan['split_payment_placeholder'],
+                'split_payment_flag'        => array('title' => $this->t_lan['split_payment_flag_title'],
+                    'type'             => 'checkbox',
+                    'default'          => 'no',
+                    'label'            => $this->t_lan['split_payment_flag_label'],
+                    'description'      => $this->t_lan['split_payment_flag_description'],
                     'desc_tip'         => true),
             );
 
@@ -567,6 +568,14 @@ function woocommerce_portmone_init() {
             $description_order = '';
             $order = wc_get_order($order_id);
 
+            $attribute5  = $this->getAttribute5($order);
+            if ( is_wp_error( $attribute5 ) ) {
+                wc_print_notice( $attribute5->get_error_message(), 'error');
+                $wp_button_class = wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '';
+                wc_print_r(sprintf( '<a href="%s" class="button wc-forward%s">%s</a>', wc_get_cart_url(), esc_attr( $wp_button_class ), __( 'View cart', 'woocommerce' ) ));
+                return;
+            }
+
             if (isset($this->settings['convert_money']) &&
                 isset($this->settings['exchange_rates']) &&
                 $this->settings['convert_money'] == 'yes' &&
@@ -596,7 +605,7 @@ function woocommerce_portmone_init() {
                 'attribute1'         => $this->getAttribute1($order),
                 'attribute2'         => $this->getAttribute2($order),
                 'attribute3'         => $this->getAttribute3($order),
-                'attribute5'         => $this->split_payment,
+                'attribute5'         => $attribute5,
                 'cms_module_name'    => json_encode(['name' => 'WordPress', 'v' => $this->plugin_data['Version']]),
                 'encoding'           => 'UTF-8'
             );
@@ -664,6 +673,10 @@ function woocommerce_portmone_init() {
                 return new WP_Error( 'error', __( 'Замовлення не було сплачено через систему Portmone', 'portmone-pay-for-woocommerce' ) );
             }
 
+            if ($this->split_payment_flag == 'yes' && $order->get_total() != $amount) {
+                return new WP_Error( 'error', __( 'Для проведення часткового повернення, будь ласка, зверніться в службу підтримки Portmone.com', 'portmone-pay-for-woocommerce' ) );
+            }
+
             $shopOrderNumber = $order->get_meta( '_shop_order_number' );
             if (empty($shopOrderNumber)) {
                 return new WP_Error( 'error', __( 'Значення для shop_order_number не можуть бути порожніми', 'portmone-pay-for-woocommerce' ) );
@@ -674,6 +687,11 @@ function woocommerce_portmone_init() {
                 return new WP_Error( 'error', $shopBillId->get_error_message() );
             }
 
+            $attribute5  = $this->getAttribute5($order);
+            if ( is_wp_error( $attribute5 ) ) {
+                return new WP_Error( 'error', $attribute5->get_error_message() );
+            }
+
             $data = array(
                 "method" => "return",
                 "login" => $this->login,
@@ -681,6 +699,7 @@ function woocommerce_portmone_init() {
                 "shop_bill_id" => $shopBillId,
                 'return_amount' => $amount,
                 'attribute1' => $reason,
+                'attribute5' => $attribute5,
                 'encoding' => 'UTF-8',
                 'lang' => 'uk',
             );
@@ -745,28 +764,38 @@ function woocommerce_portmone_init() {
                 $no_pay = false;
                 foreach($parseXml->orders->order as $order ){
                     $status = (array)$order->status;
-                    if ($status[0] == self::ORDER_PAYED || $status[0] == self::ORDER_PREAUTH) {
+                    if ($status[0] == self::ORDER_RETURN) {
+                        return new WP_Error( 'error', __('Для проведення повернення, будь ласка, зверніться в службу підтримки Portmone.com', 'portmone-pay-for-woocommerce' ) );
+                    }
+                }
+                foreach($parseXml->orders->order as $order ){
+                    $status = (array)$order->status;
+                    if ($status[0] == self::ORDER_PAYED) {
                         return $order->shop_bill_id;
                     }
                 }
                 if ($no_pay == false) {
-                    return new WP_Error( 'error', __($this->t_lan['error_order_in_portmone'], 'portmone-pay-for-woocommerce' ) );
+                    return new WP_Error( 'error', __('Неможливо проведення повернення. Замовлення не було сплачено через систему Portmone', 'portmone-pay-for-woocommerce' ) );
                 }
             }
 
             if ($order_data['status'] == self::ORDER_REJECTED) {
-                return new WP_Error( 'error', __('Неможливо відшкодувати. Оплату скасовано', 'portmone-pay-for-woocommerce' ) );
+                return new WP_Error( 'error', __('Неможливо проведення повернення. Оплату скасовано', 'portmone-pay-for-woocommerce' ) );
             }
 
-            if ($order_data['status'] == self::ORDER_CREATED) {
-                return new WP_Error( 'error', __('Неможливо відшкодувати. Замовлення не було сплачено', 'portmone-pay-for-woocommerce' ) );
+            if ($order_data['status'] == self::ORDER_PREAUTH || $order_data['status'] == self::ORDER_CREATED) {
+                return new WP_Error( 'error', __('Неможливо проведення повернення. Замовлення не було сплачено через систему Portmone', 'portmone-pay-for-woocommerce' ) );
             }
 
-            if ($order_data['status'] == self::ORDER_PREAUTH || $order_data['status'] == self::ORDER_PAYED) {
+            if ($order_data['status'] == self::ORDER_RETURN) {
+                return new WP_Error( 'error', __('Для проведення повернення, будь ласка, зверніться в службу підтримки Portmone.com', 'portmone-pay-for-woocommerce' ) );
+            }
+
+            if ($order_data['status'] == self::ORDER_PAYED) {
                 return $order_data['shop_bill_id'];
             }
 
-            return new WP_Error( 'error', __('Невідома помилка', 'portmone-pay-for-woocommerce' ) );;
+            return new WP_Error( 'error', __('Невідома помилка', 'portmone-pay-for-woocommerce' ) );
         }
 
         /**
@@ -806,6 +835,51 @@ function woocommerce_portmone_init() {
 
         private function getAttribute3(\WC_Order $order) {
             return ($this->save_client_email_flag == 'yes') ? $order->get_billing_email() : '';
+        }
+
+        /**
+         * @param WC_Order $order
+         * @return string|WP_Error
+         */
+        private function getAttribute5(\WC_Order $order) {
+            $attribute5 = '';
+            if ($this->split_payment_flag == 'yes') {
+
+                $splitPayments = [];
+                foreach ($order->get_items() as $item) {
+                    $payeeId = 0;
+                    $product = $item->get_product();
+                    foreach ($item->get_product()->get_attributes() as $key => $value) {
+                        if ($value->get_data()['name'] != 'payee_id') {
+                            continue;
+                        }
+
+                        $payeeId = $value->get_data()['options'][0];
+                        if (!empty($splitPayments[$payeeId])) {
+                            $splitPayments[$payeeId] += (float) $item->get_total();
+                        } else {
+                            $splitPayments[$payeeId] = (float) $item->get_total();
+                        }
+
+                        break;
+                    }
+
+                    if ($payeeId == 0) {
+                        $message         = sprintf( __( 'Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв\'яжіться з нами, щоб отримати допомогу.' ), $product->get_name() );
+                        return new WP_Error( 'error', $message);
+                    }
+                }
+                unset($payeeId);
+
+                if (!empty($splitPayments)) {
+                    foreach ($splitPayments as $payeeId => $amount) {
+                        $attribute5 .= ':' . $payeeId .';'. $amount . ';';
+                    }
+                }
+
+            }
+
+            return $attribute5;
         }
 
         /**
@@ -1010,6 +1084,11 @@ function woocommerce_portmone_init() {
                 $orderId = $this->portmone_get_order_id($_REQUEST['SHOPORDERNUMBER']);
                 $paymentInfo = $this->isPaymentValid($_REQUEST);
                 if ($paymentInfo == false) {
+
+                    $cart = WC()->cart;
+                    $cart->get_cart();
+                    $cart->empty_cart();
+
                     if ($_REQUEST['RESULT'] == '0') {
                         $this->message['message'] = $this->t_lan['thankyou_text'] . ' ' . $this->t_lan['number_pay'] . ' ' . $orderId;
                     } else {
