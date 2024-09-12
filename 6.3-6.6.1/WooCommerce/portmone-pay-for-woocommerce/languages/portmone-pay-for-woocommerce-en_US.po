@@ -234,23 +234,23 @@ msgstr "To make a return, please contact Portmone.com support"
 msgid "Невідома помилка"
 msgstr "Unknown error"
 
-msgid "Зберегти ім\'я та прізвище клієнта"
-msgstr "Save the  customer\'s first and last name"
+msgid "Зберегти ім'я та прізвище клієнта"
+msgstr "Save the  customer's first and last name"
 
-msgid "Ім\'я та прізвище клієнта береться з адреси, вказаної в замовленні. Узгоджується з менеджером Portmone"
-msgstr "The customer\'s first and last name is taken from the address specified in the order. To be agreed with the Portmone manager"
+msgid "Ім'я та прізвище клієнта береться з адреси, вказаної в замовленні. Узгоджується з менеджером Portmone"
+msgstr "The customer's first and last name is taken from the address specified in the order. To be agreed with the Portmone manager"
 
 msgid "Зберегти телефон клієнта"
 msgstr "Save customer phone number"
 
 msgid "Телефон клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
-msgstr "The customer\'s phone number is taken from the address specified in the order. To be agreed with the Portmone manager"
+msgstr "The customer's phone number is taken from the address specified in the order. To be agreed with the Portmone manager"
 
 msgid "Зберегти email клієнта"
 msgstr "Save customer email"
 
 msgid "Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
-msgstr "The customer\'s email is taken from the address specified in the order. To be agreed with the Portmone manager"
+msgstr "The customer's email is taken from the address specified in the order. To be agreed with the Portmone manager"
 
 msgid "Розщеплення платежу"
 msgstr "Splitting parameters"
