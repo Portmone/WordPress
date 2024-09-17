@@ -209,3 +209,60 @@ msgstr "version is relevant for the plugin"
 
 msgid "на этой версии плагин НЕ проверен и может работать нестабильно"
 msgstr "the plugin is NOT tested on this version and may be unstable"
+
+msgid "Замовлення не було сплачено через систему Portmone"
+msgstr "The order was not paid through the Portmone system"
+
+msgid "Значення для shop_order_number не можуть бути порожніми"
+msgstr "Values for shop_order_number cannot be empty"
+
+msgid "Помилка під час надсилання запиту на отримання номера замовлення в системі Portmone"
+msgstr "Error sending request to receive order number in Portmone system"
+
+msgid "Помилка авторизації. Введено неправильний логін або пароль"
+msgstr "Authorization error. Incorrect login or password entered"
+
+msgid "Неможливо проведення повернення. Оплату скасовано"
+msgstr "It is not possible to make a return. Payment rejected"
+
+msgid "Неможливо проведення повернення. Замовлення не було сплачено через систему Portmone"
+msgstr "It is not possible to make a return. The order was not paid through the Portmone system"
+
+msgid "Для проведення повернення, будь ласка, зверніться в службу підтримки Portmone.com"
+msgstr "To make a return, please contact Portmone.com support"
+
+msgid "Невідома помилка"
+msgstr "Unknown error"
+
+msgid "Зберегти ім'я та прізвище клієнта"
+msgstr "Save the  customer's first and last name"
+
+msgid "Ім'я та прізвище клієнта береться з адреси, вказаної в замовленні. Узгоджується з менеджером Portmone"
+msgstr "The customer's first and last name is taken from the address specified in the order. To be agreed with the Portmone manager"
+
+msgid "Зберегти телефон клієнта"
+msgstr "Save customer phone number"
+
+msgid "Телефон клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
+msgstr "The customer's phone number is taken from the address specified in the order. To be agreed with the Portmone manager"
+
+msgid "Зберегти email клієнта"
+msgstr "Save customer email"
+
+msgid "Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
+msgstr "The customer's email is taken from the address specified in the order. To be agreed with the Portmone manager"
+
+msgid "Розщеплення платежу"
+msgstr "Splitting parameters"
+
+msgid "Платіжна система Portmone.com надає можливість розщеплення 1 (одного) карткового платежу на декілька компаній (юридичних осіб). Продавець повинен додати в товар атрибут з іменем payee_id і значенням рівного індексу компанії в системі Portmone.com"
+msgstr "The Portmone.com payment system provides the possibility of splitting 1 (one) card payment to several companies (legal entities). The seller must add to the product an attribute with the name payee_id and the value equal to the index of the company in the Portmone.com system"
+
+msgid "Відзначте, щоб зробити розщеплення платежу"
+msgstr "Check to split the payment"
+
+msgid "Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв\'яжіться з нами, щоб отримати допомогу."
+msgstr "An error occurred. The recipient company is not specified in the product &ldquo;%s&rdquo;. Please contact us for assistance."
+
+msgid "Для проведення часткового повернення, будь ласка, зверніться в службу підтримки Portmone.com"
+msgstr "For a partial refund, please contact Portmone.com support"
