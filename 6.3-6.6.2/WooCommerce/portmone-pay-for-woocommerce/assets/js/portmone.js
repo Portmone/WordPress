@@ -1,10 +1,5 @@
 jQuery(function () {
     (function ($) {
-        var portmone_payment_form = document.portmone_payment_form;
-        if (portmone_payment_form && portmone_payment_form.length > 0) {
-            $('.woocommerce-checkout').prepend('<div class="portmone-checkout-page-overlay"></div><div class="portmone-checkout-page-spin"></div>');
-            portmone_payment_form.submit();
-        }
 
         $('form').submit(function () {
             var val = $( this ).serializeArray();
