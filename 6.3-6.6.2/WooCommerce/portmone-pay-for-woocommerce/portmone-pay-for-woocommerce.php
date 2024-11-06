@@ -4,7 +4,7 @@
  * Plugin Name: Portmone-pay-for-woocommerce
  * Plugin URI: https://github.com/Portmone/WordPress
  * Description: Portmone Payment Gateway for WooCommerce.
- * Version: 4.2.1
+ * Version: 4.2.2
  * Author: Portmone
  * Author URI: https://www.portmone.com.ua
  * Domain Path: /
@@ -327,6 +327,9 @@ function woocommerce_portmone_init() {
                 'split_payment_flag_title' => 'Розщеплення платежу',
                 'split_payment_flag_label' => 'Платіжна система Portmone.com надає можливість розщеплення 1 (одного) карткового платежу на декілька компаній (юридичних осіб). Продавець повинен додати в товар атрибут з іменем payee_id і значенням рівного індексу компанії в системі Portmone.com',
                 'split_payment_flag_description' => 'Відзначте, щоб зробити розщеплення платежу',
+                'show_message_on_thank_you_page_flag_title' => 'Показати повідомлення на thank-you page',
+                'show_message_on_thank_you_page_flag_label' => 'Повідомлення відображаються на thank-you page після переходу зі сторінки оплати Portmone.com',
+                'show_message_on_thank_you_page_flag_description' => 'Відзначте, щоб показати повідомлення на thank-you page',
             ];
 
             $this->f_lan = 'portmone-pay-for-woocommerce';
@@ -365,7 +368,8 @@ function woocommerce_portmone_init() {
                 'save_client_first_last_name_flag',
                 'save_client_phone_number_flag',
                 'save_client_email_flag',
-                'split_payment_flag'
+                'split_payment_flag',
+                'show_message_on_thank_you_page_flag'
             ];
 
             if (!empty($this->settings['showlogo']) && $this->settings['showlogo'] == "yes") {
@@ -492,6 +496,12 @@ function woocommerce_portmone_init() {
                     'default'          => 'no',
                     'label'            => $this->t_lan['split_payment_flag_label'],
                     'description'      => $this->t_lan['split_payment_flag_description'],
+                    'desc_tip'         => true),
+                'show_message_on_thank_you_page_flag'        => array('title' => $this->t_lan['show_message_on_thank_you_page_flag_title'],
+                    'type'             => 'checkbox',
+                    'default'          => 'no',
+                    'label'            => $this->t_lan['show_message_on_thank_you_page_flag_label'],
+                    'description'      => $this->t_lan['show_message_on_thank_you_page_flag_description'],
                     'desc_tip'         => true),
             );
 
@@ -1127,7 +1137,7 @@ function woocommerce_portmone_init() {
                 if ( is_wp_error( $paymentInfo ) ) {
                     $this->message['class'] = 'message-portmone';
                     $this->message['message'] = $paymentInfo->get_error_message();
-                    if ($isPrintNotice) {
+                    if ($isPrintNotice && !empty($this->show_message_on_thank_you_page_flag) && $this->show_message_on_thank_you_page_flag == 'yes') {
                         wc_print_notice( $paymentInfo->get_error_message(), 'error');
                     }
                     return false;
@@ -1142,7 +1152,7 @@ function woocommerce_portmone_init() {
                     $this->message['message'] = $_REQUEST['RESULT'] . ' ' . $this->t_lan['number_pay'] . ' ' . $orderId;
                 }
                 $this->message['class'] = 'message-portmone';
-                if ($isPrintNotice) {
+                if ($isPrintNotice && !empty($this->show_message_on_thank_you_page_flag) &&  $this->show_message_on_thank_you_page_flag == 'yes') {
                     wc_print_notice( $this->message['message']);
                 }
                 return true;
