@@ -266,3 +266,21 @@ msgstr "An error occurred. The recipient company is not specified in the product
 
 msgid "Для проведення часткового повернення, будь ласка, зверніться в службу підтримки Portmone.com"
 msgstr "For a partial refund, please contact Portmone.com support"
+
+msgid "Помилка при надсиланні запиту"
+msgstr "Error sending request"
+
+msgid "Помилка отримання посилання на оплату"
+msgstr "Error receiving payment link"
+
+msgid "Помилка обробки отриманих даних про замовлення"
+msgstr "Error processing received order data"
+
+msgid "Показати повідомлення на thank-you page"
+msgstr "Show message on thank-you page"
+
+msgid "Повідомлення відображаються на thank-you page після переходу зі сторінки оплати Portmone.com"
+msgstr "Messages are displayed on the thank-you page after switching from the Portmone.com payment page"
+
+msgid "Відзначте, щоб показати повідомлення на thank-you page"
+msgstr "Check to show message on thank-you page"
