@@ -284,3 +284,15 @@ msgstr "Messages are displayed on the thank-you page after switching from the Po
 
 msgid "Відзначте, щоб показати повідомлення на thank-you page"
 msgstr "Check to show message on thank-you page"
+
+msgid "Отримувати повідомлення про успішну оплату"
+msgstr "Receive notifications about successful payment"
+
+msgid "Отримувати повідомлення про успішну оплату у форматі JSON. Для активації даного функціоналу, будь ласка, напишіть на пошту b2bsupport@portmone.me"
+msgstr "Receive a message about successful payment in JSON format. To activate this functionality, please write to b2bsupport@portmone.me"
+
+msgid "Відзначте, щоб отримувати повідомлення про успішну оплату"
+msgstr "Check to receive notifications about successful payment"
+
+msgid "Помилка під час обробки нотифікації"
+msgstr "Error while processing notification"
