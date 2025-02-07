@@ -1,0 +1,8 @@
+
+
+msgid "Платіжний шлюз Portmone для WooCommerce вимагає встановлення та активації WooCommerce. Ви можете завантажити %s тут."
+msgstr "Платежный шлюз Portmone для WooCommerce требует установки и активации WooCommerce. Вы можете загрузить %s здесь."
+
+msgid "Налаштування"
+msgstr "Настройки"
+
