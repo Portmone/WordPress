@@ -12,9 +12,9 @@ defined( 'ABSPATH' ) || exit;
 class Portmone_Pay_For_WooCommerce_Helper_Http_Client
 {
 
-    public function create_link_Payment( Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment $data, WC_Order $order )
+    public function create_link_payment( Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment $data, WC_Order $order )
     {
-        $create_link_payment = $this->curl_json_request($data);
+        $create_link_payment = $this->curl_json_request( $data );
         if ( is_wp_error( $create_link_payment ) ) {
             $order->add_order_note( '#22P ' . $create_link_payment->get_error_message() );
             $order->save();
@@ -25,16 +25,36 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
         if ( $result['errorCode'] != '0' ) {
             $order->add_order_note( '#23P ' . $result['error'] );
             $order->save();
-            throw new \Exception($result['error']);
+            throw new \Exception( $result['error'] );
         }
 
         if ( empty( $result['linkPayment'] ) ) {
             $order->add_order_note( '#24P ' . __( 'Помилка отримання посилання на оплату', 'portmone-pay-for-woocommerce' ) );
             $order->save();
-            throw new \Exception(__('Помилка отримання посилання на оплату', 'portmone-pay-for-woocommerce' ) );                ;
+            throw new \Exception( __( 'Помилка отримання посилання на оплату', 'portmone-pay-for-woocommerce' ) );                ;
         }
 
         return $result['linkPayment'];
+    }
+
+    public function get_portmone_order_data( Portmone_Pay_For_WooCommerce_Dto_Body $body )
+    {
+        $result = $this->curl_json_request( $body );
+        if ( is_wp_error( $result ) ) {
+            return new WP_Error( '#25P ' . $result->get_error_message() );
+        }
+
+        $order_data = json_decode( $result, true );
+        if ( count( $order_data ) == 0 ) {
+            return new WP_Error('error', '#26P ' . __('У системі Portmone.com цього платежу немає, він повернутий чи створений некоректно', 'portmone-pay-for-woocommerce'));
+        }
+
+        $portmone_order_data = $order_data[0];
+        if ( $portmone_order_data['errorCode'] != '0' ) {
+            return new WP_Error('#27P ' . $portmone_order_data['errorMessage'] );
+        }
+
+        return $portmone_order_data;
     }
 
     private function curl_json_request( $data )
@@ -55,7 +75,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
         curl_close( $ch );
 
         if ( 200 !== intval( $http_code ) ) {
-            return new WP_Error( 'error', __( 'Помилка при надсиланні запиту', 'portmone-pay-for-woocommerce' ) );;
+            return new WP_Error( 'error', __( 'Помилка при надсиланні запиту', 'portmone-pay-for-woocommerce' ) . " http code: " . $http_code );;
         }
         return $response;
     }

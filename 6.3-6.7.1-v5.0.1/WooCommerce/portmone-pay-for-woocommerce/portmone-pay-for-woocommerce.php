@@ -14,7 +14,7 @@
  * Requires PHP: 7.4
  * Requires Plugins:  woocommerce
  * WC requires at least: 8.6
- * WC tested up to: 9.6.0
+ * WC tested up to: 9.8.4
  *
  * @package Portmone_Pay_For_Woocommerce
  */
@@ -33,6 +33,8 @@ define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_DIR', plugin_dir_path( __FILE__ ) ); // /v
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_URL', plugin_dir_url( __FILE__ ) );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_FILE',  __FILE__ );
 
+// Removes all cache items.
+// wp_cache_flush();
 
 function activate_portmone_pay_for_woocommerce() {
     require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/class-portmone-pay-for-woocommerce-activator.php';

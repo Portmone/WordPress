@@ -9,11 +9,11 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
  * @author     portmone
  */
-class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payer
+class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payer implements JsonSerializable
 {
-    public $lang;
-    public $emailAddress;
-    public $showEmail ='Y';
+    private $lang;
+    private $emailAddress;
+    private $showEmail ='Y';
 
     public function set_properties( WC_Order $order )
     {
@@ -21,6 +21,10 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payer
         $this->emailAddress = $order->get_billing_email();
     }
 
+    public function jsonSerialize(): array
+    {
+        return get_object_vars( $this );
+    }
 
     /**
      * Definition of the WP language

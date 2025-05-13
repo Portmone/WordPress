@@ -69,7 +69,7 @@ class Portmone_Pay_For_WooCommerce_Admin
          * class.
          */
 
-        wp_enqueue_script( $this->plugin_name, PORTMONE_PAY_FOR_WOOCOMMERCE_URL . 'assets/js/portmone-pay-for-woocommerce-admin.js', array( 'jquery' ) );
+        wp_enqueue_script( $this->plugin_name, PORTMONE_PAY_FOR_WOOCOMMERCE_URL . 'assets/js/portmone-pay-for-woocommerce-admin.js', array( 'jquery', 'wp-i18n' ) );
 
     }
 

@@ -93,7 +93,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
                 }
 
                 if ( $payee_id == 0 ) {
-                    $message = sprintf( __( 'Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв\'яжіться з нами, щоб отримати допомогу.' ), $product->get_name() );
+                    $message = sprintf( __( 'Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв\'яжіться з нами, щоб отримати допомогу' ), $product->get_name() );
                     return new WP_Error( 'error', $message);
                 }
             }
@@ -108,5 +108,14 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
         }
 
         return $attribute5;
+    }
+
+    public function add_meta_data(WC_Order $order, string $key, $value)
+    {
+        if ( $order->meta_exists( $key ) ) {
+            $order->update_meta_data( $key, $value );
+        } else {
+            $order->add_meta_data( $key, $value );
+        }
     }
 }

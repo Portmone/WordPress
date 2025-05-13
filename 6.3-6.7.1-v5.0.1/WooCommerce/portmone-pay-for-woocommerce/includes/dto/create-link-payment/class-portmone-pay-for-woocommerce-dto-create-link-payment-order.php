@@ -9,22 +9,22 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
  * @author     portmone
  */
-class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order
+class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order implements JsonSerializable
 {
-    public $description = '';
-    public $shopOrderNumber;
-    public $billAmount;
-    public $attribute1;
-    public $attribute2;
-    public $attribute3;
-    public $attribute4 = '';
-    public $attribute5;
-    public $successUrl;
-    public $failureUrl;
-    public $preauthFlag;
-    public $billCurrency;
-    public $expTime;
-    public $encoding = 'UTF-8';
+    private $description = '';
+    private $shopOrderNumber;
+    private $billAmount;
+    private $attribute1;
+    private $attribute2;
+    private $attribute3;
+    private $attribute4 = '';
+    private $attribute5;
+    private $successUrl;
+    private $failureUrl;
+    private $preauthFlag;
+    private $billCurrency;
+    private $expTime;
+    private $encoding = 'UTF-8';
 
     public function set_properties( array $settings, WC_Order $order )
     {
@@ -43,6 +43,11 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order
     public function set_attribute5( string $attribute5 )
     {
         $this->attribute5 = $attribute5;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return get_object_vars( $this );
     }
 
     private function get_order_total( array $settings, WC_Order $order )
@@ -77,6 +82,22 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order
         return 'UAH';
     }
 
+    /**
+     * @return mixed
+     */
+    public function getShopOrderNumber()
+    {
+        return $this->shopOrderNumber;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBillAmount()
+    {
+        return $this->billAmount;
+    }
+
     private function get_attribute1( array $settings, WC_Order $order )
     {
         return ( $settings['save_client_first_last_name_flag'] == 'yes' ) ? $order->get_billing_first_name()  . ' ' . $order->get_billing_last_name() : '';
@@ -96,4 +117,6 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order
     {
         return ( $settings['preauth_flag'] == 'yes' ) ? 'Y' : 'N' ;
     }
+
+
 }

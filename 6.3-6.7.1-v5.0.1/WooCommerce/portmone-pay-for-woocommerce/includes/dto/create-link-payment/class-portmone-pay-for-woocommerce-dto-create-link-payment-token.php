@@ -9,11 +9,16 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
  * @author     portmone
  */
-class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Token
+class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Token  implements JsonSerializable
 {
-    public $tokenFlag = 'N';
-    public $returnToken = 'N';
-    public $token ='';
-    public $cardMask = '';
-    public $otherPaymentMethods = '';
+    private $tokenFlag = 'N';
+    private $returnToken = 'N';
+    private $token ='';
+    private $cardMask = '';
+    private $otherPaymentMethods = '';
+
+    public function jsonSerialize(): array
+    {
+        return get_object_vars( $this );
+    }
 }

@@ -79,7 +79,9 @@ class Portmone_Pay_For_Woocommerce
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/create-link-payment/class-portmone-pay-for-woocommerce-dto-create-link-payment-token.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/create-link-payment/class-portmone-pay-for-woocommerce-dto-create-link-payment-payer.php';
 
-
+        require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/class-portmone-pay-for-woocommerce-dto-body.php';
+        require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/result/class-portmone-pay-for-woocommerce-dto-result-data.php';
+        require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/return/class-portmone-pay-for-woocommerce-dto-return-data.php';
 
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/class-portmone-pay-for-woocommerce-payment-gateway.php';
 
