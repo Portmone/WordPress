@@ -3,10 +3,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * receive payment response method
+ * Functionality for processing the transition from the payment page
+ * of the wallet system to the merchant's website.
  *
  * @package    Portmone_Pay_For_Woocommerce
- * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
+ * @subpackage Portmone_Pay_For_Woocommerce/includes/api
  * @author     portmone
  */
 class Portmone_Pay_For_WooCommerce_Api_Receive_Payment_Response
@@ -16,23 +17,26 @@ class Portmone_Pay_For_WooCommerce_Api_Receive_Payment_Response
      */
     private $helper_payment;
 
-    public function __construct(Portmone_Pay_For_WooCommerce_Helper_Payment $helper_payment)
+    public function __construct( Portmone_Pay_For_WooCommerce_Helper_Payment $helper_payment )
     {
         $this->helper_payment = $helper_payment;
     }
 
+     /*
+      *  Post parameters processing.
+      *  https://docs.portmone.com.ua/docs/en/PaymentGatewayEng/#31-post-request
+      */
     public function receive_payment_response()
     {
         if ( empty( $_REQUEST['SHOPORDERNUMBER'] ) ) {
            wp_safe_redirect( $this->get_return_url( null ) );
         }
 
-        $order_id = $this->helper_payment->get_order_id($_REQUEST['SHOPORDERNUMBER']);
+        $order_id = $this->helper_payment->get_order_id( $_REQUEST['SHOPORDERNUMBER'] );
         $order = wc_get_order( $order_id );
         if ( ( ! $order instanceof WC_Order ) ) {
             wp_safe_redirect( $this->get_return_url( null ) );
         }
-
 
         $settings = get_option( 'woocommerce_portmone_settings', null );
 
@@ -62,7 +66,7 @@ class Portmone_Pay_For_WooCommerce_Api_Receive_Payment_Response
      * @param WC_Order|null $order Order object.
      * @return string
      */
-    public function get_return_url( $order = null ) {
+    private function get_return_url( $order = null ) {
         if ( $order ) {
             $return_url = $order->get_checkout_order_received_url();
         } else {

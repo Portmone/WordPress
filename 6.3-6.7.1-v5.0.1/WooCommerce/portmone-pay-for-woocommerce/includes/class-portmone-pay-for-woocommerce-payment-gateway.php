@@ -77,17 +77,10 @@ class WC_Portmone extends WC_Payment_Gateway
      */
     private $helper_http_client;
 
-    /**
-     * @var Portmone_Pay_For_WooCommerce_Helper_Payment
-     */
-    private $helper_payment;
-
-
     public function __construct()
     {
         $this->helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
         $this->helper_http_client = new Portmone_Pay_For_WooCommerce_Helper_Http_Client();
-        $this->helper_payment = new Portmone_Pay_For_WooCommerce_Helper_Payment();
 
         // file added in woocommerce v7.1.0, maybe removed later
         $this->is_hpos_enabled = false;

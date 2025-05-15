@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Common functions
+ * Common purpose functionality
  *
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
@@ -110,6 +110,14 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
         return $attribute5;
     }
 
+    /**
+     * Add or update meta data.
+     *
+     * @param WC_Order     $order
+     * @param string       $key Meta key.
+     * @param string|array $value Meta value.
+     *
+     */
     public function add_meta_data(WC_Order $order, string $key, $value)
     {
         if ( $order->meta_exists( $key ) ) {
@@ -117,5 +125,20 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
         } else {
             $order->add_meta_data( $key, $value );
         }
+    }
+
+    /**
+     * get portmone payment statuses
+     *
+     * @return array[]
+     */
+    public function get_portmone_payment_statuses()
+    {
+        return  [
+            'paid'          => ['#109b00', '#FFFFFF', __( 'Оплачено з Portmone.com', 'portmone-pay-for-woocommerce' )],
+            'paidnotve'     => ['#0a4e03', '#FFFFFF', __( 'Оплачено з Portmone.com (але не перевірено)', 'portmone-pay-for-woocommerce' )],
+            'preauth'       => ['#ffe000', '#000000', __( 'Оплачено з Portmone.com (блокування коштів)', 'portmone-pay-for-woocommerce' )],
+            'error'         => ['#bb0f0f', '#FFFFFF', __( 'Оплата з Portmone.com НЕ вдалась', 'portmone-pay-for-woocommerce' )]
+        ];
     }
 }

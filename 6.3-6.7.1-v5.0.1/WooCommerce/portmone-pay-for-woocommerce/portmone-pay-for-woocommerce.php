@@ -14,7 +14,7 @@
  * Requires PHP: 7.4
  * Requires Plugins:  woocommerce
  * WC requires at least: 8.6
- * WC tested up to: 9.8.4
+ * WC tested up to: 9.8.5
  *
  * @package Portmone_Pay_For_Woocommerce
  */
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  */
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_VERSION', '5.0.1' );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_NAME', 'portmone-pay-for-woocommerce' );
-define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_DIR', plugin_dir_path( __FILE__ ) ); // /var/www/html/wp-content/plugins/portmone-pay-for-woocommerce/
+define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_URL', plugin_dir_url( __FILE__ ) );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_FILE',  __FILE__ );
 
@@ -42,6 +42,7 @@ function activate_portmone_pay_for_woocommerce() {
 }
 register_activation_hook( __FILE__, 'activate_portmone_pay_for_woocommerce' );
 
+
 // Declaring extension compatibility with HPOS
 add_action( 'before_woocommerce_init', function() {
     if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
@@ -53,8 +54,7 @@ add_action( 'before_woocommerce_init', function() {
 add_action('woocommerce_blocks_loaded', 'portmone_pay_for_woocommerce_block_support');
 function portmone_pay_for_woocommerce_block_support()
 {
-
-    if( ! class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+   if( ! class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
         return;
     }
 
@@ -75,7 +75,6 @@ add_action( 'plugins_loaded', 'portmone_pay_for_woocommerce_init', 10 );
 
 /**
  * Initialize the plugin.
- *
  */
 function portmone_pay_for_woocommerce_init() {
 
@@ -92,7 +91,6 @@ function portmone_pay_for_woocommerce_init() {
 
 /**
  * WooCommerce fallback notice.
- *
  */
 function portmone_pay_for_woocommerce_missing_wc_notice() {
     /* translators: %s WC download URL link. */

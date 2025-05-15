@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Http_Client functions
+ * Functionality of sending http requests
  *
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
@@ -12,7 +12,17 @@ defined( 'ABSPATH' ) || exit;
 class Portmone_Pay_For_WooCommerce_Helper_Http_Client
 {
 
-    public function create_link_payment( Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment $data, WC_Order $order )
+
+    /**
+     * Creating a payment link
+     * https://docs.portmone.com.ua/docs/en/PaymentGatewayEng/#125-creating-a-payment-link
+     *
+     * @param Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment $data
+     * @param WC_Order $order
+     * @return string
+     * @throws Exception
+     */
+    public function create_link_payment(Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment $data, WC_Order $order )
     {
         $create_link_payment = $this->curl_json_request( $data );
         if ( is_wp_error( $create_link_payment ) ) {
@@ -37,7 +47,14 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
         return $result['linkPayment'];
     }
 
-    public function get_portmone_order_data( Portmone_Pay_For_WooCommerce_Dto_Body $body )
+
+    /**
+     * Receives order information in the portmone system
+     *
+     * @param Portmone_Pay_For_WooCommerce_Dto_Body $body
+     * @return array|WP_Error
+     */
+    public function get_portmone_order_data(Portmone_Pay_For_WooCommerce_Dto_Body $body )
     {
         $result = $this->curl_json_request( $body );
         if ( is_wp_error( $result ) ) {
@@ -57,7 +74,14 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
         return $portmone_order_data;
     }
 
-    private function curl_json_request( $data )
+
+    /**
+     * Sending request to payment gateway
+     *
+     * @param $data
+     * @return bool|string|WP_Error
+     */
+    private function curl_json_request($data )
     {
         $json_data = json_encode( $data );
         $url = 'https://www.portmone.com.ua/gateway/';

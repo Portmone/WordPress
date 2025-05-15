@@ -220,19 +220,23 @@ msgstr "Values for shop_order_number cannot be empty"
 msgid "Невідома помилка"
 msgstr "Unknown error"
 
+msgid "Помилка під час обробки нотифікації"
+msgstr "Error while processing notification"
 
+msgid "Оплачено з Portmone.com"
+msgstr "Paid from Portmone.com"
 
+msgid "Оплачено з Portmone.com (але не перевірено)"
+msgstr "Paid from Portmone.com (but not verified)"
 
+msgid "Оплачено з Portmone.com (блокування коштів)"
+msgstr "Paid with Portmone.com (money lock)"
 
+msgid "Оплачено з Portmone.com (блокування коштів)"
+msgstr "Paid with Portmone.com (money lock)"
 
-
-
-
-
-
-
-
-
+msgid "Оплата з Portmone.com НЕ вдалась"
+msgstr "Paid with Portmone.com is NOT successful"
 
 
 

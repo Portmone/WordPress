@@ -3,7 +3,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Result_Data class
+ * Data structure for requesting a refund
+ * https://docs.portmone.com.ua/docs/en/PaymentGatewayEng#9-refund
  *
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
@@ -12,43 +13,36 @@ defined( 'ABSPATH' ) || exit;
 class Portmone_Pay_For_WooCommerce_Dto_Return_Data  implements JsonSerializable
 {
     /**
-     * @access public
      * @var string
      */
     private $login;
 
     /**
-     * @access public
      * @var string
      */
     private $password;
 
     /**
-     * @access public
      * @var string
      */
     private $payeeId;
 
     /**
-     * @access public
      * @var string
      */
     private $shopOrderNumber;
 
     /**
-     * @access public
      * @var string
      */
     private $message;
 
     /**
-     * @access public
      * @var string
      */
     private $returnAmount;
 
     /**
-     * @access public
      * @var string
      */
     private $attribute5;

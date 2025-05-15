@@ -11,34 +11,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payee  implements JsonSerializable
 {
-    /**
-     * @access private
-     * @var string
-     */
+
     private $payeeId;
 
-    /**
-     * @access private
-     * @var string
-     */
     private $login;
 
-    /**
-     * @access private
-     * @var string
-     */
     private $dt;
 
-    /**
-     * @access private
-     * @var string
-     */
     private $signature = '';
 
-    /**
-     * @access private
-     * @var string
-     */
     private $shopSiteId = '';
 
     public function set_properties( array $settings )

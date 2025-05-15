@@ -3,8 +3,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Order class
- *
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
  * @author     portmone

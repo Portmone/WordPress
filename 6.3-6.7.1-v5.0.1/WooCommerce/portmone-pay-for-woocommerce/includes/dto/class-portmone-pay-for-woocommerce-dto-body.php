@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Body class
+ * General wrapper for requests to the portmone system
  *
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
@@ -12,22 +12,19 @@ defined( 'ABSPATH' ) || exit;
 class Portmone_Pay_For_WooCommerce_Dto_Body implements JsonSerializable
 {
     /**
-     * @access public
      * @var string
      */
-    public $method;
+    private $method;
 
     /**
-     * @access public
      * @var stdClass
      */
-    public $params;
+    private $params;
 
     /**
-     * @access public
      * @var string
      */
-    public $id = '1';
+    private $id = '1';
 
     public function setMethod(string $method)
     {

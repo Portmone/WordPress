@@ -1,6 +1,7 @@
 <?php
 
 defined( 'ABSPATH' ) || exit;
+
 /**
  * The core plugin class.
  *
@@ -37,6 +38,60 @@ class Portmone_Pay_For_Woocommerce
 
         $this->gateway_hooks();
         $this->api_hooks();
+        $this->payment_status_hooks();
+    }
+
+    /**
+     * Add payment methods
+     *
+     * @return array
+     */
+    public function woocommerce_add_portmone_gateway($methods)
+    {
+        $methods[] = 'WC_Portmone';
+        return $methods;
+    }
+
+    /**
+     * Run the loader to execute all of the hooks with WordPress.
+     */
+    public function run()
+    {
+        $this->loader->run();
+    }
+
+    /*
+     * Adding new order statuses.
+     */
+    public function register_new_order_statuses()
+    {
+        $helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
+        $portmone_payment_statuses = $helper_common->get_portmone_payment_statuses();
+
+        foreach ( $portmone_payment_statuses as $kay => $val ) {
+            register_post_status( 'wc-status-'.$kay, array(
+                'label'                     => _x( $val[2], 'Order status', 'textdomain' ),
+                'public'                    => true,
+                'exclude_from_search'       => false,
+                'show_in_admin_all_list'    => true,
+                'show_in_admin_status_list' => true,
+                'label_count'               => _n_noop( '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>', '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>', 'textdomain' )
+            ) );
+        }
+    }
+
+    /*
+     * Adding new order statuses.
+     */
+    public function new_wc_order_statuses( $order_statuses )
+    {
+        $helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
+        $portmone_payment_statuses = $helper_common->get_portmone_payment_statuses();
+
+        foreach ( $portmone_payment_statuses as $kay => $val ) {
+            $order_statuses['wc-status-'.$kay] = _x( $val[2], 'Order status', 'textdomain' );
+        }
+        return $order_statuses;
     }
 
     /**
@@ -64,14 +119,14 @@ class Portmone_Pay_For_Woocommerce
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/admin/class-portmone-pay-for-woocommerce-admin.php';
 
         /**
-         * The class helpers.
+         * Helper classes
          */
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/helpers/class-portmone-pay-for-woocommerce-helper-common.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/helpers/class-portmone-pay-for-woocommerce-helper-http-client.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/helpers/class-portmone-pay-for-woocommerce-helper-payment.php';
 
         /**
-         * The class dto.
+         * DTO classes
          */
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/create-link-payment/class-portmone-pay-for-woocommerce-dto-create-link-payment.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/create-link-payment/class-portmone-pay-for-woocommerce-dto-create-link-payment-payee.php';
@@ -87,11 +142,15 @@ class Portmone_Pay_For_Woocommerce
 
 
         /**
-         * The class api.
+         * The class responsible for processing the response (user transition)
+         * from the wallet site after payment (page with payment form).
          */
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/api/class-portmone-pay-for-woocommerce-api-receive-payment-response.php';
 
-
+        /**
+         * The class rest api. Processing external requests via REST API
+         */
+        require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/api/class-portmone-pay-for-woocommerce-api-rest.php';
 
         $this->loader = new Portmone_Pay_For_WooCommerce_Loader();
     }
@@ -111,36 +170,32 @@ class Portmone_Pay_For_Woocommerce
     }
 
     /**
-     * Add payment method hook
+     * Register a hook related to the functionality of the plugin's admin area and payment gateway.
      */
     private function gateway_hooks()
     {
         $this->loader->add_action( 'woocommerce_payment_gateways', $this, 'woocommerce_add_portmone_gateway' );
     }
 
+    /**
+     * Registering a hook associated with adding new order statuses.
+     */
+    private function payment_status_hooks()
+    {
+        $this->loader->add_action( 'init', $this, 'register_new_order_statuses' );
+        $this->loader->add_filter( 'wc_order_statuses', $this, 'new_wc_order_statuses' );
+    }
+
+    /*
+     * Registering API related hooks.
+     */
     private function api_hooks()
     {
         $helper_payment = new Portmone_Pay_For_WooCommerce_Helper_Payment();
         $receive_payment_response = new Portmone_Pay_For_WooCommerce_Api_Receive_Payment_Response($helper_payment);
         $this->loader->add_action( 'woocommerce_api_portmone_payment', $receive_payment_response, 'receive_payment_response' );
-    }
 
-    /**
-     * Add payment methods
-     *
-     * @return array
-     */
-     public function woocommerce_add_portmone_gateway($methods)
-     {
-        $methods[] = 'WC_Portmone';
-        return $methods;
-    }
-
-    /**
-     * Run the loader to execute all of the hooks with WordPress.
-     */
-    public function run()
-    {
-        $this->loader->run();
+        $rest = new Portmone_Pay_For_WooCommerce_Api_Rest();
+        $this->loader->add_action( 'rest_api_init', $rest, 'portmone_register_routes' );
     }
 }

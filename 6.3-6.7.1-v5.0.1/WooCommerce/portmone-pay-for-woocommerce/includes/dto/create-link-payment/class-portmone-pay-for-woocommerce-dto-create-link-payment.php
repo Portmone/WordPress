@@ -3,7 +3,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Create_Link_Payment class
+ * Data structure for requesting a link to the payment page
+ * https://docs.portmone.com.ua/docs/en/PaymentGatewayEng/#125-creating-a-payment-link
  *
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
@@ -12,31 +13,26 @@ defined( 'ABSPATH' ) || exit;
 class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment implements JsonSerializable
 {
     /**
-     * @access private
      * @var string
      */
     private $method = 'createLinkPayment';
 
     /**
-     * @access private
      * @var Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payee
      */
     private $payee;
 
     /**
-     * @access private
      * @var Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order
      */
     private $order;
 
     /**
-     * @access private
      * @var Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Token
      */
     private $token;
 
     /**
-     * @access private
      * @var Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payer
      */
     private $payer;

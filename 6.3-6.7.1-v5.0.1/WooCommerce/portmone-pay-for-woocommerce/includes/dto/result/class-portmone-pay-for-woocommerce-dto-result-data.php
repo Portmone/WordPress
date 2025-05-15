@@ -3,7 +3,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Result_Data class
+ * Data structure for request to get order data
+ * https://docs.portmone.com.ua/docs/en/PaymentGatewayEng/#8-getting-authorization-results
  *
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes/hepers
@@ -12,37 +13,31 @@ defined( 'ABSPATH' ) || exit;
 class Portmone_Pay_For_WooCommerce_Dto_Result_Data implements JsonSerializable
 {
     /**
-     * @access public
      * @var string
      */
     private $login;
 
     /**
-     * @access public
      * @var string
      */
     private $password;
 
     /**
-     * @access public
      * @var string
      */
     private $payeeId;
 
     /**
-     * @access public
      * @var string
      */
     private $shopbillId;
 
     /**
-     * @access public
      * @var string
      */
     private $shopOrderNumber;
 
     /**
-     * @access public
      * @var string
      */
     private $status = 'PAYED';

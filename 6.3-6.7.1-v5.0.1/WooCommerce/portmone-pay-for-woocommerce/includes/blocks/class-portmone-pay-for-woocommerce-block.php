@@ -10,7 +10,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
  *
  * @since      5.0.1
  * @package    Portmone_Pay_For_Woocommerce
- * @subpackage Portmone_Pay_For_Woocommerce/includes
+ * @subpackage Portmone_Pay_For_Woocommerce/includes/blocks
  * @author     Portmone
  */
 final class Portmone_Pay_For_Woocommerce__Block extends AbstractPaymentMethodType
@@ -41,6 +41,12 @@ final class Portmone_Pay_For_Woocommerce__Block extends AbstractPaymentMethodTyp
         return ['portmone-blocks-integration'];
     }
 
+    /**
+     * An array of key, value pairs of data made available to payment methods
+     * client side.
+     *
+     * @return array
+     */
     public function get_payment_method_data()
     {
         return [
