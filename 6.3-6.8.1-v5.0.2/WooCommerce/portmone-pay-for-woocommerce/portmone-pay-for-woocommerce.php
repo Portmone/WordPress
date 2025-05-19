@@ -4,7 +4,7 @@
  * Plugin Name: portmone-pay-for-woocommerce
  * Plugin URI: https://github.com/Portmone/WordPress
  * Description: Portmone Payment Gateway for WooCommerce
- * Version: 5.0.1
+ * Version: 5.0.2
  * Author: Portmone
  * Author URI: https://www.portmone.com.ua
  * Domain Path: /
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * Currently plugin version.
  * Start at version 5.0.1 and use SemVer - https://semver.org
  */
-define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_VERSION', '5.0.1' );
+define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_VERSION', '5.0.2' );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_NAME', 'portmone-pay-for-woocommerce' );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_URL', plugin_dir_url( __FILE__ ) );

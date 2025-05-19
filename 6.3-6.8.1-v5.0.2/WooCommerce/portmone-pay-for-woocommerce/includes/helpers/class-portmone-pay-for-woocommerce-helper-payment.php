@@ -57,7 +57,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
 
         if ( $response['RESULT'] !== '0' ) {
             $result = $response['RESULT'] . ' ' . __( 'Номер вашого замовлення', 'portmone-pay-for-woocommerce' ) . ': ' . $order->get_id();
-            $this->update_order($order, null, OrderInternalStatus::FAILED, '#2P ' . $result);
+            $this->update_order($order, null, OrderInternalStatus::FAILED, '#2P ' . $result, []);
             return new WP_Error('error', '#2P ' . $result);
         }
 
@@ -135,22 +135,22 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
     public function change_order_status( array $portmone_order_data, WC_Order $order, array $settings )
     {
         if ( $portmone_order_data['status'] == self::ORDER_REJECTED ) {
-            $this->update_order($order, $portmone_order_data['pay_date'], OrderInternalStatus::FAILED, '#9P ' . __( 'Під час здійснення оплати виникла помилка. Перевірте дані вашої картки та спробуйте здійснити оплату ще раз!', 'portmone-pay-for-woocommerce' ));
+            $this->update_order($order, $portmone_order_data['pay_date'], OrderInternalStatus::FAILED, '#9P ' . __( 'Під час здійснення оплати виникла помилка. Перевірте дані вашої картки та спробуйте здійснити оплату ще раз!', 'portmone-pay-for-woocommerce' ), $portmone_order_data );
             return new WP_Error('error', '#9P ' . __( 'Під час здійснення оплати виникла помилка. Перевірте дані вашої картки та спробуйте здійснити оплату ще раз!', 'portmone-pay-for-woocommerce' ) . ' ' .  __( 'Номер вашого замовлення', 'portmone-pay-for-woocommerce' )  . ': ' . $order->get_id());
         }
 
         if ( $portmone_order_data['status'] == self::ORDER_PREAUTH ) {
-            $this->update_order($order, $portmone_order_data['pay_date'], 'wc-status-preauth', '#10P ' .  __( 'Оплачено за допомогою Portmone.com (блокування коштів)', 'portmone-pay-for-woocommerce' ));
+            $this->update_order($order, $portmone_order_data['pay_date'], 'wc-status-preauth', '#10P ' .  __( 'Оплачено за допомогою Portmone.com (блокування коштів)', 'portmone-pay-for-woocommerce' ), $portmone_order_data );
             $this->send_notification_email( $order, 'WC_Email_Customer_Processing_Order' );
         }
 
         if ( $portmone_order_data['status'] == self::ORDER_CREATED ) {
-            $this->update_order( $order, $portmone_order_data['pay_date'], OrderInternalStatus::FAILED, '#13P ' . __( 'Під час здійснення оплати виникла помилка. Перевірте дані вашої картки та спробуйте здійснити оплату ще раз!', 'portmone-pay-for-woocommerce' ) );
+            $this->update_order( $order, $portmone_order_data['pay_date'], OrderInternalStatus::FAILED, '#13P ' . __( 'Під час здійснення оплати виникла помилка. Перевірте дані вашої картки та спробуйте здійснити оплату ще раз!', 'portmone-pay-for-woocommerce' ), $portmone_order_data );
             return new WP_Error('error', '#13P ' . __( 'Під час здійснення оплати виникла помилка. Перевірте дані вашої картки та спробуйте здійснити оплату ще раз!', 'portmone-pay-for-woocommerce' ) );
         }
 
         if ( $portmone_order_data['status'] == self::ORDER_PAYED ) {
-            $this->update_order( $order, $portmone_order_data['pay_date'], OrderInternalStatus::PROCESSING, '#14P ' .  __( 'Оплату здійснено успішно через Portmone.com', 'portmone-pay-for-woocommerce' ) ) ;
+            $this->update_order( $order, $portmone_order_data['pay_date'], OrderInternalStatus::PROCESSING, '#14P ' .  __( 'Оплату здійснено успішно через Portmone.com', 'portmone-pay-for-woocommerce' ), $portmone_order_data ) ;
             $this->update_count_products( $order, $settings );
             $this->send_notification_email( $order, 'WC_Email_Customer_Processing_Order' );
         }
@@ -220,13 +220,37 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
      * @return void
      * @throws WC_Data_Exception
      */
-    private function update_order( WC_Order $order, $pay_date, string $status, string $note )
+    private function update_order( WC_Order $order, $pay_date, string $status, string $note,  array $portmone_order_data )
     {
         $order->update_status( $status );
         $order->add_order_note( $note );
         if ( ! $order->get_date_paid( 'edit' ) && $pay_date !== null) {
             $order->set_date_paid( strtotime( $pay_date . '+02' ) );
         }
+
+        $rnn = $portmone_order_data['rrn'] ?? '';
+        $order->update_meta_data( 'rrn', $rnn );
+
+        $auth_code = $portmone_order_data['authCode'] ?? '';
+        $order->update_meta_data( 'auth_code', $auth_code );
+
+        $terminal_id = $portmone_order_data['terminal_id'] ?? '';
+        $order->update_meta_data( 'terminal_id', $terminal_id );
+
+        $merchant_id = $portmone_order_data['merchant_id'] ?? '';
+        $order->update_meta_data( 'merchant_id', $merchant_id );
+
+        $shop_bill_id = $portmone_order_data['shopBillId'] ?? '';
+        $order->update_meta_data( 'shop_bill_id', $shop_bill_id );
+
+        $bank_name = $portmone_order_data['bank_name'] ?? '';
+        $order->update_meta_data( 'bank_name', $bank_name );
+
+        $card_mask = $portmone_order_data['cardMask'] ?? '';
+        $order->update_meta_data( 'card_mask', $card_mask );
+
+        $card_type_name = $portmone_order_data['cardTypeName'] ?? '';
+        $order->update_meta_data( 'card_type_name', $card_type_name );
 
         $order->save();
         if ($status == 'wc-processing') {
