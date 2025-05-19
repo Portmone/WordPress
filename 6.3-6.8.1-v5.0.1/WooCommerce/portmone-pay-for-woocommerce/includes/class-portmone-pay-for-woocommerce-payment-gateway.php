@@ -149,8 +149,8 @@ class WC_Portmone extends WC_Payment_Gateway
             $this->form_fields = array_merge(
                 $this->form_fields,
                 array(
-                    'convert_money'    => array('
-                        title'         => __( 'Включити конвертацію в Гривні', 'portmone-pay-for-woocommerce' ),
+                    'convert_money'    => array(
+                        'title'         => __( 'Включити конвертацію в Гривні', 'portmone-pay-for-woocommerce' ),
                         'type'         => 'checkbox',
                         'label'        => $convert_money_label,
                         'default'      => 'no',
@@ -159,7 +159,7 @@ class WC_Portmone extends WC_Payment_Gateway
                     'exchange_rates'   => array(
                         'title'        => __( 'Курс валюти', 'portmone-pay-for-woocommerce' ),
                         'type'         => 'number',
-                        'default'      => O,
+                        'default'      => 0,
                         'description'  => $exchange_rates_description,
                         'desc_tip'     => true)
                 )

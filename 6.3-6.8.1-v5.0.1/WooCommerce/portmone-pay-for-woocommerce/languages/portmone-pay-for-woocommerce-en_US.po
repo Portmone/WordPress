@@ -1,234 +1,280 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: WordPress - 4.7.x\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-20T13:10:04+00:00\n"
-"PO-Revision-Date: 2025-02-20T13:10:04+00:00\n"
-"Language: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-07-17 22:40+0300\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 2.4.1\n"
 
 msgid "Платіжний шлюз Portmone для WooCommerce вимагає встановлення та активації WooCommerce. Ви можете завантажити %s тут."
-msgstr "Платежный шлюз Portmone для WooCommerce требует установки и активации WooCommerce. Вы можете загрузить %s здесь."
+msgstr "Portmone Payment Gateway for WooCommerce requires WooCommerce to be installed and active. You can download %s here."
 
 msgid "Налаштування"
-msgstr "Настройки"
+msgstr "Settings"
 
 msgid "Включити прийом оплати через Portmone.com"
-msgstr "Включить прием оплаты через Portmone.com"
+msgstr "Enable payment via Portmone.com"
 
 msgid "Включити Portmone.com модуль оплати"
-msgstr "Включить Portmone.com модуль оплаты"
+msgstr "Enable Portmone.com Payment Module"
 
 msgid "Ідентифікатор магазину в системі Portmone.com (Payee ID)"
-msgstr "Идентификатор магазина в системе Portmone.com (Payee ID)"
+msgstr "Store identifier in the Portmone.com system (Payee ID)"
 
 msgid "Обов’язкове поле"
-msgstr "Обязательно для заполнения"
+msgstr "Required information"
 
 msgid "ID Інтернет-магазину, повідомлений менеджером Portmone.com"
-msgstr "ID Интернет-магазина, предоставленный менеджером Portmone.com"
+msgstr "The online store ID provided by the Portmone.com manager"
 
 msgid "Логін Інтернет-магазину в системі Portmone.com"
-msgstr "Логин Интернет-магазина в системе Portmone.com"
+msgstr "The login of the online store in Portmone.com system"
 
 msgid "Логін Інтернет-магазину, повідомлений менеджером Portmone.com"
-msgstr "Логин Интернет-магазина, предоставленный менеджером Portmone.com"
+msgstr "The login of the online store provided by the Portmone.com manager"
 
 msgid "Пароль Інтернет-магазину в системі Portmone.com"
-msgstr "Пароль Интернет-магазина в системе Portmone.com"
+msgstr "The password of the online store in the Portmone.com system"
 
 msgid "Пароль для Інтернет-магазину, повідомлений менеджером Portmone.com"
 msgstr "Пароль для Интернет-магазина, предоставленный менеджером Portmone.com"
 
 msgid "Час на сплату"
-msgstr "Время на оплату"
+msgstr "Time for payments"
 
 msgid "Час відведенний на оплату через Portmone.com"
-msgstr "Время отведенное на оплату через Portmone.com"
+msgstr "Time for payment in Portmone.com"
 
 msgid "Ключ для підпису"
-msgstr "Ключ для подписи"
+msgstr "Key for signature"
 
 msgid "Ключ для підпису узгодженний з Portmone.com"
-msgstr "Ключ для подписи согласованный с Portmone"
+msgstr "Key for signature consensual with Portmone.com"
 
 msgid "Включити конвертацію в Гривні"
-msgstr "Включить конвертацию в Гривны"
+msgstr "Enable conversion to Hryvnia"
 
 msgid "Конвертувати валюту магазину з %1$s %2$s > в > %3$s, при оформленні замовлення використовуючи власний курс конвертації який вказати нижче (стандартно, конвертація проходить за курсом НБУ, на сайті портмоне)"
-msgstr "Конвертировать валюту магазина из %1$s %2$s > в > %3$s, при оформлении заказа используя собственный курс конвертации который указать ниже (стандартно, конвертация проходит по курсу НБУ, на сайте портмоне)"
+msgstr "Convert store currency from %1$s %2$s > to > %3$s, when ordering using your own conversion rate which is indicated below (standard, conversion takes place at the NBU rate, on the purse website)"
 
 msgid "Portmone.com приймає тільки Українські гривні. Ваша сума буде автоматично конвертована в UAH в Portmone.com за курсом НБУ. Якщо ви хочете вказати власний курс конвертації, виберіть цей пункт."
-msgstr "Portmone.com принимает только Украинские гривны. Ваша сумма будет автоматически конвертирована в UAH в Portmone.com по курсу НБУ. Если вы хотите указать собственный курс конвертации, выберите этот пункт."
+msgstr "Portmone.com accepts only Ukrainian hryvnia. Your amount will be automatically converted in UAH to Portmone.com at the NBU rate. If you want to specify your own conversion rate, select this item."
 
 msgid "Курс валюти"
-msgstr "Курс валюты"
+msgstr "Exchange rate"
 
 msgid "Курс %1$s за 1 %2$s %3$s"
-msgstr "Курс %1$s за 1 %2$s %3$s"
+msgstr "Rate %1$s for 1 %2$s %3$s"
 
 msgid "Назва компанії"
-msgstr "Название компании"
+msgstr "Company name"
 
 msgid "Оплата замовлення через Portmone.com"
-msgstr "Оплата заказа через Portmone.com"
+msgstr "Payment for order through Portmone.com"
 
 msgid "Назва Інтернет-магазину, що відображається клієнту при оплаті"
-msgstr "Название Интернет-магазина, которое видит клиент при оплате"
+msgstr "The name of the online store, which the customer sees when paying"
 
 msgid "Коментар для клієнта"
-msgstr "Комментарий для клиента"
+msgstr "Note to the customer"
 
 msgid "Сервіс проведення платежів забезпечується системою Portmone.com з використанням сучасного й безпечного механізму авторизації платіжних карт. Служба підтримки Portmone.com: телефон +380(44)200 09 02, електронна пошта: support@portmone.com"
-msgstr "Сервис проведения платежей обеспечивается системой Portmone.com с использованием современного и безопасного механизма авторизации платежных карт. Служба поддержки Portmone.com: телефон +380(44)200 09 02, электронная почта: support@portmone.com"
+msgstr "The payment service is provided by Portmone.com system using a modern and secure payment card authorization mechanism"
 
 msgid "Інформація для клієнта на сторінці оплати замовлення"
-msgstr "Описание для клиента на странице оплаты заказа"
+msgstr "Description for the customer on the payment page"
 
 msgid "Режим преавторизаціі"
-msgstr "Режим преавторизации"
+msgstr "Pre-authorization mod"
 
 msgid "Засоби тільки блокуються на карті клієнта, але фінансового списання з рахунку клієнта не відбувається"
-msgstr "Средства только блокируются на карте клиента, но финансового списания со счета клиента не происходит"
+msgstr "Funds are only blocked on the client’s card, but there is no financial write-off from the client’s account"
 
 msgid "Відзначте, щоб кошти тільки блокуються на карті клієнта, але фінансового списання з рахунку клієнта не відбувається"
-msgstr "Отметьте, чтобы cредства только блокируются на карте клиента, но финансового списания со счета клиента не происходит"
+msgstr "Please note that funds are only blocked on the client's card, but no financial debiting from the client's account occurs"
 
 msgid "Показати Portmone.com в списку меню адміністративної панелі"
-msgstr "Показать Portmone.com в списке меню административной панели"
+msgstr "Show Portmone.com in the admin panel menu list"
 
 msgid "Вкажіть порядковий номер відображення в списку меню. Якщо значення <1, Portmone.com перегляньте в списку меню не буде"
-msgstr "Укажите порядковый номер отображения в списке меню. Если значение < 1, Portmone.com отображатся в списке меню не будет"
+msgstr "Indicate the display serial number in the menu list. If value <1, Portmone.com will not appear in the menu list"
 
 msgid "Змінити кількість товарів на складі після оплати"
-msgstr "Изменять колличество товаров на складе после оплаты"
+msgstr "Change the number of goods in stock after payment"
 
 msgid "Від загальної суми товарів на складі відняти товари оплаченого замовленн"
-msgstr "От общей суммы товаров на складе отнять товары оплаченного заказа"
+msgstr "From the total amount of goods in the warehouse to take away goods paid order"
 
 msgid "Відзначте, щоб змінювати кількість товарів"
-msgstr "Отметьте, чтобы изменять количество товаров"
+msgstr "Tick ​​to change the quantity of goods"
 
 msgid "Зберегти ім'я та прізвище клієнта"
-msgstr "Сохранить имя и фамилию клиента"
+msgstr "Save the customer's first and last name"
 
 msgid "Відзначте, щоб зберегти ім'я та прізвище клієнта"
-msgstr "Отметьте, чтобы сохранить имя и фамилию клиента"
+msgstr "Check to save the  customer's first and last name"
 
 msgid "Ім'я та прізвище клієнта береться з адреси, вказаної в замовленні. Узгоджується з менеджером Portmone"
-msgstr "Имя и фамилия клиента берется с адреса, указанного в заказе. Согласуется с менеджером Portmone"
+msgstr "The customer's first and last name is taken from the address specified in the order. To be agreed with the Portmone manager"
 
 msgid "Зберегти телефон клієнта"
-msgstr "Сохранить телефон клиента"
+msgstr "Save customer phone number"
 
 msgid "Відзначте, щоб зберегти телефон клієнта"
-msgstr "Отметьте, чтобы сохранить телефон клиента"
+msgstr "Check to save the customer's phone number"
 
 msgid "Телефон клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
-msgstr "Телефон клиента берется с адреса, указанного в заказе. Согласуется с менеджером Portmone"
+msgstr "The customer's phone number is taken from the address specified in the order. To be agreed with the Portmone manager"
 
 msgid "Зберегти email клієнта"
-msgstr "Сохранить email клиента"
+msgstr "Save customer email"
 
 msgid "Відзначте, щоб зберегти email клієнта"
-msgstr "Отметьте, чтобы сохранить email клиента"
+msgstr "Check to save the customer's email"
 
 msgid "Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone"
-msgstr "Email клиента берется с адреса, указанного в заказе. Согласуется с менеджером Portmone"
+msgstr "The customer's email is taken from the address specified in the order. To be agreed with the Portmone manager"
 
 msgid "Розщеплення платежу"
-msgstr "Расщепление платежа"
+msgstr "Splitting parameters"
 
 msgid "Платіжна система Portmone.com надає можливість розщеплення 1 (одного) карткового платежу на декілька компаній (юридичних осіб). Продавець повинен додати в товар атрибут з іменем payee_id і значенням рівного індексу компанії в системі Portmone.com"
-msgstr "Платежная система Portmone.com предоставляет возможность расщепления 1 (одного) карточного платежа на несколько компаний (юридических лиц). Продавец должен добавить в товар атрибут с именем payee_id и значением равного индекса компании в системе Portmone.com"
+msgstr "The Portmone.com payment system provides the possibility of splitting 1 (one) card payment to several companies (legal entities). The seller must add to the product an attribute with the name payee_id and the value equal to the index of the company in the Portmone.com system"
 
 msgid "Відзначте, щоб зробити розщеплення платежу"
-msgstr "Отметьте, чтобы произвести расщепление платежа"
+msgstr "Check to split the payment"
 
 msgid "Показати повідомлення на thank-you page"
-msgstr "Показать сообщения на thank-you page"
+msgstr "Show message on thank-you page"
 
 msgid "Повідомлення відображаються на thank-you page після переходу зі сторінки оплати Portmone.com"
-msgstr "Сообщения отображаются на thank-you page после перехода со страницы оплаты Portmone.com"
+msgstr "Messages are displayed on the thank-you page after switching from the Portmone.com payment page"
 
 msgid "Відзначте, щоб показати повідомлення на thank-you page"
-msgstr "Отметьте, чтобы показать сообщение на thank-you page"
+msgstr "Check to show message on thank-you page"
 
 msgid "Отримувати повідомлення про успішну оплату"
-msgstr "Получать уведомление об успешной оплате"
+msgstr "Receive notifications about successful payment"
 
 msgid "Отримувати повідомлення про успішну оплату у форматі JSON. Для активації даного функціоналу, будь ласка, напишіть на пошту b2bsupport@portmone.me"
-msgstr "Получать уведомление об успешной оплате в формате JSON. Для активации данного функционала пожалуйста напишите на почту b2bsupport@portmone.me"
+msgstr "Receive a message about successful payment in JSON format. To activate this functionality, please write to b2bsupport@portmone.me"
 
 msgid "Відзначте, щоб отримувати повідомлення про успішну оплату"
-msgstr "Отметьте, чтобы получать уведомления об успешной оплате"
+msgstr "Check to receive notifications about successful payment"
 
 msgid "Неможливо обробити цей платіж"
 msgstr "Unable to process this payment"
 
 msgid "Статус цього замовлення &ldquo;%s&rdquo; &mdash; його неможливо оплатити повторно"
-msgstr "Статус этого заказа &ldquo;%s&rdquo; &mdash; его невозможно оплатить повторно"
+msgstr "This order status is &ldquo;%s&rdquo; &mdash; it cannot be repaid"
 
 msgid "Номер вашого замовлення"
-msgstr "Номер вашего заказа"
+msgstr "Your order number"
 
 msgid "У системі Portmone.com цього платежу немає, він повернутий чи створений некоректно"
-msgstr "В системе Portmone.com этого платежа нет, он возвращен или создан некорректно"
+msgstr "This payment does not exist in the Portmone.com system, it was returned or created incorrectly"
 
 msgid "Помилка отримання посилання на оплату"
-msgstr "Ошибка получения ссылки на оплату"
+msgstr "Error receiving payment link"
 
 msgid "Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв\\'яжіться з нами, щоб отримати допомогу"
-msgstr "Произошла ошибка. Не указана компания получатель в товаре &ldquo;%s&rdquo;. Пожалуйста, свяжитесь с нами, чтобы получить помощь"
+msgstr "An error occurred. The recipient company is not specified in the item &ldquo;%s&rdquo;. Please contact us for assistance"
 
 msgid "Під час здійснення оплати виникла помилка. Перевірте дані вашої картки та спробуйте здійснити оплату ще раз!"
-msgstr "При совершении оплаты возникла ошибка. Проверьте данные вашей карты и попробуйте провести оплату еще раз!"
+msgstr "An error occurred while making a payment. Check your card details and try to make a payment again!"
 
 msgid "Оплачено за допомогою Portmone.com (блокування коштів)"
-msgstr "Оплачено с помощью Portmone.com (блокировка средств)"
+msgstr "Paid via Portmone.com (funds blocked)"
 
 msgid "Оплату здійснено успішно через Portmone.com"
-msgstr "Оплата совершена успешно через Portmone.com"
+msgstr "Payment completed successfully via Portmone.com"
 
 msgid "Email користувачеві доданий у чергу на відправку"
-msgstr "Email пользователю добавлен в очередь на отправку"
+msgstr "The user's email has been added to the sending queue."
 
 msgid "Під час здійснення оплати виникла помилка."
-msgstr "При совершении оплаты возникла ошибка"
+msgstr "An error occurred while making the payment"
 
 msgid "Дані Інтернет-магазину некоректні"
-msgstr "Данные Интернет-магазина некорректны"
+msgstr "Online store data is incorrect"
 
 msgid "Номер замовлення некоректний"
-msgstr "Номер замовлення некоректний"
+msgstr "The order number is incorrect"
 
 msgid "Сплачена сума некоректна"
-msgstr "Оплаченная сумма некорректен"
+msgstr "The amount paid is incorrect"
 
 msgid "Для повернення у валюті %s, будь ласка, зверніться до служби підтримки Portmone.com"
-msgstr "Для возвращения в валюте %s, пожалуйста, обратитесь в службу поддержки Portmone.com"
+msgstr "For a refund in %s currency, please contact Portmone.com support"
 
 msgid "Значення для shop_order_number не можуть бути порожніми"
-msgstr "Значения для shop_order_number не могут быть пустыми"
+msgstr "Values for shop_order_number cannot be empty"
 
 msgid "Невідома помилка"
-msgstr "Неизвестная ошибка"
+msgstr "Unknown error"
 
 msgid "Помилка під час обробки нотифікації"
-msgstr "Ошибка при обработке нотификации"
+msgstr "Error while processing notification"
 
 msgid "Оплачено з Portmone.com"
-msgstr "Оплачено с Portmone.com"
+msgstr "Paid from Portmone.com"
 
 msgid "Оплачено з Portmone.com (але не перевірено)"
-msgstr "Оплачено с Portmone.com (но не проверено)"
+msgstr "Paid from Portmone.com (but not verified)"
 
 msgid "Оплачено з Portmone.com (блокування коштів)"
-msgstr "Оплачено с Portmone.com (блокировка средств)"
+msgstr "Paid with Portmone.com (money lock)"
+
+msgid "Оплачено з Portmone.com (блокування коштів)"
+msgstr "Paid with Portmone.com (money lock)"
 
 msgid "Оплата з Portmone.com НЕ вдалась"
-msgstr "Оплата с Portmone.com НЕ удалась"
+msgstr "Paid with Portmone.com is NOT successful"
+
+msgid "Інформація"
+msgstr "Information"
+
+msgid "Платіжний плагін Portmone.com"
+msgstr "Portmone.com payment plugin"
+
+msgid "Версія плагіну"
+msgstr "Plugin version"
+
+msgid "Час на оплату має бути числом"
+msgstr "Payment time must be a number"
+
+msgid "Час на оплату має бути більшим за нуль"
+msgstr "Time to pay must be greater than zero"
+
+msgid "Не заповнені обов'язкові поля"
+msgstr "Required fields are not filled in"
+
+msgid "Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв'яжіться з нами, щоб отримати допомогу"
+msgstr "An error occurred. The recipient company is not specified in the item &ldquo;%s&rdquo;. Please contact us for assistance"
+
+msgid "Замовлення не знайдено"
+msgstr "Order not found"
+
+msgid "Замовлення не було сплачено через систему Portmone"
+msgstr "The order was not paid for through the Portmone system"
+
+msgid "Для проведення часткового повернення, будь ласка, зверніться в службу підтримки Portmone.com"
+msgstr "To make a partial refund, please contact Portmone.com support"
+
+msgid "Помилка при надсиланні запиту"
+msgstr "Error sending request"
+
+msgid "версія актуальна для плагіна"
+msgstr "version is current for the plugin"
+
+msgid "на цій версії плагін НЕ перевірений і може працювати нестабільно"
+msgstr "The plugin has NOT been tested on this version and may not work stably."
+
+

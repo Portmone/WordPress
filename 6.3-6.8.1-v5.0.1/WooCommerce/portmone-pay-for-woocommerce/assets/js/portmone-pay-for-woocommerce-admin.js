@@ -33,13 +33,13 @@ jQuery(function () {
 						if (val[i].name === 'woocommerce_portmone_exp_time') {
 							if (val[i].value !== '' &&  isNaN(+val[i].value)) {
 								$('#woocommerce_portmone_exp_time').addClass('woocommerce_portmone_input_error');
-								error_exp_time = 'Час на оплату має бути числом';
+								error_exp_time = __( "Час на оплату має бути числом", "portmone-pay-for-woocommerce" );
 								break;
 							}
 
 							if (val[i].value < 0) {
 								$('#woocommerce_portmone_exp_time').addClass('woocommerce_portmone_input_error');
-								error_exp_time = 'Час на оплату має бути більшим за нуль';
+								error_exp_time =  __( "Час на оплату має бути більшим за нуль", "portmone-pay-for-woocommerce" );
 							}
 						}
 					}
@@ -56,7 +56,7 @@ jQuery(function () {
 					}
 
 					if ( error > 0 ) {
-						$('#portmone-header').after('<div id="message" class="error" ><p><strong>Не заповнені обов\'язкові поля</strong></p></div>');
+						$('#portmone-header').after('<div id="message" class="error" ><p><strong>' + __( "Не заповнені обов'язкові поля", "portmone-pay-for-woocommerce" ) + ' </strong></p></div>');
 						return false;
 					}
 

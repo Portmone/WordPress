@@ -78,7 +78,14 @@ add_action( 'plugins_loaded', 'portmone_pay_for_woocommerce_init', 10 );
  */
 function portmone_pay_for_woocommerce_init() {
 
-    load_plugin_textdomain("portmone-pay-for-woocommerce", false, plugin_basename(dirname(__FILE__))."/languages");
+    load_plugin_textdomain("portmone-pay-for-woocommerce", false, plugin_basename(dirname(__FILE__))."/languages" );
+
+    $locale                  = apply_filters( 'plugin_locale', determine_locale(), PORTMONE_PAY_FOR_WOOCOMMERCE_NAME );
+    $custom_translation_path = PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . '/languages/'. PORTMONE_PAY_FOR_WOOCOMMERCE_NAME .'-' . $locale . '.mo';
+    if ( is_readable( $custom_translation_path ) ) {
+        unload_textdomain( PORTMONE_PAY_FOR_WOOCOMMERCE_NAME );
+        load_textdomain( PORTMONE_PAY_FOR_WOOCOMMERCE_NAME, $custom_translation_path );
+    }
 
     if ( ! class_exists( 'WooCommerce' ) ) {
         add_action( 'admin_notices', 'portmone_pay_for_woocommerce_missing_wc_notice' );

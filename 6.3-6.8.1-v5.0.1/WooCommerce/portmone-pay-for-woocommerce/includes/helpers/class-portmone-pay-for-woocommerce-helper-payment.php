@@ -193,7 +193,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
     private function check_portmone_order_data( array $portmone_order_data, array $settings, WC_Order $order )
     {
         if ( $settings['payee_id'] !=  $portmone_order_data['payee_id'] ) {
-            return new WP_Error('error', '#17P ' . __( 'Під час здійснення оплати виникла помилка.', 'portmone-pay-for-woocommerce')  . ' '. __( 'Данные Интернет-магазина некорректны', 'portmone-pay-for-woocommerce' ) );
+            return new WP_Error('error', '#17P ' . __( 'Під час здійснення оплати виникла помилка.', 'portmone-pay-for-woocommerce')  . ' '. __( 'Дані Інтернет-магазину некоректні', 'portmone-pay-for-woocommerce' ) );
         }
 
         $shop_order_number = $order->get_meta( '_shop_order_number' );
@@ -201,10 +201,13 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
             return new WP_Error('error', '#18P ' . __( 'Під час здійснення оплати виникла помилка.', 'portmone-pay-for-woocommerce')  . ' '. __( 'Номер замовлення некоректний', 'portmone-pay-for-woocommerce' ) );
         }
 
-        $bill_amount = $order->get_meta( '_create_link_payment_bill_amount' );
-        if ( empty( $bill_amount ) || $bill_amount != $portmone_order_data['billAmount'] ) {
-            return new WP_Error('error', '#19P ' . __( 'Під час здійснення оплати виникла помилка.', 'portmone-pay-for-woocommerce')  . ' '. __( 'Сплачена сума некоректна', 'portmone-pay-for-woocommerce' ) );
+        if ( $order->get_currency() == 'UAH' || $settings['convert_money'] == 'yes' ) {
+            $bill_amount = $order->get_meta( '_create_link_payment_bill_amount' );
+            if ( empty( $bill_amount ) || $bill_amount != $portmone_order_data['billAmount'] ) {
+                return new WP_Error('error', '#19P ' . __( 'Під час здійснення оплати виникла помилка.', 'portmone-pay-for-woocommerce')  . ' '. __( 'Сплачена сума некоректна', 'portmone-pay-for-woocommerce' ) );
+            }
         }
+
     }
 
     /**

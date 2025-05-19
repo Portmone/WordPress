@@ -93,7 +93,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
                 }
 
                 if ( $payee_id == 0 ) {
-                    $message = sprintf( __( 'Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв\'яжіться з нами, щоб отримати допомогу' ), $product->get_name() );
+                    $message = sprintf( __( "Сталася помилка. Не вказана компанія одержувач у товарі &ldquo;%s&rdquo;. Будь ласка, зв'яжіться з нами, щоб отримати допомогу", 'portmone-pay-for-woocommerce' ), $product->get_name() );
                     return new WP_Error( 'error', $message);
                 }
             }
