@@ -1,8 +1,8 @@
-# Плагин Portmone.com для WordPress 6.3 - 6.8.1, wooCommerce: 8.6.1 - 9.8.5
+# Плагин Portmone.com для WordPress 6.3 - 6.8.2, wooCommerce: 8.6.1 - 10.0.4
 
 Creator: Portmone.com   
 Tags: Portmone, WordPress, wooCommerce, payment, payment gateway, credit card, debit card    
-Requires at least: WordPress 6.8.1, wooCommerce: 9.8.5
+Requires at least: WordPress 6.8.1, wooCommerce: 10.0.4
 License: Payment Card Industry Data Security Standard (PCI DSS) 
 License URI: [License](https://www.portmone.com.ua/r3/uk/security/) 
 

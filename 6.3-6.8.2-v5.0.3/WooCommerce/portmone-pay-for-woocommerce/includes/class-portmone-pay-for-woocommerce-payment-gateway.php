@@ -243,6 +243,13 @@ class WC_Portmone extends WC_Payment_Gateway
                     'default'          => 'no',
                     'description'      => __( 'Відзначте, щоб отримувати повідомлення про успішну оплату', 'portmone-pay-for-woocommerce' ),
                     'desc_tip'         => true),
+                'test_mode_flag'         => array(
+                    'title'            =>  __( 'Режим тестування', 'portmone-pay-for-woocommerce' ),
+                    'type'             => 'checkbox',
+                    'label'            => __( 'У режимі тест у систему портмоне передається номер замовлення (shopOrderNumber) як конкотенація рядків номер замовлення у системі партнера, символ _ , позначка часу', 'portmone-pay-for-woocommerce' ),
+                    'default'          => 'no',
+                    'description'      => __( 'Відзначте, щоб зробити Режим тестування', 'portmone-pay-for-woocommerce' ),
+                    'desc_tip'         => true),
             )
         );
     }

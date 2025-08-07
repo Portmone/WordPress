@@ -29,10 +29,6 @@ class Portmone_Pay_For_Woocommerce
 
     public function __construct()
     {
-
-        $this->version = PORTMONE_PAY_FOR_WOOCOMMERCE_VERSION;
-        $this->plugin_name = PORTMONE_PAY_FOR_WOOCOMMERCE_NAME;
-
         $this->includes();
         $this->define_admin_hooks();
 

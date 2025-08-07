@@ -27,7 +27,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
      * @return string
      */
     public function get_wc_actual() {
-        if (WC()->version >= $this->portmone_plugin_data["WC requires at least"] && WC()->version <= $this->portmone_plugin_data["WC tested up to"]) {
+        if ( version_compare( WC()->version, $this->portmone_plugin_data["WC requires at least"], '>=' ) && version_compare( WC()->version, $this->portmone_plugin_data["WC tested up to"], '<=' ) ) {
             return '<span style="color: green">('.__( 'версія актуальна для плагіна', 'portmone-pay-for-woocommerce' ).')</span>';
         } else {
             return '<span style="color: #e7a511;">('.__( 'на цій версії плагін НЕ перевірений і може працювати нестабільно', 'portmone-pay-for-woocommerce' ).')</span>';
@@ -40,7 +40,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
      * @return string
      */
     public function get_wp_actual() {
-        if (get_bloginfo('version') >= $this->portmone_plugin_data["RequiresWP"]) {
+        if ( version_compare(get_bloginfo('version'), $this->portmone_plugin_data["RequiresWP"], '>=' ) ) {
             return '<span style="color: green">('.__( 'версія актуальна для плагіна', 'portmone-pay-for-woocommerce' ).')</span>';
         } else {
             return '<span style="color: #e7a511;">('._( 'на цій версії плагін НЕ перевірений і може працювати нестабільно', 'portmone-pay-for-woocommerce' ).')</span>';
