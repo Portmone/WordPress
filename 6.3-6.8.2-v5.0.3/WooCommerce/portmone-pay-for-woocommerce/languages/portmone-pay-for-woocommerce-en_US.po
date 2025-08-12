@@ -277,4 +277,11 @@ msgstr "version is current for the plugin"
 msgid "на цій версії плагін НЕ перевірений і може працювати нестабільно"
 msgstr "The plugin has NOT been tested on this version and may not work stably."
 
+msgid "Режим тестування"
+msgstr "Test Mode"
 
+msgid "У режимі тест у систему портмоне передається номер замовлення (shopOrderNumber) як конкотенація рядків номер замовлення у системі партнера, символ _ , позначка часу"
+msgstr "In test mode, the order number (shopOrderNumber) is transferred to the wallet system as a concatenation of the strings order number in the partner system, the symbol _ , and a timestamp"
+
+msgid "Відзначте, щоб зробити Режим тестування"
+msgstr "Check to enable Test Mode"

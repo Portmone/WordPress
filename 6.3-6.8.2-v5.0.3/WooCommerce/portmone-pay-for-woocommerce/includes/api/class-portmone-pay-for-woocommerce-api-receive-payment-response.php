@@ -30,12 +30,14 @@ class Portmone_Pay_For_WooCommerce_Api_Receive_Payment_Response
     {
         if ( empty( $_REQUEST['SHOPORDERNUMBER'] ) ) {
            wp_safe_redirect( $this->get_return_url( null ) );
+            return;
         }
 
         $order_id = $this->helper_payment->get_order_id( $_REQUEST['SHOPORDERNUMBER'] );
         $order = wc_get_order( $order_id );
-        if ( ( ! $order instanceof WC_Order ) ) {
+        if ( ! $order instanceof WC_Order ) {
             wp_safe_redirect( $this->get_return_url( null ) );
+            return;
         }
 
         $settings = get_option( 'woocommerce_portmone_settings', null );

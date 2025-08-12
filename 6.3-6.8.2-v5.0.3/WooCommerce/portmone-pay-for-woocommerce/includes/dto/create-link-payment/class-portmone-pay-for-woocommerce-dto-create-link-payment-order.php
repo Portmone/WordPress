@@ -26,7 +26,11 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order implements Json
 
     public function set_properties( array $settings, WC_Order $order )
     {
-        $this->shopOrderNumber = $order->get_order_number() . '_' . time();
+        $this->shopOrderNumber = $order->get_id();
+        if (isset($settings['test_mode_flag']) && $settings['test_mode_flag'] == 'yes' ) {
+            $this->shopOrderNumber .= '_' . time();
+        }
+
         $this->billAmount = $this->get_order_total( $settings, $order );
         $this->attribute1 = $this->get_attribute1( $settings, $order );
         $this->attribute2 = $this->get_attribute2( $settings, $order );
