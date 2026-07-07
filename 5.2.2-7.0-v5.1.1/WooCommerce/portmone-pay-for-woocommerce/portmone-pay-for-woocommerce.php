@@ -4,17 +4,17 @@
  * Plugin Name: portmone-pay-for-woocommerce
  * Plugin URI: https://github.com/Portmone/WordPress
  * Description: Portmone Payment Gateway for WooCommerce
- * Version: 5.0.3
+ * Version: 5.1.1
  * Author: Portmone
  * Author URI: https://www.portmone.com.ua
  * Domain Path: /
  * License: Payment Card Industry Data Security Standard (PCI DSS)
  * License URI: https://www.portmone.com.ua/r3/uk/security/
- * Requires at least: 6.3
+ * Requires at least: 5.2.2
  * Requires PHP: 7.4
  * Requires Plugins:  woocommerce
- * WC requires at least: 8.6
- * WC tested up to: 10.0.4
+ * WC requires at least: 3.7.1
+ * WC tested up to: 10.9.3
  *
  * @package Portmone_Pay_For_Woocommerce
  */
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * Currently plugin version.
  * Start at version 5.0.1 and use SemVer - https://semver.org
  */
-define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_VERSION', '5.0.3' );
+define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_VERSION', '5.1.1' );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_NAME', 'portmone-pay-for-woocommerce' );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PORTMONE_PAY_FOR_WOOCOMMERCE_URL', plugin_dir_url( __FILE__ ) );
@@ -63,7 +63,7 @@ function portmone_pay_for_woocommerce_block_support()
     add_action(
         'woocommerce_blocks_payment_method_type_registration',
         function ( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
-            $payment_method_registry->register( new Portmone_Pay_For_Woocommerce__Block() );
+            $payment_method_registry->register( new Portmone_Pay_For_Woocommerce_Block() );
         }
     );
 }

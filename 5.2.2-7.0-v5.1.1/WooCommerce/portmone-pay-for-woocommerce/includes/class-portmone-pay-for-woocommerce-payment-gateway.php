@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
  * The payment gateway plugin class.
  *
  *
- * @since      5.0.1
+ * @since      5.1.1
  * @package    portmone-pay-for-woocommerce
  * @subpackage portmone-pay-for-woocommerce/includes
  * @author     Portmone
@@ -77,6 +77,20 @@ class WC_Portmone extends WC_Payment_Gateway
      */
     private $helper_http_client;
 
+    /**
+     * Payment method title for the frontend.
+     *
+     * @var string
+     */
+    public $title;
+
+    /**
+     * Payment method description for the frontend.
+     *
+     * @var string
+     */
+    public $description;
+
     public function __construct()
     {
         $this->helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
@@ -94,6 +108,11 @@ class WC_Portmone extends WC_Payment_Gateway
         $this->init_form_fields();
         $this->init_settings();
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
+
+        if ( ! $this->is_hpos_enabled ) {
+            $this->title = $this->settings['title']; ;
+            $this->description = $this->settings['description'] ;
+        }
     }
 
     /**

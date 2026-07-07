@@ -8,12 +8,12 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 /**
  * This class defines all the code needed to support the block.
  *
- * @since      5.0.1
+ * @since      5.1.1
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes/blocks
  * @author     Portmone
  */
-final class Portmone_Pay_For_Woocommerce__Block extends AbstractPaymentMethodType
+final class Portmone_Pay_For_Woocommerce_Block extends AbstractPaymentMethodType
 {
     protected $name = 'portmone';
 
