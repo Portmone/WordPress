@@ -285,3 +285,42 @@ msgstr "In test mode, the order number (shopOrderNumber) is transferred to the w
 
 msgid "Відзначте, щоб зробити Режим тестування"
 msgstr "Check to enable Test Mode"
+
+msgid "Код продавця"
+msgstr "Seller's code"
+
+msgid "Цифровий код ставки податку"
+msgstr "Tax rate code"
+
+msgid "Цифровий код ставки податку (попередньо програмується у особистому кабінеті податвого агента). Якщо до товару потрібно застосувати декілька податків - вказати через кому', 'portmone-pay-for-woocommerce"
+msgstr "Numeric tax rate code (pre-programmed in the tax agent\'s dashboard). For multiple taxes, separate by commas"
+
+msgid "Підключення"
+msgstr "Connection"
+
+msgid "Параметри платежу"
+msgstr "Payment options"
+
+msgid "Платіжна сторінка"
+msgstr "Payment page"
+
+msgid "Дані клієнта"
+msgstr "Customer data"
+
+msgid "Фіскалізація"
+msgstr "Fiscalization"
+
+msgid "Автофіскалізація"
+msgstr "Autofiscalization"
+
+msgid "Відзначте, щоб передавати дані для автофіскалізації"
+msgstr "Check to transmit data for autofiscaling"
+
+msgid "Разом з платежем передаються дані для автоматичної фіскалізації платежу"
+msgstr "Data for automatic fiscalization of the payment is transmitted along with the payment"
+
+msgid "Валюта"
+msgstr "Currency"
+
+msgid "Поведінка магазину"
+msgstr "Store behavior"

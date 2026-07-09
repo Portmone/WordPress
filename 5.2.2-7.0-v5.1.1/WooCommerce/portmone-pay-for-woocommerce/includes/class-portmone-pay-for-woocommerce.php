@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @since      5.0.1
+ * @since      5.1.1
  * @package    Portmone_Pay_For_Woocommerce
  * @subpackage Portmone_Pay_For_Woocommerce/includes
  * @author     Portmone
@@ -129,6 +129,7 @@ class Portmone_Pay_For_Woocommerce
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/create-link-payment/class-portmone-pay-for-woocommerce-dto-create-link-payment-order.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/create-link-payment/class-portmone-pay-for-woocommerce-dto-create-link-payment-token.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/create-link-payment/class-portmone-pay-for-woocommerce-dto-create-link-payment-payer.php';
+        require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/create-link-payment/class-portmone-pay-for-woocommerce-dto-create-link-payment-good-item.php';
 
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/class-portmone-pay-for-woocommerce-dto-body.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/result/class-portmone-pay-for-woocommerce-dto-result-data.php';

@@ -37,6 +37,8 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment implements JsonSerial
      */
     private $payer;
 
+    private $goods;
+
     public function set_signature( array $settings )
     {
         $signature = $this->payee->getPayeeId().$this->payee->getDt().bin2hex( $this->order->getShopOrderNumber() ).$this->order->getBillAmount();
@@ -46,13 +48,19 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment implements JsonSerial
 
     public function jsonSerialize(): array
     {
-        return [
+        $result =  [
             'method' => $this->method,
             'payee' => $this->payee,
             'order' => $this->order,
             'token' => $this->token,
             'payer' => $this->payer,
         ];
+
+        if ( ! empty( $this->goods ) ) {
+            $result['goods'] = $this->goods;
+        }
+
+        return $result;
     }
 
     public function setPayee(Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payee $payee)
@@ -73,6 +81,14 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment implements JsonSerial
     public function setPayer(Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payer $payer)
     {
         $this->payer = $payer;
+    }
+
+    /**
+     * @param mixed $goods
+     */
+    public function setGoods($goods)
+    {
+        $this->goods = $goods;
     }
 }
 

@@ -111,6 +111,101 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
     }
 
     /**
+     *  Get goods
+     *
+     * @param array $settings
+     * @param WC_Order $order
+     *
+     * @return array<Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item>
+     */
+    public function get_goods( array $settings, WC_Order $order )
+    {
+        $goods = [];
+
+        if ( empty( $settings['fiscalization_flag'] ) || $settings['fiscalization_flag'] !== 'yes' || get_woocommerce_currency() !== 'UAH' ) {
+            return $goods;
+        }
+
+        if ( empty( $settings['internal_code'] ) &&  empty( $settings['tax_rate_codes'] ) ) {
+            $mes = '#22P ' . __( "Сталася помилка. Не задана значення для Код продавця та Цифровий код ставки податку. Будь ласка, зв'яжіться з нами, щоб отримати допомогу", 'portmone-pay-for-woocommerce' );
+            $order->add_order_note( $mes );
+            $order->save();
+            throw new \Exception( $mes );
+        }
+
+        foreach ( $order->get_items() as  $item ) {
+            $product = $item->get_product();
+            $goodtem = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item();
+
+            $quantity = $item->get_quantity();
+            // Базова ціну товару без знижки
+            $price = $product->get_regular_price();
+            $sale_price = $product->get_sale_price();
+            // Підсумкова ціна (зі знижкою)
+            $amount = round( $quantity * $sale_price , 2 );
+
+            $goodtem
+                ->setInternalCode( $settings['internal_code'] )
+                ->setTaxRateCodes( $settings['tax_rate_codes'] )
+                ->setName( $item->get_name() )
+                ->setPrice( $price )
+                ->setQuantity( $quantity )
+                ->setAmount( $amount )
+                ->setBarcode( $product->get_sku() );
+
+            $discount =  round( $quantity * ($price - $sale_price) , 2 );
+
+            if ( $discount > 0 ) {
+                $goodtem->setDiscount( $discount );
+                $goodtem->setDiscountName( 'Знижка' );
+            }
+
+            $goods[] = $goodtem;
+        }
+
+        // Отримання чистої вартості доставки (без податку)
+        $shipping_net = $order->get_shipping_total();
+        if (  (float) $shipping_net > 0 ) {
+            $goodtem = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item();
+
+            $goodtem
+                ->setInternalCode( $settings['internal_code'] )
+                ->setTaxRateCodes( $settings['tax_rate_codes'] )
+                ->setName( 'Компенсація транспортних витрат' )
+                ->setPrice( $shipping_net )
+                ->setQuantity( 1 )
+                ->setAmount( $shipping_net )
+                ->setIsProduct( false );
+
+            $goods[] = $goodtem;
+        }
+
+        $coupons_discount = 0;
+        // Отримуємо всі купони, які прикріплені до цього замовлення
+        foreach ( $order->get_items( 'coupon' ) as $coupon_item ) {
+            // get_discount() повертає суму знижки, яку дав цей конкретний купон
+            $coupons_discount += (float) $coupon_item->get_discount();
+        }
+
+        if ( $coupons_discount > 0 ) {
+            $goodtem = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item();
+
+            $goodtem
+                ->setInternalCode( $settings['internal_code'] )
+                ->setTaxRateCodes( $settings['tax_rate_codes'] )
+                ->setName( 'Знижка' )
+                ->setPrice( (-1) * $coupons_discount )
+                ->setQuantity( 1 )
+                ->setAmount( (-1) * $coupons_discount )
+                ->setIsProduct( false );
+
+            $goods[] = $goodtem;
+        }
+
+        return $goods;
+    }
+
+    /**
      * Add or update meta data.
      *
      * @param WC_Order     $order

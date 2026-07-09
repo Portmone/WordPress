@@ -121,6 +121,11 @@ class WC_Portmone extends WC_Payment_Gateway
     function init_form_fields()
     {
         $this->form_fields = array(
+            'section_divider_connection' => array(
+                'title'       => __( 'Підключення', 'portmone-pay-for-woocommerce' ),
+                'type'        => 'title',
+                'description' => '',
+            ),
             'enabled'              => array(
                 'title'            => __( 'Включити прийом оплати через Portmone.com', 'portmone-pay-for-woocommerce' ),
                 'type'             => 'checkbox',
@@ -141,20 +146,167 @@ class WC_Portmone extends WC_Payment_Gateway
                 'type'             => 'password',
                 'description'      => __( 'Пароль для Інтернет-магазину, повідомлений менеджером Portmone.com', 'portmone-pay-for-woocommerce' ),
                 'desc_tip'         => true),
+            'key'                  => array(
+                'title'            => __( 'Ключ для підпису', 'portmone-pay-for-woocommerce' ) . ' <span title="'. __( 'Обов’язкове поле', 'portmone-pay-for-woocommerce' ) .'" class="red">*</span>',
+                'type'             => 'text',
+                'description'      => __( 'Ключ для підпису узгодженний з Portmone.com', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
+            'receive_notifications_flag'        => array(
+                'title'            => __( 'Отримувати повідомлення про успішну оплату', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            => __( 'Отримувати повідомлення про успішну оплату у форматі JSON. Для активації даного функціоналу, будь ласка, напишіть на пошту b2bsupport@portmone.me', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'no',
+                'description'      => __( 'Відзначте, щоб отримувати повідомлення про успішну оплату', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
+            'test_mode_flag'         => array(
+                'title'            =>  __( 'Режим тестування', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            => __( 'У режимі тест у систему портмоне передається номер замовлення (shopOrderNumber) як конкотенація рядків номер замовлення у системі партнера, символ _ , позначка часу', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'no',
+                'description'      => __( 'Відзначте, щоб зробити Режим тестування', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
+            'section_divider_connection_end_line' => array(
+                'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                'type'        => 'title',
+                'description' => '',
+            ),
+
+            'section_divider_payment_options' => array(
+                'title'       => __( 'Параметри платежу', 'portmone-pay-for-woocommerce' ),
+                'type'        => 'title',
+                'description' => '',
+            ),
+            'preauth_flag'         => array(
+                'title'            => __( 'Режим преавторизаціі', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            => __( 'Засоби тільки блокуються на карті клієнта, але фінансового списання з рахунку клієнта не відбувається', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'no',
+                'description'      => __( 'Відзначте, щоб кошти тільки блокуються на карті клієнта, але фінансового списання з рахунку клієнта не відбувається', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
             'exp_time'             => array(
                 'title'            => __( 'Час на сплату', 'portmone-pay-for-woocommerce' ),
                 'type'             => 'text',
                 'description'      => __( 'Час відведенний на оплату через Portmone.com', 'portmone-pay-for-woocommerce' ),
                 'default'          => 400,
                 'desc_tip'         => true),
-            'key'                  => array(
-                'title'            => __( 'Ключ для підпису', 'portmone-pay-for-woocommerce' ) . ' <span title="'. __( 'Обов’язкове поле', 'portmone-pay-for-woocommerce' ) .'" class="red">*</span>',
-                'type'             => 'text',
-                'description'      => __( 'Ключ для підпису узгодженний з Portmone.com', 'portmone-pay-for-woocommerce' ),
+            'split_payment_flag'                 => array(
+                'title'            => __( 'Розщеплення платежу', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            =>  __( 'Платіжна система Portmone.com надає можливість розщеплення 1 (одного) карткового платежу на декілька компаній (юридичних осіб). Продавець повинен додати в товар атрибут з іменем payee_id і значенням рівного індексу компанії в системі Portmone.com', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'no',
+                'description'      => __( 'Відзначте, щоб зробити розщеплення платежу', 'portmone-pay-for-woocommerce' ),
                 'desc_tip'         => true),
+            'section_divider_payment_options_end_line' => array(
+                'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                'type'        => 'title',
+                'description' => '',
+            ),
+
+            'section_divider_payment_page' => array(
+                'title'       => __( 'Платіжна сторінка', 'portmone-pay-for-woocommerce' ),
+                'type'        => 'title',
+                'description' => '',
+            ),
+            'title'                => array(
+                'title'            => __( 'Назва компанії', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'text',
+                'default'          => __( 'Оплата замовлення через Portmone.com', 'portmone-pay-for-woocommerce' ),
+                'description'      => __( 'Назва Інтернет-магазину, що відображається клієнту при оплаті', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
+            'description'          => array(
+                'title'            => __( 'Коментар для клієнта', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'textarea',
+                'default'          => __( 'Сервіс проведення платежів забезпечується системою Portmone.com з використанням сучасного й безпечного механізму авторизації платіжних карт. Служба підтримки Portmone.com: телефон +380(44)200 09 02, електронна пошта: support@portmone.com', 'portmone-pay-for-woocommerce' ),
+                'description'      => __( 'Інформація для клієнта на сторінці оплати замовлення', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
+
+            /*'showlogo'             => array(
+                'title'            => __( 'Включити режим показу на сторінці', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            => __( 'Включити на сторінці спосіб оплати', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'yes',
+                'description'      => __( 'Включити режим сторінки без перенаправлення', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),*/
+            'section_divider_payment_page_end_line' => array(
+                'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                'type'        => 'title',
+                'description' => '',
+            ),
+
+            'section_divider_customer_data' => array(
+                'title'       => __( 'Дані клієнта', 'portmone-pay-for-woocommerce' ),
+                'type'        => 'title',
+                'description' => '',
+            ),
+            'save_client_first_last_name_flag'   => array(
+                'title'            => __( 'Зберегти ім\'я та прізвище клієнта', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            =>  __( 'Ім\'я та прізвище клієнта береться з адреси, вказаної в замовленні. Узгоджується з менеджером Portmone', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'no',
+                'description'      => __( 'Відзначте, щоб зберегти ім\'я та прізвище клієнта' ),
+                'desc_tip'         => true),
+            'save_client_phone_number_flag'      => array(
+                'title'            => __( 'Зберегти телефон клієнта', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            => __( 'Телефон клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'no',
+                'description'      => __( 'Відзначте, щоб зберегти телефон клієнта', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
+            'save_client_email_flag'             => array(
+                'title'            => __( 'Зберегти email клієнта', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            => __( 'Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'no',
+                'description'      => __( 'Відзначте, щоб зберегти email клієнта', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
+            'section_divider_customer_data_end_line' => array(
+                'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                'type'        => 'title',
+                'description' => '',
+            ),
+
         );
 
-        if ( get_woocommerce_currency() !== 'UAH' ) {
+        $current_currency  = get_woocommerce_currency();
+
+        if ( $current_currency  === 'UAH' ) {
+            $this->form_fields = array_merge(
+                $this->form_fields,
+                array(
+                    'section_divider_fiscalization' => array(
+                        'title'       => __( 'Фіскалізація', 'portmone-pay-for-woocommerce' ),
+                        'type'        => 'title',
+                        'description' => '',
+                    ),
+                    'fiscalization_flag'      => array(
+                        'title'            => __( 'Автофіскалізація', 'portmone-pay-for-woocommerce' ),
+                        'type'             => 'checkbox',
+                        'label'            => __( 'Разом з платежем передаються дані для автоматичної фіскалізації платежу', 'portmone-pay-for-woocommerce' ),
+                        'default'          => 'no',
+                        'description'      => __( 'Відзначте, щоб передавати дані для автофіскалізації', 'portmone-pay-for-woocommerce' ),
+                        'desc_tip'         => true),
+                    'internal_code'             => array(
+                        'title'            => __( 'Код продавця', 'portmone-pay-for-woocommerce' ),
+                        'type'             => 'text',
+                        'description'      => __( 'Код продавця', 'portmone-pay-for-woocommerce' ),
+                        'default'          => '',
+                        'desc_tip'         => true),
+                    'tax_rate_codes'         => array(
+                        'title'            => __( 'Цифровий код ставки податку', 'portmone-pay-for-woocommerce' ),
+                        'type'             => 'text',
+                        'description'      => __( 'Цифровий код ставки податку (попередньо програмується у особистому кабінеті податвого агента). Якщо до товару потрібно застосувати декілька податків - вказати через кому', 'portmone-pay-for-woocommerce' ),
+                        'default'          => '',
+                        'desc_tip'         => true),
+                    'section_divider_fiscalization_end_line' => array(
+                        'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                        'type'        => 'title',
+                        'description' => '',
+                    ),
+                )
+            );
+        }
+
+        if ( $current_currency !== 'UAH' ) {
             $currency = get_woocommerce_currencies();
 
             $letters_convert_money_label = array('%1$s', '%2$s', '%3$s');
@@ -168,6 +320,11 @@ class WC_Portmone extends WC_Payment_Gateway
             $this->form_fields = array_merge(
                 $this->form_fields,
                 array(
+                    'section_divider_currency' => array(
+                        'title'       => __( 'Валюта', 'portmone-pay-for-woocommerce' ),
+                        'type'        => 'title',
+                        'description' => '',
+                    ),
                     'convert_money'    => array(
                         'title'         => __( 'Включити конвертацію в Гривні', 'portmone-pay-for-woocommerce' ),
                         'type'         => 'checkbox',
@@ -180,7 +337,12 @@ class WC_Portmone extends WC_Payment_Gateway
                         'type'         => 'number',
                         'default'      => 0,
                         'description'  => $exchange_rates_description,
-                        'desc_tip'     => true)
+                        'desc_tip'     => true),
+                    'section_divider_currency_end_line' => array(
+                        'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                        'type'        => 'title',
+                        'description' => '',
+                    ),
                 )
             );
         }
@@ -188,32 +350,11 @@ class WC_Portmone extends WC_Payment_Gateway
         $this->form_fields = array_merge(
             $this->form_fields,
             array(
-                'title'                => array(
-                    'title'            => __( 'Назва компанії', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'text',
-                    'default'          => __( 'Оплата замовлення через Portmone.com', 'portmone-pay-for-woocommerce' ),
-                    'description'      => __( 'Назва Інтернет-магазину, що відображається клієнту при оплаті', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),
-                'description'          => array(
-                    'title'            => __( 'Коментар для клієнта', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'textarea',
-                    'default'          => __( 'Сервіс проведення платежів забезпечується системою Portmone.com з використанням сучасного й безпечного механізму авторизації платіжних карт. Служба підтримки Portmone.com: телефон +380(44)200 09 02, електронна пошта: support@portmone.com', 'portmone-pay-for-woocommerce' ),
-                    'description'      => __( 'Інформація для клієнта на сторінці оплати замовлення', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),
-                'preauth_flag'         => array(
-                    'title'            => __( 'Режим преавторизаціі', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'checkbox',
-                    'label'            => __( 'Засоби тільки блокуються на карті клієнта, але фінансового списання з рахунку клієнта не відбувається', 'portmone-pay-for-woocommerce' ),
-                    'default'          => 'no',
-                    'description'      => __( 'Відзначте, щоб кошти тільки блокуються на карті клієнта, але фінансового списання з рахунку клієнта не відбувається', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),
-                /*'showlogo'             => array(
-                    'title'            => __( 'Включити режим показу на сторінці', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'checkbox',
-                    'label'            => __( 'Включити на сторінці спосіб оплати', 'portmone-pay-for-woocommerce' ),
-                    'default'          => 'yes',
-                    'description'      => __( 'Включити режим сторінки без перенаправлення', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),*/
+                'section_divider_store_behavior' => array(
+                    'title'       => __( 'Поведінка магазину', 'portmone-pay-for-woocommerce' ),
+                    'type'        => 'title',
+                    'description' => '',
+                ),
                 'show_admin_menu'      => array(
                     'title'            => __( 'Показати Portmone.com в списку меню адміністративної панелі', 'portmone-pay-for-woocommerce' ),
                     'type'             => 'number',
@@ -227,48 +368,11 @@ class WC_Portmone extends WC_Payment_Gateway
                     'default'          => 'yes',
                     'description'      => __( 'Відзначте, щоб змінювати кількість товарів', 'portmone-pay-for-woocommerce' ),
                     'desc_tip'         => true),
-                'save_client_first_last_name_flag'   => array(
-                    'title'            => __( 'Зберегти ім\'я та прізвище клієнта', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'checkbox',
-                    'label'            =>  __( 'Ім\'я та прізвище клієнта береться з адреси, вказаної в замовленні. Узгоджується з менеджером Portmone', 'portmone-pay-for-woocommerce' ),
-                    'default'          => 'no',
-                    'description'      => __( 'Відзначте, щоб зберегти ім\'я та прізвище клієнта' ),
-                    'desc_tip'         => true),
-                'save_client_phone_number_flag'      => array(
-                    'title'            => __( 'Зберегти телефон клієнта', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'checkbox',
-                    'label'            => __( 'Телефон клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone', 'portmone-pay-for-woocommerce' ),
-                    'default'          => 'no',
-                    'description'      => __( 'Відзначте, щоб зберегти телефон клієнта', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),
-                'save_client_email_flag'             => array(
-                    'title'            => __( 'Зберегти email клієнта', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'checkbox',
-                    'label'            => __( 'Email клієнта береться з адреси, зазначеної в замовленні. Узгоджується з менеджером Portmone', 'portmone-pay-for-woocommerce' ),
-                    'default'          => 'no',
-                    'description'      => __( 'Відзначте, щоб зберегти email клієнта', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),
-                'split_payment_flag'                 => array(
-                    'title'            => __( 'Розщеплення платежу', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'checkbox',
-                    'label'            =>  __( 'Платіжна система Portmone.com надає можливість розщеплення 1 (одного) карткового платежу на декілька компаній (юридичних осіб). Продавець повинен додати в товар атрибут з іменем payee_id і значенням рівного індексу компанії в системі Portmone.com', 'portmone-pay-for-woocommerce' ),
-                    'default'          => 'no',
-                    'description'      => __( 'Відзначте, щоб зробити розщеплення платежу', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),
-                'receive_notifications_flag'        => array(
-                    'title'            => __( 'Отримувати повідомлення про успішну оплату', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'checkbox',
-                    'label'            => __( 'Отримувати повідомлення про успішну оплату у форматі JSON. Для активації даного функціоналу, будь ласка, напишіть на пошту b2bsupport@portmone.me', 'portmone-pay-for-woocommerce' ),
-                    'default'          => 'no',
-                    'description'      => __( 'Відзначте, щоб отримувати повідомлення про успішну оплату', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),
-                'test_mode_flag'         => array(
-                    'title'            =>  __( 'Режим тестування', 'portmone-pay-for-woocommerce' ),
-                    'type'             => 'checkbox',
-                    'label'            => __( 'У режимі тест у систему портмоне передається номер замовлення (shopOrderNumber) як конкотенація рядків номер замовлення у системі партнера, символ _ , позначка часу', 'portmone-pay-for-woocommerce' ),
-                    'default'          => 'no',
-                    'description'      => __( 'Відзначте, щоб зробити Режим тестування', 'portmone-pay-for-woocommerce' ),
-                    'desc_tip'         => true),
+                'section_divider_store_behavior_end_line' => array(
+                    'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                    'type'        => 'title',
+                    'description' => '',
+                ),
             )
         );
     }
@@ -359,6 +463,13 @@ class WC_Portmone extends WC_Payment_Gateway
         $createLinkPayment->setPayer( $createLinkPaymentPayer );
 
         $createLinkPayment->set_signature($settings);
+
+        $goods = $this->helper_common->get_goods( $settings, $order );
+        $createLinkPayment->setGoods( $goods );
+
+        if ( isset($settings['test_mode_flag']) && $settings['test_mode_flag'] == 'yes' ) {
+            $this->helper_common->add_meta_data( $order, 'create_link_payment_data',  json_encode( $createLinkPayment ) );
+        }
 
         $linkPayment = $this->helper_http_client->create_link_payment( $createLinkPayment, $order );
 
