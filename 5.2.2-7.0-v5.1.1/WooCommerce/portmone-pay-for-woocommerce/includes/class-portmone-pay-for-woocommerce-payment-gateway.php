@@ -196,6 +196,13 @@ class WC_Portmone extends WC_Payment_Gateway
                 'default'          => 'no',
                 'description'      => __( 'Відзначте, щоб зробити розщеплення платежу', 'portmone-pay-for-woocommerce' ),
                 'desc_tip'         => true),
+            'installment_flag'         => array(
+                'title'            => __( 'Розтермінування', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'checkbox',
+                'label'            => __( 'Покупець зможе обрати оплату частинами через банки пратнери на сторінці Portmone. Узгоджується з менеджером Portmone', 'portmone-pay-for-woocommerce' ),
+                'default'          => 'no',
+                'description'      => __( 'Відзначте, щоб увімкнути розтермінування', 'portmone-pay-for-woocommerce' ),
+                'desc_tip'         => true),
             'section_divider_payment_options_end_line' => array(
                 'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
                 'type'        => 'title',
@@ -466,6 +473,10 @@ class WC_Portmone extends WC_Payment_Gateway
 
         $goods = $this->helper_common->get_goods( $settings, $order );
         $createLinkPayment->setGoods( $goods );
+
+        $paymentTypes = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Types();
+        $paymentTypes->setInstallment( $settings );
+        $createLinkPayment->setPaymentTypes( $paymentTypes );
 
         if ( isset($settings['test_mode_flag']) && $settings['test_mode_flag'] == 'yes' ) {
             $this->helper_common->add_meta_data( $order, 'create_link_payment_data',  json_encode( $createLinkPayment ) );

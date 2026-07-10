@@ -58,7 +58,8 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order implements Json
         if (isset($settings['convert_money']) &&
             isset($settings['exchange_rates']) &&
             $settings['convert_money'] == 'yes' &&
-            $settings['exchange_rates'] > 0
+            $settings['exchange_rates'] > 0 &&
+            get_woocommerce_currency() !== 'UAH'
         ) {
             return round( $order_total * $settings['exchange_rates'] , 2 );
         }

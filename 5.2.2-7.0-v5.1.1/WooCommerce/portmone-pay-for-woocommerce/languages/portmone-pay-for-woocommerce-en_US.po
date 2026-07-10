@@ -324,3 +324,12 @@ msgstr "Currency"
 
 msgid "Поведінка магазину"
 msgstr "Store behavior"
+
+msgid "Розтермінування"
+msgstr "Rescheduling"
+
+msgid "Покупець зможе обрати оплату частинами через банки пратнери на сторінці Portmone. Узгоджується з менеджером Portmone"
+msgstr "The buyer will be able to choose to pay in installments through partner banks on the Portmone page. Agreed with the Portmone manager"
+
+msgid "Відзначте, щоб увімкнути розтермінування"
+msgstr "Check to enable rescheduling"

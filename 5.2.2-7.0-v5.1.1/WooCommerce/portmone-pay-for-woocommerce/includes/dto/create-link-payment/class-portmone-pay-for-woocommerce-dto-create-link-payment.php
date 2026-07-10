@@ -37,7 +37,15 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment implements JsonSerial
      */
     private $payer;
 
+    /**
+     * @var array
+     */
     private $goods;
+
+    /**
+     * @var Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Types
+     */
+    private $paymentTypes;
 
     public function set_signature( array $settings )
     {
@@ -54,6 +62,7 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment implements JsonSerial
             'order' => $this->order,
             'token' => $this->token,
             'payer' => $this->payer,
+            'paymentTypes' => $this->paymentTypes,
         ];
 
         if ( ! empty( $this->goods ) ) {
@@ -84,11 +93,16 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment implements JsonSerial
     }
 
     /**
-     * @param mixed $goods
+     * @param array $goods
      */
-    public function setGoods($goods)
+    public function setGoods(array $goods)
     {
         $this->goods = $goods;
+    }
+
+    public function setPaymentTypes(Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Types $paymentTypes)
+    {
+        $this->paymentTypes = $paymentTypes;
     }
 }
 
