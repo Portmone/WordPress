@@ -57,11 +57,19 @@ jQuery(function () {
 
 					if ( error > 0 ) {
 						$('#portmone-header').after('<div id="message" class="error" ><p><strong>' + __( "Не заповнені обов'язкові поля", "portmone-pay-for-woocommerce" ) + ' </strong></p></div>');
+						$('html, body, #portmone-header').animate({scrollTop: 0}, 'slow');
 						return false;
 					}
 
 					if ( error_exp_time !== '' ) {
 						$('#portmone-header').after('<div id="message" class="error" ><p><strong>'+error_exp_time+'</strong></p></div>');
+						$('html, body, #portmone-header').animate({scrollTop: 0}, 'slow');
+						return false;
+					}
+
+					if ($('#woocommerce_portmone_split_payment_flag').is(':checked') && $('#woocommerce_portmone_installment_flag').is(':checked')) {
+						$('#portmone-header').after('<div id="message" class="error" ><p><strong>'+__( "Неможливо оформити розтермінування та розщеплення в одному платежі.", "portmone-pay-for-woocommerce" )+'</strong></p></div>');
+						$('html, body, #portmone-header').animate({scrollTop: 0}, 'slow');
 						return false;
 					}
 				}

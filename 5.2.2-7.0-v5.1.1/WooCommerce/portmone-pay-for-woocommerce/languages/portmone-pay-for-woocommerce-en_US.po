@@ -328,8 +328,17 @@ msgstr "Store behavior"
 msgid "Розтермінування"
 msgstr "Rescheduling"
 
-msgid "Покупець зможе обрати оплату частинами через банки пратнери на сторінці Portmone. Узгоджується з менеджером Portmone"
-msgstr "The buyer will be able to choose to pay in installments through partner banks on the Portmone page. Agreed with the Portmone manager"
+msgid "Покупець зможе обрати оплату частинами через банки пратнери на сторінці Portmone. Послуга оплати частинами потребує погодження та підписання додаткової угоди по кожному банку. Для підключення зверніться до вашого менеджера Portmone або на b2bsupport@portmone.me"
+msgstr "The buyer will be able to choose to pay in installments through partner banks on the Portmone page. The installment payment service requires approval and signing of an additional agreement for each bank. To connect, contact your Portmone manager or b2bsupport@portmone.me"
 
 msgid "Відзначте, щоб увімкнути розтермінування"
 msgstr "Check to enable rescheduling"
+
+msgid "Не можна робити часткового повернення для платежу з преавторизацією"
+msgstr "Partial refunds cannot be made for pre-authorized payments."
+
+msgid "Неможливо оформити розтермінування та розщеплення в одному платежі."
+msgstr "It is not possible to arrange for deferral and splitting in one payment."
+
+msgid "Оплата неможлива: не можна поєднувати «Розтермінування» та «Розщеплення платежу»."
+msgstr "Payment is not possible: "Deferral" and "Split payment" cannot be combined."

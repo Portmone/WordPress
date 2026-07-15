@@ -205,6 +205,85 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
         return $goods;
     }
 
+
+    /**
+     *  Get goods
+     *
+     * @param array $settings
+     * @param WC_Order $order
+     *
+     * @return array<Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item>
+     */
+    public function get_goods_for_return( array $settings, WC_Order $order )
+    {
+        $goods = [];
+
+        if ( empty( $settings['fiscalization_flag'] ) || $settings['fiscalization_flag'] !== 'yes' || get_woocommerce_currency() !== 'UAH' ) {
+            return $goods;
+        }
+
+
+        if ( empty( $_POST['line_item_qtys'] ) || empty( $_POST['line_item_totals'] ) ) {
+            return $goods;
+        }
+
+        $line_item_qtys = json_decode( str_replace(["\\"], "", $_POST['line_item_qtys'] ) , true );
+        $line_item_totals = json_decode( str_replace(["\\"], "", $_POST['line_item_totals'] ) , true);
+        
+        foreach ( $order->get_items() as $item_id => $item ) {
+
+            if ( empty( $line_item_totals[$item_id] )  ) {
+                continue;
+            }
+            $return_amount =  $line_item_totals[$item_id];
+
+            $return_quantity = 1;
+            if ( isset( $line_item_qtys[$item_id] ) ) {
+                $return_quantity = $line_item_qtys[$item_id];
+            }
+
+            $product = $item->get_product();
+            $goodtem = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item();
+
+            // Базова ціну товару без знижки
+            $price = $product->get_regular_price();
+
+            $goodtem
+                ->setInternalCode( $settings['internal_code'] )
+                ->setTaxRateCodes( $settings['tax_rate_codes'] )
+                ->setName( $item->get_name() )
+                ->setPrice( $price )
+                ->setQuantity( $return_quantity )
+                ->setAmount( $return_amount )
+                ->setBarcode( $product->get_sku() );
+
+            $goods[] = $goodtem;
+        }
+
+        // Отримуємо масив об'єктів доставки для цього замовлення
+        $shipping_items = $order->get_items( 'shipping' );
+        foreach ( $shipping_items as $shipping_item_id => $shipping_item ) {
+            if ( empty( $line_item_totals[$shipping_item_id] ) ) {
+                continue;
+            }
+
+            $goodtem = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item();
+
+            $goodtem
+                ->setInternalCode( $settings['internal_code'] )
+                ->setTaxRateCodes( $settings['tax_rate_codes'] )
+                ->setName( 'Компенсація транспортних витрат' )
+                ->setPrice( $line_item_totals[$shipping_item_id] )
+                ->setQuantity( 1 )
+                ->setAmount( $line_item_totals[$shipping_item_id] )
+                ->setIsProduct( false );
+
+            $goods[] = $goodtem;
+        }
+
+        return $goods;
+    }
+
     /**
      * Add or update meta data.
      *

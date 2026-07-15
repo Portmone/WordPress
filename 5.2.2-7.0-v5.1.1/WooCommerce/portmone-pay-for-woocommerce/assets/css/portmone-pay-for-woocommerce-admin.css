@@ -28,3 +28,8 @@
     height: 18px;
     width: 18px;
 }
+.woocommerce_portmone_input_hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+}

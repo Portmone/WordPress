@@ -42,6 +42,11 @@ class Portmone_Pay_For_WooCommerce_Dto_Result_Data implements JsonSerializable
      */
     private $status = 'PAYED';
 
+    /**
+     * @var string
+     */
+    private $installment_flag = 'N';
+
 
     public function setLogin(string $login)
     {
@@ -73,8 +78,11 @@ class Portmone_Pay_For_WooCommerce_Dto_Result_Data implements JsonSerializable
         $result = [
             'login' => $this->login,
             'password' => $this->password,
-            'payeeId' => $this->payeeId,
         ];
+
+        if ( $this->installment_flag == 'N' ) {
+            $result['payeeId'] = $this->payeeId;
+        }
 
         if ( ! empty( $this->shopbillId ) ) {
             $result['shopbillId'] = $this->shopbillId;
@@ -87,6 +95,11 @@ class Portmone_Pay_For_WooCommerce_Dto_Result_Data implements JsonSerializable
         }
 
         return $result;
+    }
+
+    public function setInstallmentFlag(string $installment_flag)
+    {
+        $this->installment_flag = $installment_flag;
     }
 }
 

@@ -168,6 +168,9 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
         $data->setLogin( $settings['login'] );
         $data->setPassword( $settings['password'] );
         $data->setShopbillId( $shop_bill_id );
+        if ( !empty( $settings['installment_flag'] ) && $settings['installment_flag'] == 'yes' ) {
+            $data->setInstallmentFlag('Y' );
+        }
 
         $body = new  Portmone_Pay_For_WooCommerce_Dto_Body();
         $body->setMethod('result' );

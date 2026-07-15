@@ -47,10 +47,32 @@ class Portmone_Pay_For_WooCommerce_Dto_Return_Data  implements JsonSerializable
      */
     private $attribute5;
 
+    /**
+     * @var array
+     */
+    private $goods;
+
 
     public function jsonSerialize(): array
     {
-        return get_object_vars( $this );
+        $result =  [
+           'payeeId' =>  $this->payeeId,
+            'login' =>  $this->login,
+            'password' =>  $this->password,
+            'shopOrderNumber' =>  $this->shopOrderNumber,
+        ];
+
+        if ( ! empty( $this->returnAmount ) ) {
+            $result['returnAmount'] = $this->returnAmount;
+            $result['attribute5'] = $this->attribute5;
+            $result['message'] = $this->message;
+        }
+
+        if ( ! empty( $this->goods ) ) {
+            $result['goods'] = $this->goods;
+        }
+
+        return $result;
     }
 
     public function setLogin(string $login)
@@ -86,6 +108,11 @@ class Portmone_Pay_For_WooCommerce_Dto_Return_Data  implements JsonSerializable
     public function setReturnAmount(string $returnAmount)
     {
         $this->returnAmount = $returnAmount;
+    }
+
+    public function setGoods(array $goods)
+    {
+        $this->goods = $goods;
     }
 
 }

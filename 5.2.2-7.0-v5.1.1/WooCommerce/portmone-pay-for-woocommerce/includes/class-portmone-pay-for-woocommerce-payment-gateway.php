@@ -166,7 +166,7 @@ class WC_Portmone extends WC_Payment_Gateway
                 'description'      => __( 'Відзначте, щоб зробити Режим тестування', 'portmone-pay-for-woocommerce' ),
                 'desc_tip'         => true),
             'section_divider_connection_end_line' => array(
-                'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                'title'       => '<hr class="woocommerce_portmone_input_hr">',
                 'type'        => 'title',
                 'description' => '',
             ),
@@ -199,12 +199,12 @@ class WC_Portmone extends WC_Payment_Gateway
             'installment_flag'         => array(
                 'title'            => __( 'Розтермінування', 'portmone-pay-for-woocommerce' ),
                 'type'             => 'checkbox',
-                'label'            => __( 'Покупець зможе обрати оплату частинами через банки пратнери на сторінці Portmone. Узгоджується з менеджером Portmone', 'portmone-pay-for-woocommerce' ),
+                'label'            => __( 'Покупець зможе обрати оплату частинами через банки пратнери на сторінці Portmone. Послуга оплати частинами потребує погодження та підписання додаткової угоди по кожному банку. Для підключення зверніться до вашого менеджера Portmone або на b2bsupport@portmone.me', 'portmone-pay-for-woocommerce' ),
                 'default'          => 'no',
                 'description'      => __( 'Відзначте, щоб увімкнути розтермінування', 'portmone-pay-for-woocommerce' ),
                 'desc_tip'         => true),
             'section_divider_payment_options_end_line' => array(
-                'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                'title'       => '<hr class="woocommerce_portmone_input_hr">',
                 'type'        => 'title',
                 'description' => '',
             ),
@@ -235,7 +235,7 @@ class WC_Portmone extends WC_Payment_Gateway
                 'description'      => __( 'Включити режим сторінки без перенаправлення', 'portmone-pay-for-woocommerce' ),
                 'desc_tip'         => true),*/
             'section_divider_payment_page_end_line' => array(
-                'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                'title'       => '<hr class="woocommerce_portmone_input_hr">',
                 'type'        => 'title',
                 'description' => '',
             ),
@@ -267,7 +267,7 @@ class WC_Portmone extends WC_Payment_Gateway
                 'description'      => __( 'Відзначте, щоб зберегти email клієнта', 'portmone-pay-for-woocommerce' ),
                 'desc_tip'         => true),
             'section_divider_customer_data_end_line' => array(
-                'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                'title'       => '<hr class="woocommerce_portmone_input_hr">',
                 'type'        => 'title',
                 'description' => '',
             ),
@@ -305,7 +305,7 @@ class WC_Portmone extends WC_Payment_Gateway
                         'default'          => '',
                         'desc_tip'         => true),
                     'section_divider_fiscalization_end_line' => array(
-                        'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                        'title'       => '<hr class="woocommerce_portmone_input_hr">',
                         'type'        => 'title',
                         'description' => '',
                     ),
@@ -346,7 +346,7 @@ class WC_Portmone extends WC_Payment_Gateway
                         'description'  => $exchange_rates_description,
                         'desc_tip'     => true),
                     'section_divider_currency_end_line' => array(
-                        'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                        'title'       => '<hr class="woocommerce_portmone_input_hr">',
                         'type'        => 'title',
                         'description' => '',
                     ),
@@ -376,7 +376,7 @@ class WC_Portmone extends WC_Payment_Gateway
                     'description'      => __( 'Відзначте, щоб змінювати кількість товарів', 'portmone-pay-for-woocommerce' ),
                     'desc_tip'         => true),
                 'section_divider_store_behavior_end_line' => array(
-                    'title'       => '<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">',
+                    'title'       => '<hr class="woocommerce_portmone_input_hr">',
                     'type'        => 'title',
                     'description' => '',
                 ),
@@ -451,6 +451,13 @@ class WC_Portmone extends WC_Payment_Gateway
             throw new \Exception( $attribute5->get_error_message() );
         }
 
+        if ( $settings['split_payment_flag'] == 'yes' &&
+            ! empty( $settings['installment_flag'] ) &&
+            $settings['installment_flag'] == 'yes' ) {
+
+            throw new \Exception( __( 'Оплата неможлива: не можна поєднувати «Розтермінування» та «Розщеплення платежу».', 'portmone-pay-for-woocommerce' ) );
+        }
+
         $createLinkPayment = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment();
 
         $createLinkPaymentPayee = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Payee();
@@ -521,7 +528,8 @@ class WC_Portmone extends WC_Payment_Gateway
 
         $settings = get_option('woocommerce_portmone_settings', null);
 
-        if ( $settings['split_payment_flag'] == 'yes' && $order->get_total() != $amount ) {
+        $order_total = $order->get_total();
+        if ( $settings['split_payment_flag'] == 'yes' && $order_total != $amount ) {
             return new WP_Error( 'error',  '#49P ' . __( 'Для проведення часткового повернення, будь ласка, зверніться в службу підтримки Portmone.com', 'portmone-pay-for-woocommerce' ) );
         }
 
@@ -545,28 +553,67 @@ class WC_Portmone extends WC_Payment_Gateway
         $data->setLogin( $settings['login'] );
         $data->setPassword( $settings['password'] );
         $data->setShopOrderNumber( $shop_order_number );
-        $data->setReturnAmount( $amount );
-        $data->setAttribute5( $attribute5 );
-        $data->setMessage( $reason );
 
         $body = new  Portmone_Pay_For_WooCommerce_Dto_Body();
-        $body->setMethod('return' );
-        $params = new stdClass();
-        $params->data = $data;
-        $body->setParams( $params );
 
-        $portmone_order_data = $this->helper_http_client->get_portmone_order_data( $body );
-        if ( is_wp_error( $portmone_order_data ) ) {
-            return new WP_Error( 'error',  '#55P ' .$portmone_order_data->get_error_message() );
-        }
+        if ( $order->get_status() == 'status-preauth' ) {
 
+            if ( $order_total != $amount ) {
+                return new WP_Error( 'error',  '#52P ' . __( 'Не можна робити часткового повернення для платежу з преавторизацією', 'portmone-pay-for-woocommerce' ) );
+            }
 
-        if ( $portmone_order_data['status'] == 'RETURN' ) {
-            $order->add_order_note(
-            /* translators: 1: Refund amount, 2: Refund ID */
-                '#43P ' . sprintf( __( 'Refunded %1$s - Refund ID: %2$s', 'woocommerce' ), $portmone_order_data['billAmount'], $portmone_order_data['shopBillId'] )
-            );
-            return true;
+            $body->setMethod('rejectPreauth' );
+
+            $params = new stdClass();
+            $params->data = $data;
+            $body->setParams( $params );
+
+            $result = $this->helper_http_client->portmone_reject_preauth( $body );
+
+            if ( is_wp_error( $result ) ) {
+                return new WP_Error( 'error',  '#57P ' .$result->get_error_message() );
+            }
+
+            if ( $result['status'] == 'REJECTED' ) {
+                $order->add_order_note(
+                /* translators: 1: Refund amount, 2: Refund ID */
+                    '#44P ' . sprintf( __( 'Reject Preauth %1$s - Refund ID: %2$s', 'woocommerce' ), $result['billAmount'], $result['shopBillId'] )
+                );
+                return true;
+            }
+
+        } else {
+            $data->setReturnAmount( $amount );
+            $data->setAttribute5( $attribute5 );
+            $data->setMessage( $reason );
+
+            $goods = $this->helper_common->get_goods_for_return( $settings, $order );
+            $data->setGoods( $goods );
+
+            if ( isset($settings['test_mode_flag']) && $settings['test_mode_flag'] == 'yes' ) {
+                $this->helper_common->add_meta_data( $order, 'return_data',  json_encode( $data ) );
+                $order->save();
+            }
+
+            $body->setMethod('return' );
+
+            $params = new stdClass();
+            $params->data = $data;
+            $body->setParams( $params );
+
+            $result = $this->helper_http_client->portmone_refund( $body );
+
+            if ( is_wp_error( $result ) ) {
+                return new WP_Error( 'error',  '#55P ' .$result->get_error_message() );
+            }
+
+            if ( $result['status'] == 'RETURN' ) {
+                $order->add_order_note(
+                /* translators: 1: Refund amount, 2: Refund ID */
+                    '#43P ' . sprintf( __( 'Refunded %1$s - Refund ID: %2$s', 'woocommerce' ), $result['billAmount'], $result['shopBillId'] )
+                );
+                return true;
+            }
         }
 
         return new WP_Error( 'error', '#56P ' . __('Невідома помилка', 'portmone-pay-for-woocommerce' ) );;
