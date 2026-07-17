@@ -556,10 +556,10 @@ class WC_Portmone extends WC_Payment_Gateway
 
         $body = new  Portmone_Pay_For_WooCommerce_Dto_Body();
 
-        if ( $order->get_status() == 'status-preauth' ) {
+        if ( $order->get_status() === 'status-preauth' ) {
 
             if ( $order_total != $amount ) {
-                return new WP_Error( 'error',  '#52P ' . __( 'Не можна робити часткового повернення для платежу з преавторизацією', 'portmone-pay-for-woocommerce' ) );
+                return new WP_Error( 'error',  '#52P ' . __( 'Скасувати можна тільки всю заблоковану суму. Часткове скасування для платежу з преавторизацією недоступне.', 'portmone-pay-for-woocommerce' ) );
             }
 
             $body->setMethod('rejectPreauth' );

@@ -334,11 +334,35 @@ msgstr "The buyer will be able to choose to pay in installments through partner 
 msgid "Відзначте, щоб увімкнути розтермінування"
 msgstr "Check to enable rescheduling"
 
-msgid "Не можна робити часткового повернення для платежу з преавторизацією"
-msgstr "Partial refunds cannot be made for pre-authorized payments."
+msgid "Скасувати можна тільки всю заблоковану суму. Часткове скасування для платежу з преавторизацією недоступне."
+msgstr "You can only cancel the entire blocked amount. Partial cancellation is not available for pre-authorized payments."
 
 msgid "Неможливо оформити розтермінування та розщеплення в одному платежі."
 msgstr "It is not possible to arrange for deferral and splitting in one payment."
 
 msgid "Оплата неможлива: не можна поєднувати «Розтермінування» та «Розщеплення платежу»."
 msgstr "Payment is not possible: "Deferral" and "Split payment" cannot be combined."
+
+msgid "У Вас немає прав для цієї дії"
+msgstr You do not have permission to perform this action."
+
+msgid "Підтвердження можна зробити лише для замовлення у статусі Оплачено з Portmone.com (блокування коштів)"
+msgstr "Confirmation can only be made for orders with the status Paid with Portmone.com (funds blocked)"
+
+msgid "Платіж підтверджено успішно через Portmone.com"
+msgstr "Payment confirmed successfully via Portmone.com"
+
+msgid "Обробка платежу..."
+msgstr "Processing payment..."
+
+msgid "Підтвердити оплату"
+msgstr "Confirm payment"
+
+msgid "Успішно!"
+msgstr "Successfully!"
+
+msgid "Помилка списання: "
+msgstr "Write-off error: "
+
+msgid "Сталася критична помилка запиту до сервера. Спробуйте оновити сторінку."
+msgstr "A critical error occurred while requesting the server. Please try refreshing the page."

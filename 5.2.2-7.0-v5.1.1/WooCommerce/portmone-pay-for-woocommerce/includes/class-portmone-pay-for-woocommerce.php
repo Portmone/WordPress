@@ -31,6 +31,7 @@ class Portmone_Pay_For_Woocommerce
     {
         $this->includes();
         $this->define_admin_hooks();
+        $this->order_admin_hooks();
 
         $this->gateway_hooks();
         $this->api_hooks();
@@ -115,6 +116,11 @@ class Portmone_Pay_For_Woocommerce
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/admin/class-portmone-pay-for-woocommerce-admin.php';
 
         /**
+         * The class responsible for defining order actions that occur in the admin panel.
+         */
+        require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/admin/class-portmone-pay-for-woocommerce-admin-order.php';
+
+        /**
          * Helper classes
          */
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/helpers/class-portmone-pay-for-woocommerce-helper-common.php';
@@ -135,6 +141,7 @@ class Portmone_Pay_For_Woocommerce
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/class-portmone-pay-for-woocommerce-dto-body.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/result/class-portmone-pay-for-woocommerce-dto-result-data.php';
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/return/class-portmone-pay-for-woocommerce-dto-return-data.php';
+        require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/dto/preauth/class-portmone-pay-for-woocommerce-dto-preauth-data.php';
 
         require_once PORTMONE_PAY_FOR_WOOCOMMERCE_DIR . 'includes/class-portmone-pay-for-woocommerce-payment-gateway.php';
 
@@ -166,6 +173,22 @@ class Portmone_Pay_For_Woocommerce
         $this->loader->add_action( 'admin_menu', $plugin_admin, 'add_menu_page' );
         $this->loader->add_action( 'plugin_action_links_' .PORTMONE_PAY_FOR_WOOCOMMERCE_NAME. '/' .PORTMONE_PAY_FOR_WOOCOMMERCE_NAME. '.php' , $plugin_admin, 'plagin_actions' );
     }
+
+    private function order_admin_hooks()
+    {
+        $admin_order = new Portmone_Pay_For_WooCommerce_Admin_Order( PORTMONE_PAY_FOR_WOOCOMMERCE_NAME );
+
+        $this->loader->add_action( 'admin_enqueue_scripts', $admin_order, 'enqueue_scripts' );
+
+        // Цей хук виводить кнопки точно в один ряд із кнопкою "Повернення"
+        $this->loader->add_action( 'woocommerce_order_item_add_action_buttons', $admin_order, 'add_button_confirm_payment', 10, 1 );
+
+        // ДОЗВОЛЯЄМО РЕДАГУВАННЯ ЗАМОВЛЕННЯ В СТАТУСІ status-preauth
+        // Передаємо 2 аргументи: $is_editable та $order
+        $this->loader->add_filter( 'wc_order_is_editable', $admin_order, 'allow_editing_in_status_preauth_status', 10, 2 );
+
+        // НОВИЙ ХУК ДЛЯ AJAX (тільки для авторизованих менеджерів)
+        $this->loader->add_action( 'wp_ajax_portmone_pay_for_woocommerce_process_preauth', $admin_order, 'ajax_handle_process_preauth' );}
 
     /**
      * Register a hook related to the functionality of the plugin's admin area and payment gateway.

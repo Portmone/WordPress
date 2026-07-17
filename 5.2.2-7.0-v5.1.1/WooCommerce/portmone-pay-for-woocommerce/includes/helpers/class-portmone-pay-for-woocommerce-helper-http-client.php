@@ -58,7 +58,13 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
     public function get_portmone_order_data( Portmone_Pay_For_WooCommerce_Dto_Body $body )
     {
         $result = $this->curl_json_request( $body );
-        return $this->get_data( $result );
+        $data = $this->get_data( $result );
+
+        if ( $data['errorCode'] != '0') {
+            return new WP_Error('error','#27P ' . $data['errorMessage'] );
+        }
+
+        return $data;
     }
 
     /**
@@ -71,7 +77,33 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
     public function portmone_refund( Portmone_Pay_For_WooCommerce_Dto_Body $body )
     {
         $result = $this->curl_json_request( $body );
-        return $this->get_data( $result );
+        $data = $this->get_data( $result );
+
+        if ( $data['errorCode'] != '0') {
+            return new WP_Error('error','#27P ' . $data['errorMessage'] );
+        }
+
+        return $data;
+
+    }
+
+    /**
+     * refund
+     * https://docs.portmone.com.ua/docs/en/PaymentGatewayEng/#912-return-json-request
+     *
+     * @param Portmone_Pay_For_WooCommerce_Dto_Body $body
+     * @return array|WP_Error
+     */
+    public function portmone_confirm_preauth( Portmone_Pay_For_WooCommerce_Dto_Body $body )
+    {
+        $result = $this->curl_json_request( $body );
+        $data = $this->get_data( $result );
+
+        if ( $data['error_code'] != '0') {
+            return new WP_Error('error','#27P ' . $data['error_message'] );
+        }
+
+        return $data;
     }
 
     /**
@@ -84,25 +116,13 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
     public function portmone_reject_preauth( Portmone_Pay_For_WooCommerce_Dto_Body $body )
     {
         $result = $this->curl_json_request( $body );
-        if ( is_wp_error( $result ) ) {
-            return new WP_Error( 'error','#25P ' . $result->get_error_message() );
+        $data = $this->get_data( $result );
+
+        if ( $data['error_code'] != '0') {
+            return new WP_Error('error','#27P ' . $data['error_message'] );
         }
 
-        $order_data = json_decode( $result, true );
-        if ( count( $order_data ) == 0 ) {
-            return new WP_Error('error', '#26P ' . __('У системі Portmone.com цього платежу немає, він повернутий чи створений некоректно', 'portmone-pay-for-woocommerce') );
-        }
-
-        if (isset( $order_data['errorCode'] ) && $order_data['errorCode'] != '0' ) {
-            return new WP_Error( 'error','#28P ' . $order_data['error'] );
-        }
-
-        $portmone_order_data = $order_data[0];
-        if ( $portmone_order_data['error_code'] != '0') {
-            return new WP_Error('error','#27P ' . $portmone_order_data['error_message'] );
-        }
-
-        return $portmone_order_data;;
+        return $data;
     }
 
     /**
@@ -124,12 +144,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
             return new WP_Error( 'error','#28P ' . $order_data['error'] );
         }
 
-        $portmone_order_data = $order_data[0];
-        if ( $portmone_order_data['errorCode'] != '0') {
-            return new WP_Error('error','#27P ' . $portmone_order_data['errorMessage'] );
-        }
-
-        return $portmone_order_data;;
+        return $order_data[0];
     }
 
 

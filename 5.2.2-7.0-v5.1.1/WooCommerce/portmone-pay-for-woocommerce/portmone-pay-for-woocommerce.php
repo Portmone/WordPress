@@ -13,7 +13,7 @@
  * Requires at least: 5.2.2
  * Requires PHP: 7.4
  * Requires Plugins:  woocommerce
- * WC requires at least: 3.7.1
+ * WC requires at least: 4.0
  * WC tested up to: 10.9.4
  *
  * @package Portmone_Pay_For_Woocommerce

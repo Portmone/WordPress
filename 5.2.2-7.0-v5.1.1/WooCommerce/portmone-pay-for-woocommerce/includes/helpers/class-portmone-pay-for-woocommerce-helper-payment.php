@@ -254,7 +254,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
         $order->update_meta_data( 'card_type_name', $card_type_name );
 
         $order->save();
-        if ($status == 'wc-processing') {
+        if ($status == 'processing') {
             $order->payment_complete();
         }
     }
