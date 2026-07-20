@@ -467,6 +467,7 @@ class WC_Portmone extends WC_Payment_Gateway
         $createLinkPaymentOrder = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order();
         $createLinkPaymentOrder->set_properties( $settings, $order );
         $createLinkPaymentOrder->set_attribute5( $attribute5 );
+        $createLinkPaymentOrder->billAmount( $this->helper_common->get_order_total( $settings, $order ) );
         $createLinkPayment->setOrder( $createLinkPaymentOrder );
 
         $createLinkPaymentToken = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Token();
@@ -583,11 +584,25 @@ class WC_Portmone extends WC_Payment_Gateway
             }
 
         } else {
+            $coupons_discount = 0;
+            // Отримуємо всі купони, які прикріплені до цього замовлення
+            foreach ( $order->get_items( 'coupon' ) as $coupon_item ) {
+                // get_discount() повертає суму знижки, яку дав цей конкретний купон
+                $coupons_discount += (float) $coupon_item->get_discount();
+            }
+
+            if ( $coupons_discount > 0 && $order_total != $amount ) {
+                return new WP_Error( 'error',  '#53P ' . __( 'Скасувати можна лише всю суму. Часткове скасування платежу зі знижкою (Купоном) недоступне.', 'portmone-pay-for-woocommerce' ) );
+            }
+
             $data->setReturnAmount( $amount );
             $data->setAttribute5( $attribute5 );
             $data->setMessage( $reason );
 
             $goods = $this->helper_common->get_goods_for_return( $settings, $order );
+            if ( is_wp_error( $goods ) ) {
+                return new WP_Error( 'error', $goods->get_error_message() );
+            }
             $data->setGoods( $goods );
 
             if ( isset($settings['test_mode_flag']) && $settings['test_mode_flag'] == 'yes' ) {

@@ -31,7 +31,6 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order implements Json
             $this->shopOrderNumber .= '_' . time();
         }
 
-        $this->billAmount = $this->get_order_total( $settings, $order );
         $this->attribute1 = $this->get_attribute1( $settings, $order );
         $this->attribute2 = $this->get_attribute2( $settings, $order );
         $this->attribute3 = $this->get_attribute3( $settings, $order );
@@ -52,19 +51,9 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order implements Json
         return get_object_vars( $this );
     }
 
-    private function get_order_total( array $settings, WC_Order $order )
+    public function billAmount($billAmount )
     {
-        $order_total = $order->get_total();
-        if (isset($settings['convert_money']) &&
-            isset($settings['exchange_rates']) &&
-            $settings['convert_money'] == 'yes' &&
-            $settings['exchange_rates'] > 0 &&
-            get_woocommerce_currency() !== 'UAH'
-        ) {
-            return round( $order_total * $settings['exchange_rates'] , 2 );
-        }
-
-        return $order_total;
+        $this->billAmount = $billAmount;
     }
 
     private function get_order_currency( array $settings )

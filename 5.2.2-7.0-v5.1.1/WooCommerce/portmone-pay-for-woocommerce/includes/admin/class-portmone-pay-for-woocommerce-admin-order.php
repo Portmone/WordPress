@@ -3,10 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The admin-specific functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
+ * Plugin functionality specific to working with orders in the admin panel.
  *
  * @package    portmone-pay-for-woocommerce
  * @subpackage portmone-pay-for-woocommerce/admin
@@ -38,29 +35,6 @@ class Portmone_Pay_For_WooCommerce_Admin_Order
 
         $this->helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
         $this->helper_http_client = new Portmone_Pay_For_WooCommerce_Helper_Http_Client();
-    }
-
-    /**
-    * Register the stylesheets for the admin area.
-    *
-    */
-    public function enqueue_styles()
-    {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Plugin_Name_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Plugin_Name_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
-        // wp_enqueue_style( $this->plugin_name, PORTMONE_PAY_FOR_WOOCOMMERCE_URL . 'assets/css/portmone-pay-for-woocommerce-admin.css', array());
-
     }
 
     /**
@@ -174,8 +148,7 @@ class Portmone_Pay_For_WooCommerce_Admin_Order
         $data->setLogin( $settings['login'] );
         $data->setPassword( $settings['password'] );
         $data->setShopOrderNumber( $shop_order_number );
-        $data->setPostauthAmount( $settings, $order );
-
+        $data->setPostauthAmount( $this->helper_common->get_order_total( $settings, $order ) );
 
         $goods = $this->helper_common->get_goods( $settings, $order );
         $data->setGoods( $goods );

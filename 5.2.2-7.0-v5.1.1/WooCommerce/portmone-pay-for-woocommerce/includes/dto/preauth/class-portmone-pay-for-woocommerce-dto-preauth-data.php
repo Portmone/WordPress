@@ -73,19 +73,9 @@ class Portmone_Pay_For_WooCommerce_Dto_Confirm_Preauth_Data  implements JsonSeri
         $this->goods = $goods;
     }
 
-    public function setPostauthAmount( array $settings, WC_Order $order )
+    public function setPostauthAmount( $postauthAmount )
     {
-        $order_total = $order->get_total();
-        if (isset($settings['convert_money']) &&
-            isset($settings['exchange_rates']) &&
-            $settings['convert_money'] == 'yes' &&
-            $settings['exchange_rates'] > 0 &&
-            get_woocommerce_currency() !== 'UAH'
-        ) {
-            return round( $order_total * $settings['exchange_rates'] , 2 );
-        }
-
-        $this->postauthAmount = $order_total;
+        $this->postauthAmount = $postauthAmount;
     }
 }
 

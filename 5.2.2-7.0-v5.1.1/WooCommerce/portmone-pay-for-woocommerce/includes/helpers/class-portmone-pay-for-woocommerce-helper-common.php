@@ -140,9 +140,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
             $quantity = $item->get_quantity();
             // Базова ціну товару без знижки
             $price = $product->get_regular_price();
-            $sale_price = $product->get_sale_price();
-            // Підсумкова ціна (зі знижкою)
-            $amount = round( $quantity * $sale_price , 2 );
+            $subtotal = $item->get_subtotal();
 
             $goodtem
                 ->setInternalCode( $settings['internal_code'] )
@@ -150,10 +148,10 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
                 ->setName( $item->get_name() )
                 ->setPrice( $price )
                 ->setQuantity( $quantity )
-                ->setAmount( $amount )
+                ->setAmount( $subtotal )
                 ->setBarcode( $product->get_sku() );
 
-            $discount =  round( $quantity * ($price - $sale_price) , 2 );
+            $discount =  round( $quantity * $price - $subtotal , 2 );
 
             if ( $discount > 0 ) {
                 $goodtem->setDiscount( $discount );
@@ -212,7 +210,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
      * @param array $settings
      * @param WC_Order $order
      *
-     * @return array<Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item>
+     * @return array<Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item>|WP_Error
      */
     public function get_goods_for_return( array $settings, WC_Order $order )
     {
@@ -242,6 +240,12 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
                 $return_quantity = $line_item_qtys[$item_id];
             }
 
+            $quantity = $item->get_quantity();
+            $total = $item->get_total();
+            if ( $return_quantity != $quantity || $total != $return_amount ) {
+                return new WP_Error( 'error',  '#65P ' . __( 'Скасувати можна лише всю позицію. Змінити кількість товару в окремій позиції неможливо. Позиція повертається тільки цілком.', 'portmone-pay-for-woocommerce' ) );
+            }
+
             $product = $item->get_product();
             $goodtem = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item();
 
@@ -260,11 +264,17 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
             $goods[] = $goodtem;
         }
 
+        // Отримання чистої вартості доставки (без податку)
+        $shipping_net = $order->get_shipping_total();
         // Отримуємо масив об'єктів доставки для цього замовлення
         $shipping_items = $order->get_items( 'shipping' );
         foreach ( $shipping_items as $shipping_item_id => $shipping_item ) {
             if ( empty( $line_item_totals[$shipping_item_id] ) ) {
                 continue;
+            }
+
+            if ( $line_item_totals[$shipping_item_id] != $shipping_net ) {
+                return new WP_Error( 'error',  '#65P ' . __( 'Скасувати можна лише всю позицію. Змінити кількість товару в окремій позиції неможливо. Позиція повертається тільки цілком.', 'portmone-pay-for-woocommerce' ) );
             }
 
             $goodtem = new Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Good_Item();
@@ -282,6 +292,26 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
         }
 
         return $goods;
+    }
+
+    /**
+     * @param array $settings
+     * @param WC_Order $order
+     * @return float
+     */
+    public function get_order_total(array $settings, WC_Order $order )
+    {
+        $order_total = $order->get_total();
+        if (isset($settings['convert_money']) &&
+            isset($settings['exchange_rates']) &&
+            $settings['convert_money'] == 'yes' &&
+            $settings['exchange_rates'] > 0 &&
+            get_woocommerce_currency() !== 'UAH'
+        ) {
+            return round( $order_total * $settings['exchange_rates'] , 2 );
+        }
+
+        return $order_total;
     }
 
     /**

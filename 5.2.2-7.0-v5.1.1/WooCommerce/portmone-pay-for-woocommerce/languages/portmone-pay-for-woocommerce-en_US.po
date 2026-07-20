@@ -366,3 +366,9 @@ msgstr "Write-off error: "
 
 msgid "Сталася критична помилка запиту до сервера. Спробуйте оновити сторінку."
 msgstr "A critical error occurred while requesting the server. Please try refreshing the page."
+
+msgid "Скасувати можна лише всю суму. Часткове скасування платежу зі знижкою (Купоном) недоступне."
+msgstr "You can only cancel the entire amount. Partial cancellations for payments with a discount (Coupon) are not available."
+
+msgid "Скасувати можна лише всю позицію. Змінити кількість товару в окремій позиції неможливо. Позиція повертається тільки цілком."
+msgstr "You can only cancel the entire item. It is not possible to change the quantity of an item in a single item. The item can only be returned in its entirety."
