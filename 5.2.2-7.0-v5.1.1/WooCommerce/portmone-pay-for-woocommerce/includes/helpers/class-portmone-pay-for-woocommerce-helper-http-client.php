@@ -60,6 +60,10 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
         $result = $this->curl_json_request( $body );
         $data = $this->get_data( $result );
 
+        if ( is_wp_error( $data ) ) {
+            return new WP_Error( 'error', $data->get_error_message(), $result->get_error_data() );
+        }
+
         if ( $data['errorCode'] != '0') {
             return new WP_Error('error','#27P ' . $data['errorMessage'] );
         }
@@ -78,6 +82,10 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
     {
         $result = $this->curl_json_request( $body );
         $data = $this->get_data( $result );
+
+        if ( is_wp_error( $data ) ) {
+            return new WP_Error( 'error', $data->get_error_message(), $result->get_error_data() );
+        }
 
         if ( $data['errorCode'] != '0') {
             return new WP_Error('error','#27P ' . $data['errorMessage'] );
@@ -99,6 +107,10 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
         $result = $this->curl_json_request( $body );
         $data = $this->get_data( $result );
 
+        if ( is_wp_error( $data ) ) {
+            return new WP_Error( 'error', $data->get_error_message(), $result->get_error_data() );
+        }
+
         if ( $data['error_code'] != '0') {
             return new WP_Error('error','#27P ' . $data['error_message'] );
         }
@@ -118,6 +130,10 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
         $result = $this->curl_json_request( $body );
         $data = $this->get_data( $result );
 
+        if ( is_wp_error( $data ) ) {
+            return new WP_Error( 'error', $data->get_error_message(), $result->get_error_data() );
+        }
+
         if ( $data['error_code'] != '0') {
             return new WP_Error('error','#27P ' . $data['error_message'] );
         }
@@ -132,7 +148,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
     private function get_data( $result )
     {
         if ( is_wp_error( $result ) ) {
-            return new WP_Error( 'error','#25P ' . $result->get_error_message() );
+            return new WP_Error( 'error','#25P ' . $result->get_error_message(), $result->get_error_data() );
         }
 
         $order_data = json_decode( $result, true );
@@ -172,7 +188,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Http_Client
         curl_close( $ch );
 
         if ( 200 !== intval( $http_code ) ) {
-            return new WP_Error( 'error', __( 'Помилка при надсиланні запиту', 'portmone-pay-for-woocommerce' ) . " http code: " . $http_code );;
+            return new WP_Error( 'error', __( 'Помилка при надсиланні запиту', 'portmone-pay-for-woocommerce' ) . " http code: " . $http_code, ['http_code' => $http_code] );;
         }
         return $response;
     }

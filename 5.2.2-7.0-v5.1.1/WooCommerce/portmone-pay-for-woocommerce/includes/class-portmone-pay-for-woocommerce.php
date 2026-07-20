@@ -57,40 +57,6 @@ class Portmone_Pay_For_Woocommerce
         $this->loader->run();
     }
 
-    /*
-     * Adding new order statuses.
-     */
-    public function register_new_order_statuses()
-    {
-        $helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
-        $portmone_payment_statuses = $helper_common->get_portmone_payment_statuses();
-
-        foreach ( $portmone_payment_statuses as $kay => $val ) {
-            register_post_status( 'wc-status-'.$kay, array(
-                'label'                     => _x( $val[2], 'Order status', 'textdomain' ),
-                'public'                    => true,
-                'exclude_from_search'       => false,
-                'show_in_admin_all_list'    => true,
-                'show_in_admin_status_list' => true,
-                'label_count'               => _n_noop( '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>', '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>', 'textdomain' )
-            ) );
-        }
-    }
-
-    /*
-     * Adding new order statuses.
-     */
-    public function new_wc_order_statuses( $order_statuses )
-    {
-        $helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
-        $portmone_payment_statuses = $helper_common->get_portmone_payment_statuses();
-
-        foreach ( $portmone_payment_statuses as $kay => $val ) {
-            $order_statuses['wc-status-'.$kay] = _x( $val[2], 'Order status', 'textdomain' );
-        }
-        return $order_statuses;
-    }
-
     /**
      * Load the required dependencies for this plugin.
      *
@@ -203,8 +169,48 @@ class Portmone_Pay_For_Woocommerce
      */
     private function payment_status_hooks()
     {
-        $this->loader->add_action( 'init', $this, 'register_new_order_statuses' );
+        // CPT
+        $this->loader->add_action( 'init', $this, 'register_init_statuses' );
+        // HPOS
+        $this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $this, 'register_hpos_statuses' );
         $this->loader->add_filter( 'wc_order_statuses', $this, 'new_wc_order_statuses' );
+    }
+
+    /**
+     * Adding new order statuses.
+     */
+    public function register_init_statuses()
+    {
+        $helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
+        foreach ( $helper_common->get_portmone_payment_statuses() as $key => $val ) {
+            register_post_status( 'wc-status-' . $key, $this->get_status_arguments( $val ) );
+        }
+    }
+
+    /**
+     * Adding new order statuses. (CPT)
+     */
+    public function register_hpos_statuses( $order_statuses )
+    {
+        $helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
+        foreach ( $helper_common->get_portmone_payment_statuses() as $key => $val ) {
+            $order_statuses['wc-status-' . $key] = $this->get_status_arguments( $val );
+        }
+        return $order_statuses;
+    }
+
+    /*
+     * Adding new order statuses. (HPOS)
+     */
+    public function new_wc_order_statuses( $order_statuses )
+    {
+        $helper_common = new Portmone_Pay_For_WooCommerce_Helper_Common();
+        $portmone_payment_statuses = $helper_common->get_portmone_payment_statuses();
+
+        foreach ( $portmone_payment_statuses as $kay => $val ) {
+            $order_statuses['wc-status-'.$kay] = _x( $val[2], 'Order status', 'textdomain' );
+        }
+        return $order_statuses;
     }
 
     /*
@@ -218,5 +224,20 @@ class Portmone_Pay_For_Woocommerce
 
         $rest = new Portmone_Pay_For_WooCommerce_Api_Rest();
         $this->loader->add_action( 'rest_api_init', $rest, 'portmone_register_routes' );
+    }
+
+    private function get_status_arguments( $val ) {
+        return array(
+            'label'                     => _x( $val[2], 'Order status', 'textdomain' ),
+            'public'                    => true,
+            'exclude_from_search'       => false,
+            'show_in_admin_all_list'    => true,
+            'show_in_admin_status_list' => true,
+            'label_count'               => _n_noop(
+                '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>',
+                '<span style="border-radius: 3px; background-color: '.$val[0].'; padding: 4px 5px; color: '.$val[1].';"><b>'.$val[2].' <span class="count" style="color: '.$val[1].';">(%s)</span></b></span>',
+                'textdomain'
+            )
+        );
     }
 }

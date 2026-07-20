@@ -105,8 +105,27 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
         if ( is_wp_error( $portmone_order_data ) ) {
             $note = '#103P ' . $portmone_order_data->get_error_message();
             $order->add_order_note( $note );
+
+            $error_data = $portmone_order_data->get_error_data()  ?? '';
+            if ( isset( $error_data['http_code']) && $error_data['http_code'] >= 500 ) {
+                if ( $order->meta_exists( 'count_notification_error' ) ) {
+                    $count_notification_error = $order->get_meta( 'count_notification_error' ) + 1;
+                    $order->update_meta_data( 'count_notification_error',  $count_notification_error);
+
+                    if ( $count_notification_error > 3 ) {
+                        $order->update_status( 'wc-status-notif-err' );
+                    }
+
+                } else {
+                    $count_notification_error = 1;
+                    $order->add_meta_data( 'count_notification_error', $count_notification_error );
+                }
+
+                $error_data['count_notification_error'] = $count_notification_error;
+            }
+
             $order->save();
-            return new WP_Error('error', $note );
+            return new WP_Error('error', $note, $error_data);
         }
 
         $order->set_transaction_id( $notification['shopBillId'] );

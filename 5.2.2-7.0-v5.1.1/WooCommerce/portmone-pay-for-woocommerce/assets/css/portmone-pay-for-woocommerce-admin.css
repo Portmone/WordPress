@@ -24,6 +24,11 @@
     color: #ffffff;
     font-weight: 600;
 }
+.order-status.status-status-notif-err {
+    background-color: #bb0f0f;
+    color: #ffffff;
+    font-weight: 600;
+}
 #toplevel_page_wc-settings-tab-checkout-section-portmone-tab1 img {
     height: 18px;
     width: 18px;

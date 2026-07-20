@@ -372,3 +372,6 @@ msgstr "You can only cancel the entire amount. Partial cancellations for payment
 
 msgid "Скасувати можна лише всю позицію. Змінити кількість товару в окремій позиції неможливо. Позиція повертається тільки цілком."
 msgstr "You can only cancel the entire item. It is not possible to change the quantity of an item in a single item. The item can only be returned in its entirety."
+
+msgid "При обробці нотифікації від  Portmone виникла помилка"
+msgstr "An error occurred while processing the notification from Portmone."

@@ -339,10 +339,11 @@ class Portmone_Pay_For_WooCommerce_Helper_Common
     public function get_portmone_payment_statuses()
     {
         return  [
-            'paid'          => ['#109b00', '#FFFFFF', __( 'Оплачено з Portmone.com', 'portmone-pay-for-woocommerce' )],
-            'paidnotve'     => ['#0a4e03', '#FFFFFF', __( 'Оплачено з Portmone.com (але не перевірено)', 'portmone-pay-for-woocommerce' )],
-            'preauth'       => ['#ffe000', '#000000', __( 'Оплачено з Portmone.com (блокування коштів)', 'portmone-pay-for-woocommerce' )],
-            'error'         => ['#bb0f0f', '#FFFFFF', __( 'Оплата з Portmone.com НЕ вдалась', 'portmone-pay-for-woocommerce' )]
+            'paid'               => ['#109b00', '#FFFFFF', __( 'Оплачено з Portmone.com', 'portmone-pay-for-woocommerce' )],
+            'paidnotve'          => ['#0a4e03', '#FFFFFF', __( 'Оплачено з Portmone.com (але не перевірено)', 'portmone-pay-for-woocommerce' )],
+            'preauth'            => ['#ffe000', '#000000', __( 'Оплачено з Portmone.com (блокування коштів)', 'portmone-pay-for-woocommerce' )],
+            'error'              => ['#bb0f0f', '#FFFFFF', __( 'Оплата з Portmone.com НЕ вдалась', 'portmone-pay-for-woocommerce' )],
+            'notif-err'          => ['#bb0f0f', '#FFFFFF', __( 'При обробці нотифікації від  Portmone виникла помилка', 'portmone-pay-for-woocommerce' )],
         ];
     }
 }

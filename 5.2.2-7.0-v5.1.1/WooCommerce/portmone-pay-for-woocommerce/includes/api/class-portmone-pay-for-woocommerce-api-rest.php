@@ -32,7 +32,7 @@ class Portmone_Pay_For_WooCommerce_Api_Rest
     /*
      * processing notification from the wallet in case of successful payment
      */
-    public function portmone_endpoint_notification( $request )
+    public static function portmone_endpoint_notification( $request )
     {
         $responseData = [
             'errorCode'  => "0",
@@ -62,6 +62,15 @@ class Portmone_Pay_For_WooCommerce_Api_Rest
         if ( is_wp_error( $result ) ) {
             $order->add_order_note( '#101P ' . __( 'Помилка під час обробки нотифікації', 'portmone-pay-for-woocommerce' ) . '. '. $result->get_error_message() );
             $order->save();
+
+            $error_data = $result->get_error_data();
+            if ( isset( $error_data['count_notification_error'] ) && $error_data['count_notification_error'] <= 3 ) {
+                return rest_ensure_response([
+                    'errorCode' => "800",
+                    'reason' => "помилка сервера",
+                    'responseId' => (string)time()
+                ]);
+            }
         }
 
         return rest_ensure_response($responseData);
