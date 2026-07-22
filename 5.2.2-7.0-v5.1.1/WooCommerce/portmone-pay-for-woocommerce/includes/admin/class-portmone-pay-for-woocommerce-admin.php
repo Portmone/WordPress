@@ -69,8 +69,18 @@ class Portmone_Pay_For_WooCommerce_Admin
          * class.
          */
 
-        wp_enqueue_script( $this->plugin_name . '-admin', PORTMONE_PAY_FOR_WOOCOMMERCE_URL . 'assets/js/portmone-pay-for-woocommerce-admin.js', array( 'jquery', 'wp-i18n' ), time(), true );
+        $handle = $this->plugin_name . '-admin';
+        wp_enqueue_script( $handle, PORTMONE_PAY_FOR_WOOCOMMERCE_URL . 'assets/js/portmone-pay-for-woocommerce-admin.js', array( 'jquery', 'wp-i18n' ), time(), true );
 
+        wp_localize_script( $handle, 'portmone_pay_for_WooCommerce_admin', array(
+
+            'i18n'     => array(
+                'error_exp_time_int'    => __( "Час на оплату має бути числом", "portmone-pay-for-woocommerce" ),
+                'error_exp_time_zero'   => __( "Час на оплату має бути більшим за нуль", "portmone-pay-for-woocommerce" ),
+                'error_required_fields' => __( "Не заповнені обов'язкові поля", "portmone-pay-for-woocommerce" ),
+                'error_deferral_and_splitting' => __( "Неможливо оформити розтермінування та розщеплення в одному платежі.", "portmone-pay-for-woocommerce" )
+            )
+        ) );
     }
 
     /**

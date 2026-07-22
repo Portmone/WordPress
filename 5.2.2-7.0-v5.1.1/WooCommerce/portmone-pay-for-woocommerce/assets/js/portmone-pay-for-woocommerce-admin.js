@@ -33,13 +33,13 @@ jQuery(function () {
 						if (val[i].name === 'woocommerce_portmone_exp_time') {
 							if (val[i].value !== '' &&  isNaN(+val[i].value)) {
 								$('#woocommerce_portmone_exp_time').addClass('woocommerce_portmone_input_error');
-								error_exp_time = __( "Час на оплату має бути числом", "portmone-pay-for-woocommerce" );
+								error_exp_time = portmone_pay_for_WooCommerce_admin.i18n.error_exp_time_int;
 								break;
 							}
 
 							if (val[i].value < 0) {
 								$('#woocommerce_portmone_exp_time').addClass('woocommerce_portmone_input_error');
-								error_exp_time =  __( "Час на оплату має бути більшим за нуль", "portmone-pay-for-woocommerce" );
+								error_exp_time =  portmone_pay_for_WooCommerce_admin.i18n.error_exp_time_zero;
 							}
 						}
 					}
@@ -56,7 +56,7 @@ jQuery(function () {
 					}
 
 					if ( error > 0 ) {
-						$('#portmone-header').after('<div id="message" class="error" ><p><strong>' + __( "Не заповнені обов'язкові поля", "portmone-pay-for-woocommerce" ) + ' </strong></p></div>');
+						$('#portmone-header').after('<div id="message" class="error" ><p><strong>' + portmone_pay_for_WooCommerce_admin.i18n.error_required_fields + ' </strong></p></div>');
 						$('html, body, #portmone-header').animate({scrollTop: 0}, 'slow');
 						return false;
 					}
@@ -68,7 +68,7 @@ jQuery(function () {
 					}
 
 					if ($('#woocommerce_portmone_split_payment_flag').is(':checked') && $('#woocommerce_portmone_installment_flag').is(':checked')) {
-						$('#portmone-header').after('<div id="message" class="error" ><p><strong>'+__( "Неможливо оформити розтермінування та розщеплення в одному платежі.", "portmone-pay-for-woocommerce" )+'</strong></p></div>');
+						$('#portmone-header').after('<div id="message" class="error" ><p><strong>'+ portmone_pay_for_WooCommerce_admin.i18n.error_deferral_and_splitting +'</strong></p></div>');
 						$('html, body, #portmone-header').animate({scrollTop: 0}, 'slow');
 						return false;
 					}
