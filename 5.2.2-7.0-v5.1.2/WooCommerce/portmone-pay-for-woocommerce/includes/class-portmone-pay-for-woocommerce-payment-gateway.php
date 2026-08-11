@@ -187,7 +187,7 @@ class WC_Portmone extends WC_Payment_Gateway
                 'title'            => __( 'Час на сплату', 'portmone-pay-for-woocommerce' ),
                 'type'             => 'text',
                 'description'      => __( 'Час відведенний на оплату через Portmone.com', 'portmone-pay-for-woocommerce' ),
-                'default'          => 400,
+                'default'          => '',
                 'desc_tip'         => true),
             'split_payment_flag'                 => array(
                 'title'            => __( 'Розщеплення платежу', 'portmone-pay-for-woocommerce' ),

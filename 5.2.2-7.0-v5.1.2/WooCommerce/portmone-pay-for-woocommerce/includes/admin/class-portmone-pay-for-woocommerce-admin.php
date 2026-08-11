@@ -78,7 +78,8 @@ class Portmone_Pay_For_WooCommerce_Admin
                 'error_exp_time_int'    => __( "Час на оплату має бути числом", "portmone-pay-for-woocommerce" ),
                 'error_exp_time_zero'   => __( "Час на оплату має бути більшим за нуль", "portmone-pay-for-woocommerce" ),
                 'error_required_fields' => __( "Не заповнені обов'язкові поля", "portmone-pay-for-woocommerce" ),
-                'error_deferral_and_splitting' => __( "Неможливо оформити розтермінування та розщеплення в одному платежі.", "portmone-pay-for-woocommerce" )
+                'error_deferral_and_splitting' => __( "Неможливо оформити розтермінування та розщеплення в одному платежі.", "portmone-pay-for-woocommerce" ),
+                'error_deferral_and_exp_time' => __( "Неможливо оформити розтермінування та зробити обмеження часу в одному платежі.", "portmone-pay-for-woocommerce" ),
             )
         ) );
     }

@@ -72,6 +72,12 @@ jQuery(function () {
 						$('html, body, #portmone-header').animate({scrollTop: 0}, 'slow');
 						return false;
 					}
+
+					if ($('#woocommerce_portmone_exp_time').val() !== '' && $('#woocommerce_portmone_installment_flag').is(':checked')) {
+						$('#portmone-header').after('<div id="message" class="error" ><p><strong>'+ portmone_pay_for_WooCommerce_admin.i18n.error_deferral_and_exp_time +'</strong></p></div>');
+						$('html, body, #portmone-header').animate({scrollTop: 0}, 'slow');
+						return false;
+					}
 				}
 			}
 		});

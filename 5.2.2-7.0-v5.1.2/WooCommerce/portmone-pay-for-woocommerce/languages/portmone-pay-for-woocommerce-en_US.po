@@ -375,3 +375,6 @@ msgstr "You can only cancel the entire item. It is not possible to change the qu
 
 msgid "При обробці нотифікації від  Portmone виникла помилка"
 msgstr "An error occurred while processing the notification from Portmone."
+
+msgid "Неможливо оформити розтермінування та зробити обмеження часу в одному платежі."
+msgstr "It is not possible to issue a deferral and set a time limit in one payment."

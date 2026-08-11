@@ -2,11 +2,11 @@
 
 Creator: Portmone.com   
 Tags: Portmone, WordPress, wooCommerce, payment, payment gateway, credit card, debit card    
-Requires at least: WordPress 7.0.2, wooCommerce: 10.9.4
+Requires at least: WordPress  5.2.2, wooCommerce: 4.0.0
 License: Payment Card Industry Data Security Standard (PCI DSS) 
 License URI: [License](https://www.portmone.com.ua/r3/uk/security/) 
 
-Версія плагіна: 5.1.1
+Версія плагіна: 5.1.2
 
 Плагін додає Portmone.com  як спосіб оплати у ваш інтернет-магазин на WordPress. Прийом платежів за картками VISA та MasterCard, оплата частинами, автоматична фіскалізація чеків, преавторизація та розщеплення платежу.
 
@@ -14,9 +14,9 @@ License URI: [License](https://www.portmone.com.ua/r3/uk/security/)
 
 ### Вимоги
 
-- WordPress 5.2.2 - 6.8.2
+- WordPress 5.2.2 або новіше
 - PHP 7.4 або новіше
-- WooCommerce 4.0.0 - 10.0.4
+- WooCommerce 4.0.0 або новіше
 
 ### Встановлення
 
