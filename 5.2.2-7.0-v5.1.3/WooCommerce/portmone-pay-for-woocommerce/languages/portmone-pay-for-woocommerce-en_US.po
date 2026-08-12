@@ -378,3 +378,9 @@ msgstr "An error occurred while processing the notification from Portmone."
 
 msgid "Неможливо оформити розтермінування та зробити обмеження часу в одному платежі."
 msgstr "It is not possible to issue a deferral and set a time limit in one payment."
+
+msgid "Опис платежу"
+msgstr "Payment description"
+
+msgid "Опис платежу (призначення оплати). Максимальна кількість символів — 250. Якщо вказати %order_number, його буде замінено на реальний номер замовлення."
+msgstr "Payment description (payment purpose). Maximum number of characters is 250. If you specify %order_number, it will be replaced with the actual order number."

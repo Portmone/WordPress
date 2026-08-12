@@ -203,6 +203,15 @@ class WC_Portmone extends WC_Payment_Gateway
                 'default'          => 'no',
                 'description'      => __( 'Відзначте, щоб увімкнути розтермінування', 'portmone-pay-for-woocommerce' ),
                 'desc_tip'         => true),
+            'order_description'             => array(
+                'title'            => __( 'Опис платежу', 'portmone-pay-for-woocommerce' ),
+                'type'             => 'text',
+                'description'      => __( 'Опис платежу (призначення оплати). Максимальна кількість символів — 250. Якщо вказати %order_number, його буде замінено на реальний номер замовлення.', 'portmone-pay-for-woocommerce' ),
+                'default'          => '',
+                'custom_attributes' => array(
+                    'maxlength' => '250',
+                ),
+                'desc_tip'         => true),
             'section_divider_payment_options_end_line' => array(
                 'title'       => '<hr class="woocommerce_portmone_input_hr">',
                 'type'        => 'title',

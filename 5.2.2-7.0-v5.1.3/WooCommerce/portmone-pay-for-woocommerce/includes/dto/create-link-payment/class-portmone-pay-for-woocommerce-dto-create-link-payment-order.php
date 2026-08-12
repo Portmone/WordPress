@@ -31,6 +31,10 @@ class Portmone_Pay_For_WooCommerce_Dto_Create_Link_Payment_Order implements Json
             $this->shopOrderNumber .= '_' . time();
         }
 
+        if ( ! empty( $settings['order_description'] ) ) {
+            $this->description = str_replace( '%order_number',  $this->shopOrderNumber, $settings['order_description'] );
+        }
+
         $this->attribute1 = $this->get_attribute1( $settings, $order );
         $this->attribute2 = $this->get_attribute2( $settings, $order );
         $this->attribute3 = $this->get_attribute3( $settings, $order );

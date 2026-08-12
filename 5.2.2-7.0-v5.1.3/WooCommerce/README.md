@@ -6,7 +6,7 @@ Requires at least: WordPress  5.2.2, wooCommerce: 4.0.0
 License: Payment Card Industry Data Security Standard (PCI DSS) 
 License URI: [License](https://www.portmone.com.ua/r3/uk/security/) 
 
-Версія плагіна: 5.1.2
+Версія плагіна: 5.1.3
 
 Плагін додає Portmone.com  як спосіб оплати у ваш інтернет-магазин на WordPress. Прийом платежів за картками VISA та MasterCard, оплата частинами, автоматична фіскалізація чеків, преавторизація та розщеплення платежу.
 
