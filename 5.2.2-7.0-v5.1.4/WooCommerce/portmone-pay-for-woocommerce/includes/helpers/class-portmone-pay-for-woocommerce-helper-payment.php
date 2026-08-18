@@ -187,7 +187,7 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
         $data->setLogin( $settings['login'] );
         $data->setPassword( $settings['password'] );
         $data->setShopbillId( $shop_bill_id );
-        if ( !empty( $settings['installment_flag'] ) && $settings['installment_flag'] == 'yes' ) {
+        if ( ! empty( $settings['installment_flag'] ) && $settings['installment_flag'] == 'yes' ) {
             $data->setInstallmentFlag('Y' );
         }
 
@@ -212,7 +212,8 @@ class Portmone_Pay_For_WooCommerce_Helper_Payment
      */
     private function check_portmone_order_data( array $portmone_order_data, array $settings, WC_Order $order )
     {
-        if ( $settings['payee_id'] !=  $portmone_order_data['payee_id'] ) {
+        if ( $settings['payee_id'] !=  $portmone_order_data['payee_id'] &&
+            ! ( ! empty( $settings['installment_flag'] ) && $settings['installment_flag'] == 'yes' ) ) {
             return new WP_Error('error', '#17P ' . __( 'Під час здійснення оплати виникла помилка.', 'portmone-pay-for-woocommerce')  . ' '. __( 'Дані Інтернет-магазину некоректні', 'portmone-pay-for-woocommerce' ) );
         }
 
